@@ -1,0 +1,68 @@
+﻿<!-- 量尺预约 -->
+<view class="container">
+  <view class="card">
+    <view class="card-title">客户信息</view>
+    <view class="form-group">
+      <text class="form-label"><text class="required">*</text>客户姓名</text>
+      <input class="form-input" placeholder="请输入" value="{{form.customer}}" bindinput="onInput" data-field="customer" />
+    </view>
+    <view class="form-group">
+      <text class="form-label"><text class="required">*</text>联系电话</text>
+      <input class="form-input" type="number" placeholder="请输入" value="{{form.phone}}" bindinput="onInput" data-field="phone" />
+    </view>
+    <view class="form-group">
+      <text class="form-label"><text class="required">*</text>量尺地址</text>
+      <input class="form-input" placeholder="请输入详细地址" value="{{form.address}}" bindinput="onInput" data-field="address" />
+    </view>
+  </view>
+
+  <view class="card">
+    <view class="card-title">门店信息</view>
+    <view class="form-group">
+      <text class="form-label">门店（默认当前）</text>
+      <picker range="{{stores}}" value="{{storeIndex}}" bindchange="onStoreChange">
+        <view class="form-input picker-value">{{stores[storeIndex] ? stores[storeIndex] : '请选择'}}</view>
+      </picker>
+    </view>
+    <view class="form-group">
+      <text class="form-label">创建人</text>
+      <input class="form-input" value="{{creator}}" disabled />
+    </view>
+  </view>
+
+  <view class="card">
+    <view class="card-title">产品明细（门类）</view>
+    <view class="room-item" wx:for="{{rooms}}" wx:key="index">
+      <view class="room-header">
+        <text class="room-name">房间 {{index + 1}}</text>
+        <text class="room-delete" catchtap="removeRoom" data-index="{{index}}" wx:if="{{rooms.length > 1}}">删除</text>
+      </view>
+      <view class="form-group">
+        <text class="form-label">房间名</text>
+        <input class="form-input" placeholder="如：主卧" value="{{item.room}}" bindinput="onRoomInput" data-index="{{index}}" data-field="room" />
+      </view>
+      <view class="form-group">
+        <text class="form-label">门类</text>
+        <picker range="{{doorTypes}}" bindchange="onDoorTypeChange" data-index="{{index}}">
+          <view class="form-input picker-value">{{item.doorType ? item.doorType : '请选择'}}</view>
+        </picker>
+      </view>
+      <view class="form-group">
+        <text class="form-label">数量</text>
+        <input class="form-input" type="number" placeholder="1" value="{{item.qty}}" bindinput="onRoomInput" data-index="{{index}}" data-field="qty" />
+      </view>
+    </view>
+    <view class="add-room" bindtap="addRoom">+ 添加房间</view>
+  </view>
+
+  <view class="card">
+    <view class="form-group">
+      <text class="form-label">备注</text>
+      <textarea class="form-input" placeholder="可选" value="{{form.remark}}" bindinput="onInput" data-field="remark" auto-height />
+    </view>
+  </view>
+
+  <view class="bottom-bar">
+    <view class="btn-primary" bindtap="onSubmit" loading="{{submitting}}">提交量尺预约</view>
+  </view>
+</view>

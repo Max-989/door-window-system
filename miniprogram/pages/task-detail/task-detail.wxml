@@ -1,0 +1,96 @@
+<!-- 任务详情页 -->
+<view class="container">
+  <view class="status-header">
+    <view class="status-top">
+      <text class="status-text">{{task.status}}</text>
+    </view>
+    <text class="task-type-label">{{task.type}}任务 · {{task.id}}</text>
+  </view>
+
+  <view class="card">
+    <view class="card-title">客户信息</view>
+    <view class="info-row">
+      <text class="info-label">客户</text>
+      <text class="info-value" style="font-weight:600">{{task.customer}}</text>
+    </view>
+    <view class="info-row">
+      <text class="info-label">电话</text>
+      <text class="info-value link" bindtap="callPhone">{{task.phone}} 📞</text>
+    </view>
+    <view class="info-row">
+      <text class="info-label">地址</text>
+      <text class="info-value">{{task.address}}</text>
+    </view>
+  </view>
+
+  <view class="card" wx:if="{{task.products && task.products.length > 0}}">
+    <view class="card-title">产品明细</view>
+    <view class="product-item" wx:for="{{task.products}}" wx:key="index">
+      <view class="product-header">
+        <text class="product-name">{{item.name}}</text>
+        <text class="product-qty">× {{item.qty}}</text>
+      </view>
+      <text class="product-spec">{{item.spec}} · {{item.room}}</text>
+    </view>
+  </view>
+
+  <view class="card" wx:if="{{task.orderNo}}">
+    <view class="info-row">
+      <text class="info-label">关联订单</text>
+      <text class="info-value link" bindtap="goToOrder">{{task.orderNo}} ›</text>
+    </view>
+  </view>
+
+  <!-- 安装任务：显示量尺图片+派送图片 -->
+  <block wx:if="{{isInstallTask}}">
+    <view class="card" wx:if="{{task.measurementImages && task.measurementImages.length > 0}}">
+      <view class="card-title">量尺照片</view>
+      <view class="photo-grid">
+        <view class="photo-item" wx:for="{{task.measurementImages}}" wx:key="index">
+          <image src="{{item}}" mode="aspectFill" bindtap="previewImage" data-urls="{{task.measurementImages}}" data-url="{{item}}" />
+        </view>
+      </view>
+    </view>
+    <view class="card" wx:if="{{task.deliveryImages && task.deliveryImages.length > 0}}">
+      <view class="card-title">派送照片</view>
+      <view class="photo-grid">
+        <view class="photo-item" wx:for="{{task.deliveryImages}}" wx:key="index">
+          <image src="{{item}}" mode="aspectFill" bindtap="previewImage" data-urls="{{task.deliveryImages}}" data-url="{{item}}" />
+        </view>
+      </view>
+    </view>
+  </block>
+
+  <!-- 增项 -->
+  <view class="card" wx:if="{{task.extras && task.extras.length > 0}}">
+    <view class="card-title">增项</view>
+    <view class="extra-display" wx:for="{{task.extras}}" wx:key="index">
+      <text class="extra-name">{{item.name}} × {{item.qty}}</text>
+      <text class="extra-desc" wx:if="{{item.desc}}">{{item.desc}}</text>
+    </view>
+  </view>
+
+  <view class="card" wx:if="{{task.remark}}">
+    <view class="card-title">备注</view>
+    <text class="remark-text">{{task.remark}}</text>
+  </view>
+
+  <view class="card">
+    <view class="card-title">现场照片</view>
+    <view class="photo-grid">
+      <view class="photo-item" wx:for="{{task.images}}" wx:key="index">
+        <image src="{{item}}" mode="aspectFill" bindtap="previewImage" data-urls="{{task.images}}" data-url="{{item}}" />
+      </view>
+      <view class="photo-add" wx:if="{{canUpload}}" bindtap="uploadImage">+</view>
+    </view>
+    <text class="no-photos" wx:if="{{!task.images}}">暂无照片</text>
+  </view>
+
+  <view class="bottom-bar" wx:if="{{canSubmit}}">
+    <view class="btn-primary" bindtap="goToSubmit">提交完工报告</view>
+  </view>
+  <view class="bottom-bar" wx:if="{{canAccept}}">
+    <view class="btn-outline" style="margin-right:20rpx" bindtap="onReject">拒单</view>
+    <view class="btn-primary" bindtap="onAccept">接单</view>
+  </view>
+</view>

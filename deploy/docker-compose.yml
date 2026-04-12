@@ -1,0 +1,148 @@
+version: "3.8"
+
+# ============================================================
+# 门窗安装管理系统 - Docker Compose 编排文件
+# 包含：MySQL、Redis、Django后端、React前端、Celery异步任务
+# ============================================================
+
+services:
+  # -------------------- MySQL 8.x --------------------
+  mysql:
+    image: mysql:8.0
+    container_name: door-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-door_root_2024}
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-door_install_db}
+      MYSQL_USER: ${MYSQL_USER:-door_user}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-door_pass_2024}
+      TZ: Asia/Shanghai
+    ports:
+      - "${MYSQL_PORT:-3306}:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./mysql/conf.d:/etc/mysql/conf.d:ro
+    command: >
+      --default-authentication-plugin=mysql_native_password
+      --character-set-server=utf8mb4
+      --collation-server=utf8mb4_unicode_ci
+      --max-connections=500
+      --innodb-buffer-pool-size=256M
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - door-net
+
+  # -------------------- Redis 7.x --------------------
+  redis:
+    image: redis:7-alpine
+    container_name: door-redis
+    restart: unless-stopped
+    ports:
+      - "${REDIS_PORT:-6379}:6379"
+    volumes:
+      - redis_data:/data
+    command: redis-server --appendonly yes --maxmemory 128mb --maxmemory-policy allkeys-lru
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 5
+    networks:
+      - door-net
+
+  # -------------------- Django 后端 (Gunicorn) --------------------
+  django-backend:
+    build:
+      context: ../backend
+      dockerfile: Dockerfile
+    container_name: door-backend
+    restart: unless-stopped
+    env_file:
+      - .env
+    ports:
+      - "${BACKEND_PORT:-8000}:8000"
+    volumes:
+      - ./backend/logs:/app/logs
+      - ./backend/media:/app/media
+    depends_on:
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - door-net
+
+  # -------------------- React 前端 (Nginx) --------------------
+  react-frontend:
+    build:
+      context: ../web-admin
+      dockerfile: Dockerfile
+    container_name: door-frontend
+    restart: unless-stopped
+    ports:
+      - "${FRONTEND_PORT:-80}:80"
+      - "${FRONTEND_HTTPS_PORT:-443}:443"
+    volumes:
+      - ./frontend/ssl:/etc/nginx/ssl:ro
+      - ./backend/media:/usr/share/nginx/html/media:ro
+    depends_on:
+      - django-backend
+    networks:
+      - door-net
+
+  # -------------------- Celery Worker (异步任务) --------------------
+  celery-worker:
+    build:
+      context: ../backend
+      dockerfile: Dockerfile
+    container_name: door-celery-worker
+    restart: unless-stopped
+    env_file:
+      - .env
+    command: ["celery", "-A", "config", "worker", "-l", "info"]
+    volumes:
+      - ./backend/logs:/app/logs
+      - ./backend/media:/app/media
+    depends_on:
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - door-net
+
+  # -------------------- Celery Beat (定时任务) --------------------
+  celery-beat:
+    build:
+      context: ../backend
+      dockerfile: Dockerfile
+    container_name: door-celery-beat
+    restart: unless-stopped
+    env_file:
+      - .env
+    command: ["celery", "-A", "config", "beat", "-l", "info", "--scheduler", "django_celery_beat.schedulers:DatabaseScheduler"]
+    volumes:
+      - ./backend/logs:/app/logs
+    depends_on:
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - door-net
+
+# -------------------- 数据卷 --------------------
+volumes:
+  mysql_data:
+    driver: local
+  redis_data:
+    driver: local
+
+# -------------------- 网络 --------------------
+networks:
+  door-net:
+    driver: bridge

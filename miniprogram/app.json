@@ -1,0 +1,65 @@
+{
+  "pages": [
+    "pages/login/login",
+    "pages/register/register",
+    "pages/index/index",
+    "pages/task-list/task-list",
+    "pages/task-detail/task-detail",
+    "pages/task-submit/task-submit",
+    "pages/order-list/order-list",
+    "pages/order-detail/order-detail",
+    "pages/create-task/create-task",
+    "pages/measurement/measurement",
+    "pages/profile/profile",
+    "pages/maintenance/maintenance",
+    "pages/team/team",
+    "pages/maintenance-detail/maintenance-detail",
+    "pages/measurement-submit/measurement-submit"
+  ],
+  "window": {
+    "backgroundTextStyle": "dark",
+    "navigationBarBackgroundColor": "#1A1A2E",
+    "navigationBarTitleText": "门窗安装管理",
+    "navigationBarTextStyle": "white",
+    "backgroundColor": "#F5F5F7"
+  },
+  "tabBar": {
+    "color": "#8E8E93",
+    "selectedColor": "#C9A96E",
+    "backgroundColor": "#1A1A2E",
+    "borderStyle": "black",
+    "list": [
+      {
+        "pagePath": "pages/index/index",
+        "text": "首页",
+        "iconPath": "assets/tab/home.png",
+        "selectedIconPath": "assets/tab/home-active.png"
+      },
+      {
+        "pagePath": "pages/task-list/task-list",
+        "text": "任务",
+        "iconPath": "assets/tab/task.png",
+        "selectedIconPath": "assets/tab/task-active.png"
+      },
+      {
+        "pagePath": "pages/order-list/order-list",
+        "text": "订单",
+        "iconPath": "assets/tab/order.png",
+        "selectedIconPath": "assets/tab/order-active.png"
+      },
+      {
+        "pagePath": "pages/profile/profile",
+        "text": "我的",
+        "iconPath": "assets/tab/profile.png",
+        "selectedIconPath": "assets/tab/profile-active.png"
+      }
+    ]
+  },
+  "permission": {
+    "scope.userLocation": {
+      "desc": "用于定位客户地址"
+    }
+  },
+  "sitemapLocation": "sitemap.json",
+  "style": "v2"
+}

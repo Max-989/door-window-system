@@ -1,0 +1,111 @@
+<!-- 提交完工报告 -->
+<view class="container">
+  <view class="card">
+    <view class="card-title">任务信息</view>
+    <view class="info-row"><text class="info-label">任务类型</text><text class="info-value">{{task.type}}</text></view>
+    <view class="info-row" wx:if="{{task.orderNo}}"><text class="info-label">关联订单</text><text class="info-value link" bindtap="goToOrder">{{task.orderNo}}</text></view>
+  </view>
+
+  <!-- 安装任务：显示量尺图片+派送图片 -->
+  <block wx:if="{{isInstall}}">
+    <view class="card" wx:if="{{measurementImages.length > 0}}">
+      <view class="card-title">量尺照片</view>
+      <view class="photo-grid">
+        <view class="photo-item" wx:for="{{measurementImages}}" wx:key="index">
+          <image src="{{item}}" mode="aspectFill" bindtap="previewImage" data-urls="{{measurementImages}}" data-url="{{item}}" />
+        </view>
+      </view>
+    </view>
+    <view class="card" wx:if="{{deliveryImages.length > 0}}">
+      <view class="card-title">派送照片</view>
+      <view class="photo-grid">
+        <view class="photo-item" wx:for="{{deliveryImages}}" wx:key="index">
+          <image src="{{item}}" mode="aspectFill" bindtap="previewImage" data-urls="{{deliveryImages}}" data-url="{{item}}" />
+        </view>
+      </view>
+    </view>
+  </block>
+
+  <view class="card">
+    <view class="card-title">完工报告</view>
+
+    <view class="form-group">
+      <text class="form-label"><text class="required">*</text>安装数量</text>
+      <input class="form-input" type="number" placeholder="请输入安装数量" value="{{form.qty}}" bindinput="onInput" data-field="qty" />
+    </view>
+
+    <view class="form-group" wx:if="{{isInstall && rooms.length > 0}}">
+      <text class="form-label">各房安装情况</text>
+      <view class="room-list">
+        <view class="room-item" wx:for="{{rooms}}" wx:key="room">
+          <text class="room-name">{{item.room}}</text>
+          <view class="room-check">
+            <text>🚪 {{item.name}} × </text>
+            <input type="number" value="{{item.qty}}" bindinput="onRoomQtyChange" data-index="{{index}}" style="width:80rpx;text-align:center" />
+          </view>
+        </view>
+      </view>
+    </view>
+
+    <!-- 增项 -->
+    <view class="form-group" wx:if="{{isInstall}}">
+      <view class="section-inner-title">
+        <text>增项</text>
+        <text class="add-extra" bindtap="addExtra">+ 添加增项</text>
+      </view>
+      <view class="extra-item" wx:for="{{extras}}" wx:key="index">
+        <view class="extra-row">
+          <input class="form-input extra-input" placeholder="增项名称" value="{{item.name}}" bindinput="onExtraInput" data-index="{{index}}" data-field="name" />
+          <input class="form-input extra-input" type="number" placeholder="数量" value="{{item.qty}}" bindinput="onExtraInput" data-index="{{index}}" data-field="qty" style="width:120rpx" />
+          <text class="extra-delete" catchtap="removeExtra" data-index="{{index}}">×</text>
+        </view>
+        <textarea class="form-input" placeholder="增项说明（可选）" value="{{item.desc}}" bindinput="onExtraInput" data-index="{{index}}" data-field="desc" auto-height style="margin-top:8rpx" />
+      </view>
+    </view>
+
+    <view class="form-group">
+      <text class="form-label">额外说明（可选）</text>
+      <textarea class="form-input" placeholder="请输入额外说明" value="{{form.extraRemark}}" bindinput="onInput" data-field="extraRemark" maxlength="500" auto-height />
+    </view>
+
+    <view class="form-group">
+      <text class="form-label"><text class="required">*</text>现场照片</text>
+      <view class="photo-grid">
+        <view class="photo-item" wx:for="{{photos}}" wx:key="index">
+          <image src="{{item}}" mode="aspectFill" bindtap="previewPhoto" data-index="{{index}}" />
+          <view class="photo-delete" catchtap="deletePhoto" data-index="{{index}}">×</view>
+        </view>
+        <view class="photo-add" bindtap="addPhoto" wx:if="{{photos.length < 9}}">+</view>
+      </view>
+    </view>
+
+    <view class="form-group">
+      <text class="form-label">备注（可选）</text>
+      <textarea class="form-input" placeholder="有什么需要说明的..." value="{{form.remark}}" bindinput="onInput" data-field="remark" maxlength="500" auto-height />
+    </view>
+  </view>
+
+  <!-- 完成方式选择 -->
+  <view class="card">
+    <view class="form-label" style="margin-bottom:16rpx">完成方式</view>
+    <view class="complete-options">
+      <view class="complete-option {{form.completeType === 'full' ? 'active' : ''}}" bindtap="selectCompleteType" data-type="full">
+        <text class="co-icon">✅</text>
+        <text class="co-text">全部完成</text>
+      </view>
+      <view class="complete-option {{form.completeType === 'partial' ? 'active' : ''}}" bindtap="selectCompleteType" data-type="partial">
+        <text class="co-icon">📋</text>
+        <text class="co-text">部分完成</text>
+        <text class="co-hint">自动生成新任务</text>
+      </view>
+    </view>
+    <view class="form-group" wx:if="{{form.completeType === 'partial'}}" style="margin-top:20rpx">
+      <text class="form-label">未完成原因</text>
+      <textarea class="form-input" placeholder="请说明未完成的部分及原因" value="{{form.partialReason}}" bindinput="onInput" data-field="partialReason" auto-height />
+    </view>
+  </view>
+
+  <view class="bottom-bar">
+    <view class="btn-primary" bindtap="onSubmit" loading="{{submitting}}">提交完工报告</view>
+  </view>
+</view>

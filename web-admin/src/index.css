@@ -1,0 +1,191 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --apple-bg: #F5F5F7;
+  --apple-card: #FFFFFF;
+  --apple-blue: #007AFF;
+  --apple-green: #34C759;
+  --apple-orange: #FF9500;
+  --apple-red: #FF3B30;
+  --apple-text: #1D1D1F;
+  --apple-text-secondary: #86868B;
+  --apple-border: #E5E5EA;
+  --apple-radius-lg: 12px;
+  --apple-radius: 8px;
+  --apple-radius-sm: 4px;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'PingFang SC', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: var(--apple-bg);
+  color: var(--apple-text);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+a {
+  color: var(--apple-blue);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: none;
+  opacity: 0.8;
+}
+
+/* 滚动条 */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.15);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(0, 0, 0, 0.25);
+}
+
+::-webkit-scrollbar-track {
+  background-color: transparent;
+}
+
+/* Ant Design 全局覆盖 */
+
+/* 表格去网格化 - Apple HIG */
+.ant-table-wrapper .ant-table {
+  border-radius: 8px !important;
+  background: #F5F5F7;
+}
+
+.ant-table-thead > tr > th,
+.ant-table-tbody > tr > td {
+  border-bottom: none !important;
+  border-right: none !important;
+}
+
+.ant-table-tbody > tr > td {
+  border-top: 1px solid rgba(0,0,0,0.04);
+}
+
+.ant-table-tbody > tr {
+  height: 64px;
+  transition: background-color 0.15s;
+}
+
+.ant-table-tbody > tr:hover > td {
+  background: rgba(0,122,255,0.03) !important;
+}
+
+.ant-table-thead > tr > th {
+  background: #F5F5F7 !important;
+  color: #86868B !important;
+  font-weight: 500;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  height: 48px;
+}
+
+.ant-table-tbody > tr:last-child > td {
+  border-bottom: none;
+}
+
+.ant-table {
+  background: transparent !important;
+}
+
+.ant-table-cell {
+  padding: 12px 16px !important;
+}
+
+.ant-table-container table > thead > tr:first-child > *:first-child {
+  border-radius: 8px 0 0 0;
+}
+
+.ant-table-container table > thead > tr:first-child > *:last-child {
+  border-radius: 0 8px 0 0;
+}
+
+/* 字体层次 - Apple 字号阶梯 */
+h2 {
+  font-size: 28px !important;
+  font-weight: 700 !important;
+  color: var(--apple-text);
+  letter-spacing: -0.3px;
+}
+
+h3 {
+  font-size: 22px !important;
+  font-weight: 600 !important;
+  color: var(--apple-text);
+}
+
+body {
+  font-size: 14px;
+}
+
+.ant-typography.ant-typography-secondary,
+.ant-form-item-extra,
+.text-secondary {
+  font-size: 12px !important;
+  color: #86868B !important;
+}
+
+/* 卡片柔和阴影 - Apple HIG */
+.ant-card {
+  border-radius: 12px !important;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06), 0 0 1px rgba(0,0,0,0.08) !important;
+  border: none !important;
+}
+
+.ant-btn-primary {
+  box-shadow: none !important;
+}
+
+.ant-btn {
+  border-radius: var(--apple-radius) !important;
+}
+
+.ant-input,
+.ant-input-affix-wrapper,
+.ant-select-selector,
+.ant-picker {
+  border-radius: var(--apple-radius) !important;
+  border-color: var(--apple-border) !important;
+}
+
+.ant-input:focus,
+.ant-input-focused,
+.ant-input-affix-wrapper-focused,
+.ant-select-focused .ant-select-selector {
+  border-color: var(--apple-blue) !important;
+  box-shadow: 0 0 0 2px rgba(0, 122, 255, 0.15) !important;
+}
+
+.ant-btn {
+  border-radius: var(--apple-radius) !important;
+}.ant-modal-content {
+  border-radius: var(--apple-radius-lg) !important;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.15) !important;
+}
+
+.ant-tag {
+  border-radius: var(--apple-radius-sm) !important;
+}
+
+.ant-tabs-ink-bar {
+  background: var(--apple-blue) !important;
+}

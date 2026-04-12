@@ -1,0 +1,48 @@
+<!-- 订单列表 -->
+<view class="container">
+  <view class="search-bar">
+    <view class="search-inner">
+      <text class="search-icon">🔍</text>
+      <input class="search-input" placeholder="搜索订单号 / 客户名" placeholder-class="search-placeholder" value="{{keyword}}" bindinput="onSearch" bindconfirm="doSearch" confirm-type="search" />
+    </view>
+  </view>
+
+  <!-- 滚动筛选标签 -->
+  <scroll-view scroll-x class="filter-scroll" enhanced show-scrollbar="{{false}}">
+    <view class="filter-tabs-scroll">
+      <view class="filter-tab {{activeTab === '全部' ? 'active' : ''}}" bindtap="onTabChange" data-tab="全部">全部</view>
+      <view class="filter-tab {{activeTab === '待确认' ? 'active' : ''}}" bindtap="onTabChange" data-tab="待确认">待确认</view>
+      <view class="filter-tab {{activeTab === '已确认' ? 'active' : ''}}" bindtap="onTabChange" data-tab="已确认">已确认</view>
+      <view class="filter-tab {{activeTab === '生产中' ? 'active' : ''}}" bindtap="onTabChange" data-tab="生产中">生产中</view>
+      <view class="filter-tab {{activeTab === '已发货' ? 'active' : ''}}" bindtap="onTabChange" data-tab="已发货">已发货</view>
+      <view class="filter-tab {{activeTab === '已到货' ? 'active' : ''}}" bindtap="onTabChange" data-tab="已到货">已到货</view>
+      <view class="filter-tab {{activeTab === '已派送' ? 'active' : ''}}" bindtap="onTabChange" data-tab="已派送">已派送</view>
+      <view class="filter-tab {{activeTab === '待安装' ? 'active' : ''}}" bindtap="onTabChange" data-tab="待安装">待安装</view>
+      <view class="filter-tab {{activeTab === '安装中' ? 'active' : ''}}" bindtap="onTabChange" data-tab="安装中">安装中</view>
+      <view class="filter-tab {{activeTab === '已完成' ? 'active' : ''}}" bindtap="onTabChange" data-tab="已完成">已完成</view>
+    </view>
+  </scroll-view>
+
+  <view class="order-card card" wx:for="{{displayOrders}}" wx:key="id" bindtap="goToDetail" data-id="{{item.id}}">
+    <view class="order-header">
+      <text class="order-no">{{item.orderNo}}</text>
+      <text class="tag {{item.statusClass}}">{{item.status}}</text>
+    </view>
+    <view class="order-body">
+      <view class="order-customer-row">
+        <text class="order-customer">{{item.customer}}</text>
+      </view>
+      <text class="order-addr">{{item.address}}</text>
+      <text class="order-products">{{item.products}}</text>
+    </view>
+    <view class="order-footer">
+      <text class="order-date">{{item.createdAt}}</text>
+      <text class="order-total" wx:if="{{showPrice}}">¥{{item.total}}</text>
+    </view>
+  </view>
+
+  <view class="empty-state" wx:if="{{displayOrders.length === 0}}">
+    <text class="icon">📭</text>
+    <text>暂无订单</text>
+  </view>
+</view>

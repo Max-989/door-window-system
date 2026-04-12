@@ -1,0 +1,25 @@
+/* 维修详情页样式 */
+.responsibility-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16rpx;
+}
+.resp-option {
+  padding: 16rpx 28rpx;
+  border-radius: 16rpx;
+  background: #F2F2F7;
+  font-size: 26rpx;
+  color: var(--text-secondary);
+  transition: all 0.2s;
+}
+.resp-option.active {
+  background: var(--accent);
+  color: #fff;
+  font-weight: 600;
+  box-shadow: var(--shadow-accent);
+}
+.remark-text {
+  font-size: 28rpx;
+  color: var(--text-primary);
+  line-height: 1.6;
+}

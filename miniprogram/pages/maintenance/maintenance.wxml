@@ -1,0 +1,36 @@
+<!-- 维修管理页（客户 + 管理员/文员） -->
+<view class="container">
+  <!-- 筛选标签 -->
+  <view class="filter-tabs">
+    <view class="tab {{activeTab === '全部' ? 'active' : ''}}" bindtap="onTabChange" data-tab="全部">全部</view>
+    <view class="tab {{activeTab === '待派单' ? 'active' : ''}}" bindtap="onTabChange" data-tab="待派单">待派单</view>
+    <view class="tab {{activeTab === '已派单' ? 'active' : ''}}" bindtap="onTabChange" data-tab="已派单">已派单</view>
+    <view class="tab {{activeTab === '已完成' ? 'active' : ''}}" bindtap="onTabChange" data-tab="已完成">已完成</view>
+    <view class="tab {{activeTab === '已取消' ? 'active' : ''}}" bindtap="onTabChange" data-tab="已取消">已取消</view>
+    <view class="tab {{activeTab === '部分完成' ? 'active' : ''}}" bindtap="onTabChange" data-tab="部分完成">部分完成</view>
+  </view>
+
+  <view class="task-card card" wx:for="{{displayList}}" wx:key="id" bindtap="goToDetail" data-id="{{item.id}}">
+    <view class="task-header">
+      <text class="task-id">{{item.id}}</text>
+      <text class="tag {{item.statusClass}}">{{item.status}}</text>
+    </view>
+    <view class="task-body">
+      <text class="task-customer">问题：{{item.description}}</text>
+      <text class="task-addr">地址：{{item.address}}</text>
+      <text class="task-time">创建时间：{{item.createdAt}}</text>
+    </view>
+    <view class="task-footer" wx:if="{{item.responsibility}}">
+      <text class="resp-badge">责任方：{{item.responsibility}}</text>
+    </view>
+  </view>
+
+  <view class="empty-state" wx:if="{{displayList.length === 0}}">
+    <text class="icon">🔧</text>
+    <text>暂无维修工单</text>
+  </view>
+
+  <view class="bottom-bar" wx:if="{{showCreateBtn}}">
+    <view class="btn-primary" bindtap="createMaintenance">+ 新建维修工单</view>
+  </view>
+</view>

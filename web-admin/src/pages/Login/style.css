@@ -1,0 +1,264 @@
+.login-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(160deg, #f5f7fa 0%, #c3cfe2 100%);
+  padding: 20px;
+  position: relative;
+}
+
+.login-card {
+  max-width: 420px;
+  width: 100%;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+  position: relative;
+  z-index: 1;
+}
+
+.login-header {
+  text-align: center;
+  padding: 36px 36px 0;
+}
+
+.login-logo {
+  width: 56px;
+  height: 56px;
+  background: #1d1d1f;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 16px;
+  font-size: 28px;
+}
+
+.login-header h1 {
+  font-size: 20px;
+  font-weight: 600;
+  color: #1d1d1f;
+  margin-bottom: 4px;
+  letter-spacing: -0.3px;
+}
+
+.login-header p {
+  font-size: 14px;
+  color: #86868B;
+}
+
+.login-view-toggle {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  font-size: 20px;
+  color: #86868B;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.login-view-toggle:hover {
+  color: #1d1d1f;
+}
+
+.login-body {
+  padding: 24px 36px 36px;
+}
+
+/* 身份选择 */
+.login-identity-select {
+  margin-bottom: 4px;
+}
+
+.login-identity-select .ant-select-selector {
+  border-radius: 8px !important;
+  border-color: rgba(0, 0, 0, 0.15) !important;
+  background: rgba(0, 0, 0, 0.04) !important;
+  color: #1d1d1f !important;
+  height: 44px !important;
+}
+
+.login-identity-select .ant-select-selection-item {
+  color: #1d1d1f !important;
+  line-height: 42px !important;
+}
+
+.login-identity-select .ant-select-arrow {
+  color: #86868B !important;
+}
+
+/* 表单 */
+.login-body .ant-form-item {
+  margin-bottom: 18px;
+}
+
+.login-body .ant-form-item-label > label {
+  color: #1d1d1f;
+}
+
+.login-body .ant-input-affix-wrapper,
+.login-body .ant-input {
+  border-radius: 8px !important;
+  border-color: rgba(0, 0, 0, 0.15) !important;
+  background: rgba(0, 0, 0, 0.04) !important;
+  color: #1d1d1f !important;
+}
+
+.login-body .ant-input-affix-wrapper:hover,
+.login-body .ant-input:hover {
+  border-color: rgba(0, 0, 0, 0.3) !important;
+}
+
+.login-body .ant-input-affix-wrapper-focused,
+.login-body .ant-input:focus {
+  border-color: rgba(0, 0, 0, 0.4) !important;
+  box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.06) !important;
+}
+
+.login-body .ant-input::placeholder,
+.login-body .ant-input-affix-wrapper .ant-input::placeholder {
+  color: rgba(0, 0, 0, 0.35) !important;
+}
+
+.login-body .ant-input-prefix {
+  color: #86868B !important;
+}
+
+.login-form-extra {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 18px;
+}
+
+.login-checkbox-group {
+  display: flex;
+  gap: 16px;
+}
+
+.login-checkbox .ant-checkbox-inner {
+  border-radius: 4px;
+  border-color: rgba(0, 0, 0, 0.25);
+}
+
+.login-checkbox .ant-checkbox-checked .ant-checkbox-inner {
+  background: #1d1d1f;
+  border-color: #1d1d1f;
+}
+
+.login-checkbox + span {
+  color: #86868B;
+  font-size: 13px;
+}
+
+.login-checkbox.ant-checkbox-disabled + span {
+  color: rgba(0, 0, 0, 0.25);
+}
+
+.login-forgot {
+  font-size: 13px;
+  color: #86868B;
+  cursor: pointer;
+}
+
+.login-forgot:hover {
+  color: #1d1d1f;
+  text-decoration: underline;
+}
+
+/* 登录按钮 */
+.login-submit-btn {
+  height: 44px !important;
+  border-radius: 8px !important;
+  font-size: 16px !important;
+  font-weight: 500 !important;
+  background: #1d1d1f !important;
+  border-color: #1d1d1f !important;
+}
+
+.login-submit-btn:hover {
+  background: #3a3a3c !important;
+  border-color: #3a3a3c !important;
+}
+
+/* 扫码视图 */
+.login-qrcode-view {
+  text-align: center;
+  padding: 24px 0 12px;
+}
+
+.login-qrcode-placeholder {
+  width: 200px;
+  height: 200px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 16px;
+  background: rgba(0, 0, 0, 0.03);
+}
+
+.login-qrcode-hint {
+  font-size: 14px;
+  color: #1d1d1f;
+  margin-bottom: 8px;
+}
+
+.login-download-link {
+  font-size: 13px;
+  color: #86868B;
+  cursor: pointer;
+}
+
+.login-download-link:hover {
+  color: #1d1d1f;
+  text-decoration: underline;
+}
+
+/* 底部注册链接 */
+.login-bottom-link {
+  text-align: center;
+  margin-top: 20px;
+  font-size: 14px;
+  color: #86868B;
+}
+
+.login-bottom-link a {
+  color: #1d1d1f;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.login-bottom-link a:hover {
+  text-decoration: underline;
+}
+
+/* 演示账号 */
+.demo-accounts {
+  margin-top: 16px;
+  padding: 12px 14px;
+  background: rgba(0, 0, 0, 0.03);
+  border-radius: 8px;
+  font-size: 12px;
+  color: #86868B;
+}
+
+.demo-accounts h4 {
+  margin-bottom: 4px;
+  color: #1d1d1f;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.demo-accounts code {
+  background: rgba(0, 0, 0, 0.06);
+  padding: 1px 6px;
+  border-radius: 4px;
+  font-size: 12px;
+  color: #1d1d1f;
+}

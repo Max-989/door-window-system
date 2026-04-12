@@ -1,0 +1,139 @@
+<!-- 个人中心 · 黑金Apple HIG -->
+<view class="page-profile">
+  <view class="profile-header">
+    <view class="profile-bg"></view>
+    <view class="profile-info">
+      <image class="avatar" src="{{userInfo.avatar ? userInfo.avatar : '/assets/default-avatar.png'}}" mode="aspectFill" />
+      <view class="info">
+        <text class="name">{{userInfo.name}}</text>
+        <text class="phone" wx:if="{{userInfo.phone}}">{{userInfo.phone}}</text>
+        <text class="role-badge">{{role}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 师傅/工头：工资概览 -->
+  <view class="card" style="margin: -32rpx 32rpx 24rpx; position: relative; z-index: 1;" wx:if="{{showWorkerInfo}}">
+    <view class="card-title">工资概览</view>
+    <view class="salary-row">
+      <view class="salary-item">
+        <text class="salary-num accent">¥{{salary.monthly}}</text>
+        <text class="salary-label">本月工费</text>
+      </view>
+      <view class="salary-divider"></view>
+      <view class="salary-item">
+        <text class="salary-num accent">¥{{salary.balance}}</text>
+        <text class="salary-label">累计工费</text>
+      </view>
+      <view class="salary-divider"></view>
+      <view class="salary-item">
+        <text class="salary-num accent">{{salary.taskCount}}</text>
+        <text class="salary-label">完工任务</text>
+      </view>
+    </view>
+    <view class="btn-outline" style="margin-top:24rpx" bindtap="viewSalaryDetail">查看工资明细 →</view>
+  </view>
+
+  <!-- 工头：团队概览 -->
+  <view class="card" style="margin: 0 32rpx 24rpx;" wx:if="{{isForeman}}">
+    <view class="card-title">团队概览</view>
+    <view class="salary-row">
+      <view class="salary-item">
+        <text class="salary-num accent">{{teamInfo.memberCount}}</text>
+        <text class="salary-label">团队成员</text>
+      </view>
+      <view class="salary-divider"></view>
+      <view class="salary-item">
+        <text class="salary-num accent">{{teamInfo.todayTasks}}</text>
+        <text class="salary-label">今日任务</text>
+      </view>
+      <view class="salary-divider"></view>
+      <view class="salary-item">
+        <text class="salary-num accent">¥{{teamInfo.monthCommission}}</text>
+        <text class="salary-label">本月提成</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 菜单列表 -->
+  <view class="card" style="margin: 0 32rpx 24rpx;">
+    <!-- 师傅/工头 -->
+    <view class="menu-item" bindtap="viewSalaryDetail" wx:if="{{showWorkerInfo}}">
+      <view class="menu-left">
+        <text class="menu-icon">💰</text>
+        <text>工资明细</text>
+      </view>
+      <text class="menu-arrow">›</text>
+    </view>
+
+    <view class="menu-item" bindtap="viewTeam" wx:if="{{isForeman}}">
+      <view class="menu-left">
+        <text class="menu-icon">👥</text>
+        <text>团队管理</text>
+      </view>
+      <text class="menu-arrow">›</text>
+    </view>
+
+    <view class="menu-item" bindtap="viewCommission" wx:if="{{isForeman}}">
+      <view class="menu-left">
+        <text class="menu-icon">📊</text>
+        <text>提成详情</text>
+      </view>
+      <text class="menu-arrow">›</text>
+    </view>
+
+    <!-- 装企文员 -->
+    <view class="menu-item" bindtap="goToOrders" wx:if="{{isClerk}}">
+      <view class="menu-left">
+        <text class="menu-icon">📦</text>
+        <text>订单管理</text>
+      </view>
+      <text class="menu-arrow">›</text>
+    </view>
+
+    <view class="menu-item" bindtap="goToMaintenance" wx:if="{{isClerk}}">
+      <view class="menu-left">
+        <text class="menu-icon">🔧</text>
+        <text>维修管理</text>
+      </view>
+      <text class="menu-arrow">›</text>
+    </view>
+
+    <!-- 通用 -->
+    <view class="menu-item" bindtap="editInfo">
+      <view class="menu-left">
+        <text class="menu-icon">✏️</text>
+        <text>编辑信息</text>
+      </view>
+      <text class="menu-arrow">›</text>
+    </view>
+
+    <view class="menu-item" bindtap="editBankCard" wx:if="{{showWorkerInfo}}">
+      <view class="menu-left">
+        <text class="menu-icon">🏦</text>
+        <text>银行卡号</text>
+      </view>
+      <text class="menu-arrow">›</text>
+    </view>
+
+    <view class="menu-item" bindtap="bindPhone" wx:if="{{!userInfo.phone}}">
+      <view class="menu-left">
+        <text class="menu-icon">📱</text>
+        <text>绑定手机</text>
+      </view>
+      <text class="menu-arrow">›</text>
+    </view>
+
+    <view class="menu-item" bindtap="about">
+      <view class="menu-left">
+        <text class="menu-icon">ℹ️</text>
+        <text>关于系统</text>
+      </view>
+      <text class="menu-arrow">›</text>
+    </view>
+  </view>
+
+  <view style="padding: 24rpx 32rpx;">
+    <view class="btn-danger" bindtap="logout">退出登录</view>
+  </view>
+</view>

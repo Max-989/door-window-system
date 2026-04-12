@@ -1,0 +1,31 @@
+/* 量尺预约样式 */
+.room-item {
+  padding: 20rpx;
+  background: #F2F2F7;
+  border-radius: 16rpx;
+  margin-bottom: 16rpx;
+}
+.room-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12rpx;
+}
+.room-name { font-size: 28rpx; font-weight: 600; color: var(--text-primary); }
+.room-delete {
+  font-size: 24rpx;
+  color: var(--danger);
+  padding: 4rpx 12rpx;
+}
+.add-room {
+  text-align: center;
+  padding: 20rpx;
+  color: var(--accent);
+  font-size: 28rpx;
+  font-weight: 500;
+  border: 2rpx dashed var(--accent);
+  border-radius: 16rpx;
+  background: var(--accent-light);
+  transition: all 0.2s;
+}
+.add-room:active { background: #E8D9B8; }

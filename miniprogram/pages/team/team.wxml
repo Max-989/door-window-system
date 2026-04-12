@@ -1,0 +1,89 @@
+<!-- 团队管理 · 黑金Apple HIG -->
+<view class="page-team">
+  <view class="search-bar">
+    <view class="search-input-wrap">
+      <text class="search-icon">🔍</text>
+      <input class="search-input" placeholder="搜索团队成员" placeholder-style="color:#AEAEB2" value="{{searchText}}" bindinput="onSearch" />
+    </view>
+  </view>
+
+  <view class="filter-tabs">
+    <view class="filter-tab {{activeFilter === 'all' ? 'active' : ''}}" bindtap="setFilter" data-filter="all">全部</view>
+    <view class="filter-tab {{activeFilter === '量尺' ? 'active' : ''}}" bindtap="setFilter" data-filter="量尺">量尺</view>
+    <view class="filter-tab {{activeFilter === '安装' ? 'active' : ''}}" bindtap="setFilter" data-filter="安装">安装</view>
+    <view class="filter-tab {{activeFilter === '维修' ? 'active' : ''}}" bindtap="setFilter" data-filter="维修">维修</view>
+  </view>
+
+  <view class="stats-card card">
+    <view class="stats-row">
+      <view class="stat-item">
+        <text class="stat-num accent">{{members.length}}</text>
+        <text class="stat-label">成员</text>
+      </view>
+      <view class="stat-item">
+        <text class="stat-num accent">{{onlineCount}}</text>
+        <text class="stat-label">在线</text>
+      </view>
+      <view class="stat-item">
+        <text class="stat-num accent">{{todayTasks}}</text>
+        <text class="stat-label">今日任务</text>
+      </view>
+    </view>
+  </view>
+
+  <view class="section-title">师傅列表</view>
+  <view class="member-card card" wx:for="{{filteredMembers}}" wx:key="id">
+    <view class="member-info">
+      <view class="member-avatar {{item.online ? 'online' : ''}}">
+        <text>{{item.name[0]}}</text>
+      </view>
+      <view class="member-detail">
+        <view class="member-name-row">
+          <text class="member-name">{{item.name}}</text>
+          <text class="member-status {{item.online ? 'online' : ''}}">{{item.online ? '在线' : '离线'}}</text>
+        </view>
+        <text class="member-skills">{{item.skills}}</text>
+        <text class="member-stats">已完工：{{item.completed}}  ·  累计收入：¥{{item.earnings}}</text>
+      </view>
+    </view>
+    <view class="member-actions">
+      <view class="btn-call" catchtap="callMember" data-phone="{{item.phone}}">📞</view>
+      <view class="btn-remove" catchtap="removeMember" data-id="{{item.id}}" data-name="{{item.name}}">✕</view>
+    </view>
+  </view>
+
+  <view class="empty-state" wx:if="{{filteredMembers.length === 0}}">
+    <text class="icon">🔍</text>
+    <text>没有匹配的成员</text>
+  </view>
+
+  <!-- 添加成员 -->
+  <view class="section-title" style="margin-top:24rpx">添加成员</view>
+  <view class="card">
+    <view class="form-group">
+      <text class="form-label">师傅姓名</text>
+      <input class="form-input" placeholder="请输入姓名" value="{{newMember.name}}" bindinput="onNewMemberInput" data-field="name" />
+    </view>
+    <view class="form-group">
+      <text class="form-label">联系电话</text>
+      <input class="form-input" type="number" placeholder="请输入电话" value="{{newMember.phone}}" bindinput="onNewMemberInput" data-field="phone" />
+    </view>
+    <view class="form-group">
+      <text class="form-label">技能</text>
+      <picker range="{{skillOptions}}" value="{{newMember.skillIndex}}" bindchange="onNewSkillChange">
+        <view class="form-input picker-value">{{skillOptions[newMember.skillIndex]}}</view>
+      </picker>
+    </view>
+    <view class="btn-outline" bindtap="addMember">+ 添加到团队</view>
+  </view>
+
+  <!-- 提成设置 -->
+  <view class="section-title" style="margin-top:24rpx">提成设置</view>
+  <view class="card">
+    <view class="form-group">
+      <text class="form-label">提成比例(%)</text>
+      <input class="form-input" type="digit" placeholder="如：10" value="{{commissionRate}}" bindinput="onRateChange" />
+    </view>
+    <view class="btn-outline" style="margin-top:12rpx" bindtap="saveCommission">保存设置</view>
+  </view>
+</view>

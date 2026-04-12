@@ -1,0 +1,89 @@
+/* 个人中心 · 黑金Apple HIG */
+.page-profile {
+  min-height: 100vh;
+  background: var(--bg);
+  padding-bottom: calc(32rpx + env(safe-area-inset-bottom));
+}
+
+/* 顶部深色区域 */
+.profile-header { position: relative; padding-top: 0; }
+.profile-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 320rpx;
+  background: linear-gradient(180deg, var(--primary) 0%, var(--primary-light) 100%);
+}
+.profile-info {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  padding: 64rpx 32rpx 48rpx;
+}
+.profile-header .avatar {
+  width: 128rpx;
+  height: 128rpx;
+  border-radius: 50%;
+  border: 4rpx solid var(--accent);
+  margin-right: 28rpx;
+  flex-shrink: 0;
+}
+.info { display: flex; flex-direction: column; }
+.name {
+  font-size: 38rpx;
+  font-weight: 600;
+  color: #FFFFFF;
+  display: block;
+}
+.phone {
+  font-size: 26rpx;
+  color: rgba(255,255,255,0.6);
+  margin-top: 8rpx;
+  display: block;
+}
+.role-badge {
+  display: inline-block;
+  margin-top: 12rpx;
+  background: rgba(201,169,110,0.2);
+  color: var(--accent);
+  font-size: 22rpx;
+  padding: 6rpx 20rpx;
+  border-radius: var(--radius-xl);
+  border: 1rpx solid rgba(201,169,110,0.3);
+  align-self: flex-start;
+}
+
+/* 工费 */
+.card-title {
+  font-size: 30rpx;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 24rpx;
+}
+.salary-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+}
+.salary-item { text-align: center; flex: 1; }
+.salary-num { display: block; font-size: 36rpx; font-weight: 700; }
+.salary-num.accent { color: var(--accent); }
+.salary-label { font-size: 24rpx; color: var(--text-secondary); margin-top: 8rpx; display: block; }
+.salary-divider { width: 1rpx; height: 64rpx; background: var(--border); }
+
+/* 菜单 */
+.menu-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 32rpx 0;
+  font-size: 30rpx;
+  color: var(--text-primary);
+  transition: background 0.15s ease;
+}
+.menu-item:active { background: #F8F8FA; margin: 0 -32rpx; padding: 32rpx; border-radius: var(--radius-lg); }
+.menu-left { display: flex; align-items: center; gap: 16rpx; }
+.menu-icon { font-size: 36rpx; }
+.menu-arrow { color: var(--text-hint); font-size: 32rpx; font-weight: 300; }

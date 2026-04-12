@@ -1,0 +1,18 @@
+-r base.txt
+
+# Testing
+pytest>=7.4,<8.0
+pytest-django>=4.8,<5.0
+pytest-cov>=4.1,<5.0
+factory-boy>=3.3,<4.0
+freezegun>=1.2,<2.0
+psutil>=5.9,<6.0  # 用于健康检查
+
+# Code Quality
+black>=23.12,<24.0
+flake8>=7.0,<8.0
+isort>=5.13,<6.0
+pre-commit>=3.6,<4.0
+
+# Documentation
+drf-yasg>=1.21,<2.0  # Swagger/OpenAPI文档生成

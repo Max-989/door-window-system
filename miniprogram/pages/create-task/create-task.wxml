@@ -1,0 +1,63 @@
+<!-- 快速创建任务（点对点） -->
+<view class="container">
+  <view class="card">
+    <view class="card-title">任务类型</view>
+    <view class="type-select">
+      <view class="type-option {{form.type === '安装' ? 'active' : ''}}" bindtap="selectType" data-type="安装">🚪 安装</view>
+      <view class="type-option {{form.type === '维修' ? 'active' : ''}}" bindtap="selectType" data-type="维修">🔧 维修</view>
+      <view class="type-option {{form.type === '送货' ? 'active' : ''}}" bindtap="selectType" data-type="送货">🚚 送货</view>
+    </view>
+  </view>
+
+  <view class="card">
+    <view class="form-group">
+      <text class="form-label"><text class="required">*</text>客户姓名</text>
+      <input class="form-input" placeholder="请输入" value="{{form.customer}}" bindinput="onInput" data-field="customer" />
+    </view>
+    <view class="form-group">
+      <text class="form-label"><text class="required">*</text>联系电话</text>
+      <input class="form-input" type="number" placeholder="请输入" value="{{form.phone}}" bindinput="onInput" data-field="phone" />
+    </view>
+    <view class="form-group">
+      <text class="form-label"><text class="required">*</text>安装地址</text>
+      <input class="form-input" placeholder="请输入详细地址" value="{{form.address}}" bindinput="onInput" data-field="address" />
+    </view>
+
+    <view class="form-group">
+      <text class="form-label">品牌门店（可选）</text>
+      <picker range="{{brands}}" value="{{brandIndex}}" bindchange="onBrandChange">
+        <view class="form-input picker-value">{{brandIndex >= 0 ? brands[brandIndex] : '请选择'}}</view>
+      </picker>
+    </view>
+
+    <view class="form-group">
+      <text class="form-label">关联订单（可选）</text>
+      <input class="form-input" placeholder="请输入订单号" value="{{form.orderNo}}" bindinput="onInput" data-field="orderNo" />
+    </view>
+
+    <view class="form-group" wx:if="{{form.type === '维修'}}">
+      <text class="form-label"><text class="required">*</text>故障描述</text>
+      <textarea class="form-input" placeholder="请详细描述问题" value="{{form.description}}" bindinput="onInput" data-field="description" auto-height />
+    </view>
+
+    <view class="form-group">
+      <text class="form-label">尺寸单/现场照片</text>
+      <view class="photo-grid">
+        <view class="photo-item" wx:for="{{photos}}" wx:key="index">
+          <image src="{{item}}" mode="aspectFill" />
+          <view class="photo-delete" catchtap="delPhoto" data-index="{{index}}">×</view>
+        </view>
+        <view class="photo-add" bindtap="addPhoto" wx:if="{{photos.length < 9}}">+</view>
+      </view>
+    </view>
+
+    <view class="form-group">
+      <text class="form-label">备注</text>
+      <textarea class="form-input" placeholder="可选" value="{{form.remark}}" bindinput="onInput" data-field="remark" auto-height />
+    </view>
+  </view>
+
+  <view class="bottom-bar">
+    <view class="btn-primary" bindtap="onSubmit" loading="{{submitting}}">提交任务</view>
+  </view>
+</view>

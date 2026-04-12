@@ -1,0 +1,107 @@
+<!-- 首页 · 黑金Apple HIG · 根据身份显示不同内容 -->
+<view class="page-index">
+  <view class="nav-bar">
+    <text class="nav-title">工作台</text>
+    <image class="nav-avatar" src="{{userInfo.avatar ? userInfo.avatar : '/assets/default-avatar.png'}}" mode="aspectFill" />
+  </view>
+
+  <view class="header">
+    <view class="user-info">
+      <image class="avatar" src="{{userInfo.avatar ? userInfo.avatar : '/assets/default-avatar.png'}}" mode="aspectFill" />
+      <view class="user-text">
+        <text class="user-name">{{userInfo.name ? userInfo.name : '未登录'}}</text>
+        <text class="user-role">{{role}}</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 客户/装企不显示统计卡片，乙方显示 -->
+  <block wx:if="{{identity === 'partner'}}">
+    <view class="stats-card card">
+      <view class="stats-row">
+        <view class="stat-item" bindtap="goToTask" data-status="已派单">
+          <text class="stat-num">{{stats.pending}}</text>
+          <text class="stat-label">已派单</text>
+        </view>
+        <view class="stat-item" bindtap="goToTask" data-status="进行中">
+          <text class="stat-num">{{stats.progress}}</text>
+          <text class="stat-label">进行中</text>
+        </view>
+        <view class="stat-item" bindtap="goToTask" data-status="已完成">
+          <text class="stat-num">{{stats.done}}</text>
+          <text class="stat-label">已完成</text>
+        </view>
+      </view>
+    </view>
+  </block>
+
+  <!-- 客户统计 -->
+  <block wx:if="{{identity === 'customer'}}">
+    <view class="stats-card card">
+      <view class="stats-row">
+        <view class="stat-item" bindtap="goToOrders">
+          <text class="stat-num">{{stats.pending + stats.progress}}</text>
+          <text class="stat-label">进行中</text>
+        </view>
+        <view class="stat-item" bindtap="goToOrders">
+          <text class="stat-num">{{stats.done}}</text>
+          <text class="stat-label">已完成</text>
+        </view>
+      </view>
+    </view>
+  </block>
+
+  <!-- 装企统计 -->
+  <block wx:if="{{identity === 'contractor'}}">
+    <view class="stats-card card">
+      <view class="stats-row">
+        <view class="stat-item" bindtap="goToOrders">
+          <text class="stat-num">{{stats.pending}}</text>
+          <text class="stat-label">待处理</text>
+        </view>
+        <view class="stat-item" bindtap="goToOrders">
+          <text class="stat-num">{{stats.progress}}</text>
+          <text class="stat-label">进行中</text>
+        </view>
+        <view class="stat-item" bindtap="goToOrders">
+          <text class="stat-num">{{stats.done}}</text>
+          <text class="stat-label">已完成</text>
+        </view>
+      </view>
+    </view>
+  </block>
+
+  <!-- 快捷操作菜单 -->
+  <view class="section-title" style="padding-left:32rpx">
+    <text wx:if="{{identity === 'customer'}}">我的服务</text>
+    <text wx:elif="{{identity === 'contractor'}}">工作台</text>
+    <text wx:else>快捷操作</text>
+  </view>
+  <view class="quick-actions">
+    <view class="action-item" wx:for="{{currentMenus}}" wx:key="text" data-action="{{item.action}}" bindtap="onMenuTap">
+      <view class="action-icon">{{item.icon}}</view>
+      <text>{{item.text}}</text>
+    </view>
+  </view>
+
+  <!-- 最近任务（乙方显示） -->
+  <block wx:if="{{identity === 'partner'}}">
+    <view class="section-title" style="padding-left:32rpx">最新任务</view>
+    <view class="card" style="margin-left:32rpx;margin-right:32rpx" wx:for="{{recentTasks}}" wx:key="id" bindtap="goToTaskDetail" data-id="{{item.id}}">
+      <view class="task-row">
+        <view class="task-info">
+          <text class="task-type">{{item.type}}</text>
+          <text class="task-customer">{{item.customer}}  {{item.phone}}</text>
+          <text class="task-addr">{{item.address}}</text>
+        </view>
+        <view class="task-right">
+          <text class="tag {{item.statusClass}}">{{item.status}}</text>
+        </view>
+      </view>
+    </view>
+    <view class="empty-state" wx:if="{{recentTasks.length === 0}}">
+      <text class="icon">📭</text>
+      <text>暂无任务</text>
+    </view>
+  </block>
+</view>

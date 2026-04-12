@@ -1,0 +1,43 @@
+<!-- 任务列表 -->
+<view class="container">
+  <view class="filter-tabs">
+    <view class="tab {{activeTab === '全部' ? 'active' : ''}}" bindtap="onTabChange" data-tab="全部">全部</view>
+    <view class="tab {{activeTab === '待派单' ? 'active' : ''}}" bindtap="onTabChange" data-tab="待派单">待派单</view>
+    <view class="tab {{activeTab === '已派单' ? 'active' : ''}}" bindtap="onTabChange" data-tab="已派单">已派单</view>
+    <view class="tab {{activeTab === '进行中' ? 'active' : ''}}" bindtap="onTabChange" data-tab="进行中">进行中</view>
+    <view class="tab {{activeTab === '已完成' ? 'active' : ''}}" bindtap="onTabChange" data-tab="已完成">已完成</view>
+    <view class="tab {{activeTab === '已取消' ? 'active' : ''}}" bindtap="onTabChange" data-tab="已取消">已取消</view>
+    <view class="tab {{activeTab === '部分完成' ? 'active' : ''}}" bindtap="onTabChange" data-tab="部分完成">部分完成</view>
+  </view>
+
+  <view class="type-filter" wx:if="{{showTypeFilter}}">
+    <picker range="{{types}}" value="{{typeIndex}}" bindchange="onTypeChange">
+      <text class="type-value">{{types[typeIndex] ? types[typeIndex] : '全部类型'}}</text>
+      <text class="type-arrow">›</text>
+    </picker>
+  </view>
+
+  <view class="task-list" wx:if="{{displayTasks.length > 0}}">
+    <view class="task-card card" wx:for="{{displayTasks}}" wx:key="id" bindtap="goToDetail" data-id="{{item.id}}">
+      <view class="task-header">
+        <text class="task-id">{{item.id}}</text>
+        <text class="tag {{item.statusClass}}">{{item.status}}</text>
+      </view>
+      <view class="task-body">
+        <text class="task-type">{{item.type}}任务</text>
+        <text class="task-customer">客户：{{item.customer}}</text>
+        <text class="task-addr">地址：{{item.address}}</text>
+        <text class="task-time">创建：{{item.createdAt}}</text>
+      </view>
+      <view class="task-footer" wx:if="{{item.status === '已派单' && isWorker}}">
+        <view class="btn-small btn-accept" catchtap="onAccept" data-id="{{item.id}}">接单</view>
+        <view class="btn-small btn-reject" catchtap="onReject" data-id="{{item.id}}">拒单</view>
+      </view>
+    </view>
+  </view>
+
+  <view class="empty-state" wx:if="{{displayTasks.length === 0}}">
+    <text class="icon">📋</text>
+    <text>暂无任务</text>
+  </view>
+</view>

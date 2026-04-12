@@ -1,0 +1,66 @@
+<!-- measurement-submit 量尺师傅提交量尺结果 -->
+<view class="container">
+  <view class="status-header">
+    <view class="status-top">
+      <text class="status-text">量尺报告</text>
+      <text class="status-badge">{{task.id}}</text>
+    </view>
+    <text class="status-sub">{{task.customer}} - {{task.address}}</text>
+  </view>
+
+  <view class="card">
+    <view class="card-title">量尺明细（按门种+房间）</view>
+    <view class="measure-item" wx:for="{{rooms}}" wx:key="index">
+      <view class="measure-header">
+        <text class="measure-room">房间 {{index + 1}}：{{item.room}}</text>
+        <text class="measure-delete" catchtap="removeRoom" data-index="{{index}}" wx:if="{{rooms.length > 1}}">删除</text>
+      </view>
+      <view class="form-group">
+        <text class="form-label">门种</text>
+        <picker range="{{doorTypes}}" value="{{item.typeIndex}}" bindchange="onDoorTypeChange" data-index="{{index}}">
+          <view class="form-input picker-value">{{item.doorType ? item.doorType : '请选择门种'}}</view>
+        </picker>
+      </view>
+      <view class="form-group">
+        <text class="form-label">数量</text>
+        <input class="form-input" type="number" placeholder="1" value="{{item.qty}}" bindinput="onRoomInput" data-index="{{index}}" data-field="qty" />
+      </view>
+      <view class="form-group">
+        <text class="form-label">宽度(mm)</text>
+        <input class="form-input" type="digit" placeholder="如 900" value="{{item.width}}" bindinput="onRoomInput" data-index="{{index}}" data-field="width" />
+      </view>
+      <view class="form-group">
+        <text class="form-label">高度(mm)</text>
+        <input class="form-input" type="digit" placeholder="如 2100" value="{{item.height}}" bindinput="onRoomInput" data-index="{{index}}" data-field="height" />
+      </view>
+      <view class="form-group">
+        <text class="form-label">备注</text>
+        <input class="form-input" placeholder="特殊说明" value="{{item.remark}}" bindinput="onRoomInput" data-index="{{index}}" data-field="remark" />
+      </view>
+      <view class="divider" />
+    </view>
+    <view class="add-room" bindtap="addRoom">+ 添加房间</view>
+  </view>
+
+  <view class="card">
+    <view class="form-group">
+      <text class="form-label"><text class="required">*</text>现场照片</text>
+      <view class="photo-grid">
+        <view class="photo-item" wx:for="{{photos}}" wx:key="index">
+          <image src="{{item}}" mode="aspectFill" />
+          <view class="photo-delete" catchtap="delPhoto" data-index="{{index}}">×</view>
+        </view>
+        <view class="photo-add" bindtap="addPhoto" wx:if="{{photos.length < 9}}">+</view>
+      </view>
+    </view>
+
+    <view class="form-group">
+      <text class="form-label">整体备注</text>
+      <textarea class="form-input" placeholder="量尺整体备注（可选）" value="{{form.remark}}" bindinput="onInput" data-field="remark" auto-height />
+    </view>
+  </view>
+
+  <view class="bottom-bar">
+    <view class="btn-primary" bindtap="onSubmit" loading="{{submitting}}">提交量尺报告</view>
+  </view>
+</view>

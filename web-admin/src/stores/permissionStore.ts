@@ -1,0 +1,100 @@
+import { create } from 'zustand'
+import useAuthStore from './auth.store'
+
+interface MenuItem {
+  id: number
+  name: string
+  code: string
+  path: string
+  icon?: string
+  menu_type?: string
+  children?: MenuItem[]
+}
+
+interface PermissionState {
+  menus: MenuItem[]
+  permissions: string[]
+  loading: boolean
+  initialized: boolean
+  fetchMenus: () => Promise<void>
+  fetchPermissions: () => Promise<void>
+  initPermissions: () => Promise<void>
+  hasPermission: (code: string) => boolean
+  hasMenuPermission: (menuCode: string) => boolean
+  clearPermissions: () => void
+}
+
+const API_BASE = '/api/permissions'
+
+
+const usePermissionStore = create<PermissionState>()((set, get) => ({
+  menus: [],
+  permissions: [],
+  loading: false,
+  initialized: false,
+
+  fetchMenus: async () => {
+    const token = useAuthStore.getState().token
+    const res = await fetch(`${API_BASE}/my-menus/`, {
+      headers: { Authorization: `Bearer ${token}` },
+    })
+    if (!res.ok) throw new Error('Failed to fetch menus')
+    const data = await res.json()
+    // 后端返回裸数组或 { menus: [...] }
+    const menuList = Array.isArray(data) ? data : (data.menus || [])
+    set({ menus: menuList })
+  },
+
+  fetchPermissions: async () => {
+    const token = useAuthStore.getState().token
+    const res = await fetch(`${API_BASE}/my-permissions/`, {
+      headers: { Authorization: `Bearer ${token}` },
+    })
+    if (!res.ok) throw new Error('Failed to fetch permissions')
+    const data = await res.json()
+    set({ permissions: data.permissions || [] })
+  },
+
+  initPermissions: async () => {
+    const { initialized } = get()
+    if (initialized) return
+    set({ loading: true })
+    try {
+      await Promise.all([get().fetchMenus(), get().fetchPermissions()])
+    } catch (e) {
+      // API 失败时默认放行，避免白屏
+      console.warn('Permission init failed, defaulting to allow:', e)
+    }
+    set({ loading: false, initialized: true })
+  },
+
+  hasPermission: (code: string) => {
+    const { permissions, initialized } = get()
+    if (!initialized) return false
+    // 权限为空时默认放行
+    if (permissions.length === 0) return true
+    return permissions.includes(code)
+  },
+
+  hasMenuPermission: (menuCode: string) => {
+    const { menus, initialized } = get()
+    // 未获取菜单数据时禁止访问
+    if (!initialized) return false
+    // 菜单为空时也默认放行（可能后端未配置或开发模式）
+    if (menus.length === 0) return true
+    // 检查菜单树中是否有该 code
+    const findMenu = (items: MenuItem[]): boolean => {
+      for (const item of items) {
+        if (item.code === menuCode) return true
+        if (item.children?.length && findMenu(item.children)) return true
+      }
+      return false
+    }
+    return findMenu(menus)
+  },
+
+  clearPermissions: () => set({ menus: [], permissions: [], initialized: false }),
+}))
+
+export default usePermissionStore
+export type { MenuItem }

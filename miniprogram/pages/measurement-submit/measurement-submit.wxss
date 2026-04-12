@@ -1,0 +1,32 @@
+/* 量尺提交页样式 */
+.measure-item {
+  margin-bottom: 8rpx;
+}
+.measure-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20rpx;
+}
+.measure-room {
+  font-size: 30rpx;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+.measure-delete {
+  font-size: 26rpx;
+  color: var(--danger);
+  padding: 8rpx 16rpx;
+}
+.add-room {
+  margin-top: 20rpx;
+  padding: 24rpx;
+  text-align: center;
+  color: var(--accent);
+  font-size: 28rpx;
+  font-weight: 500;
+  border: 2rpx dashed var(--accent);
+  border-radius: 16rpx;
+  background: var(--accent-light);
+}
+.add-room:active { background: #EDE3CC; }

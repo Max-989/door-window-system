@@ -1,0 +1,218 @@
+.register-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(160deg, #f5f7fa 0%, #c3cfe2 100%);
+  padding: 20px;
+  position: relative;
+}
+
+.register-card {
+  max-width: 460px;
+  width: 100%;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+  position: relative;
+  z-index: 1;
+}
+
+.register-header {
+  text-align: center;
+  padding: 32px 36px 0;
+}
+
+.register-logo {
+  width: 56px;
+  height: 56px;
+  background: #1d1d1f;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 16px;
+  font-size: 28px;
+}
+
+.register-header h1 {
+  font-size: 20px;
+  font-weight: 600;
+  color: #1d1d1f;
+  margin-bottom: 4px;
+}
+
+.register-header p {
+  font-size: 14px;
+  color: #86868B;
+}
+
+.register-body {
+  padding: 16px 36px 36px;
+}
+
+/* 身份选择 Tab */
+.register-identity-tabs {
+  display: flex;
+  width: 100%;
+}
+
+.register-identity-tabs .ant-radio-button-wrapper {
+  flex: 1;
+  text-align: center;
+  height: 40px;
+  line-height: 38px;
+  border-color: rgba(0, 0, 0, 0.15) !important;
+  background: rgba(0, 0, 0, 0.03) !important;
+  color: #86868B !important;
+}
+
+.register-identity-tabs .ant-radio-button-wrapper-checked {
+  border-color: rgba(0, 0, 0, 0.3) !important;
+  color: #1d1d1f !important;
+  background: rgba(0, 0, 0, 0.06) !important;
+}
+
+.register-identity-tabs .ant-radio-button-wrapper:first-child {
+  border-radius: 8px 0 0 8px;
+}
+
+.register-identity-tabs .ant-radio-button-wrapper:last-child {
+  border-radius: 0 8px 8px 0;
+}
+
+/* 表单 */
+.register-body .ant-form-item {
+  margin-bottom: 16px;
+}
+
+.register-body .ant-form-item-label > label {
+  font-size: 13px;
+  color: #1d1d1f;
+}
+
+.register-body .ant-input-affix-wrapper,
+.register-body .ant-input {
+  border-radius: 8px !important;
+  border-color: rgba(0, 0, 0, 0.15) !important;
+  background: rgba(0, 0, 0, 0.04) !important;
+  color: #1d1d1f !important;
+}
+
+.register-body .ant-input-affix-wrapper:hover,
+.register-body .ant-input:hover {
+  border-color: rgba(0, 0, 0, 0.3) !important;
+}
+
+.register-body .ant-input-affix-wrapper-focused,
+.register-body .ant-input:focus {
+  border-color: rgba(0, 0, 0, 0.4) !important;
+  box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.06) !important;
+}
+
+.register-body .ant-input::placeholder,
+.register-body .ant-input-affix-wrapper .ant-input::placeholder {
+  color: rgba(0, 0, 0, 0.35) !important;
+}
+
+.register-body .ant-input-prefix {
+  color: #86868B !important;
+}
+
+/* Select 下拉 */
+.register-body .ant-select-selector {
+  border-color: rgba(0, 0, 0, 0.15) !important;
+  background: rgba(0, 0, 0, 0.04) !important;
+  color: #1d1d1f !important;
+}
+
+.register-body .ant-select-selection-item {
+  color: #1d1d1f !important;
+}
+
+.register-body .ant-select-selection-placeholder {
+  color: rgba(0, 0, 0, 0.35) !important;
+}
+
+.register-body .ant-select-arrow {
+  color: #86868B !important;
+}
+
+/* Radio 文字颜色 */
+.register-body .ant-radio-wrapper,
+.register-body .ant-radio {
+  color: #1d1d1f !important;
+}
+
+/* Checkbox 文字颜色 */
+.register-body .ant-checkbox-wrapper {
+  color: #1d1d1f !important;
+}
+
+/* Divider */
+.register-body .ant-divider {
+  border-color: rgba(0, 0, 0, 0.08);
+}
+
+/* 验证码行 */
+.register-sms-row {
+  display: flex;
+  gap: 10px;
+}
+
+.register-sms-btn {
+  flex-shrink: 0;
+  width: 110px;
+  border-radius: 8px !important;
+  height: 40px !important;
+  border-color: rgba(0, 0, 0, 0.2) !important;
+  color: #1d1d1f !important;
+  background: rgba(0, 0, 0, 0.04) !important;
+}
+
+.register-sms-btn:hover:not(:disabled) {
+  background: rgba(0, 0, 0, 0.08) !important;
+  border-color: rgba(0, 0, 0, 0.35) !important;
+}
+
+/* 上传组件 */
+.register-upload .ant-upload {
+  border-radius: 8px;
+  border-color: rgba(0, 0, 0, 0.15);
+}
+
+/* 注册按钮 */
+.register-submit-btn {
+  height: 44px !important;
+  border-radius: 8px !important;
+  font-size: 16px !important;
+  font-weight: 500 !important;
+  background: #1d1d1f !important;
+  border-color: #1d1d1f !important;
+}
+
+.register-submit-btn:hover {
+  background: #3a3a3c !important;
+  border-color: #3a3a3c !important;
+}
+
+/* 底部链接 */
+.register-bottom-link {
+  text-align: center;
+  margin-top: 20px;
+  font-size: 14px;
+  color: #86868B;
+}
+
+.register-bottom-link a {
+  color: #1d1d1f;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+.register-bottom-link a:hover {
+  text-decoration: underline;
+}

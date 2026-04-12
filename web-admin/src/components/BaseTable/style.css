@@ -1,0 +1,47 @@
+.search-bar {
+  margin-bottom: 12px;
+}
+
+.search-bar .ant-row {
+  width: 100%;
+}
+
+.filter-bar {
+  margin-bottom: 12px;
+}
+
+.table-container {
+  background: #F5F5F7;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06), 0 0 1px rgba(0,0,0,0.08);
+  overflow: hidden;
+}
+
+.table-container .ant-table {
+  margin: 0;
+}
+
+.table-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.table-toolbar-left {
+  display: flex;
+  gap: 8px;
+}
+
+.table-toolbar-right {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.table-pagination {
+  padding: 12px 16px;
+  display: flex;
+  justify-content: flex-end;
+  border-top: 1px solid #f0f0f0;
+}

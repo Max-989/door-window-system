@@ -1,0 +1,86 @@
+<!-- 维修工单详情（含责任划分审核） -->
+<view class="container">
+  <view class="status-header">
+    <view class="status-top">
+      <text class="status-text">{{item.status}}</text>
+      <text class="status-badge">{{item.id}}</text>
+    </view>
+    <text class="status-sub">维修工单</text>
+  </view>
+
+  <view class="card">
+    <view class="card-title">报修信息</view>
+    <view class="info-row"><text class="info-label">客户</text><text class="info-value" style="font-weight:600">{{item.customer}}</text></view>
+    <view class="info-row"><text class="info-label">电话</text><text class="info-value link" bindtap="callPhone">{{item.phone}} 📞</text></view>
+    <view class="info-row"><text class="info-label">地址</text><text class="info-value">{{item.address}}</text></view>
+    <view class="info-row"><text class="info-label">创建时间</text><text class="info-value">{{item.createdAt}}</text></view>
+  </view>
+
+  <view class="card">
+    <view class="card-title">问题描述</view>
+    <text class="remark-text">{{item.description}}</text>
+  </view>
+
+  <view class="card" wx:if="{{item.images && item.images.length > 0}}">
+    <view class="card-title">报修照片</view>
+    <view class="photo-grid">
+      <view class="photo-item" wx:for="{{item.images}}" wx:key="index">
+        <image src="{{item}}" mode="aspectFill" bindtap="previewImage" data-urls="{{item.images}}" data-url="{{item}}" />
+      </view>
+    </view>
+  </view>
+
+  <!-- 师傅现场提交 -->
+  <block wx:if="{{isWorker && item.status === '已派单'}}">
+    <view class="card">
+      <view class="card-title">现场情况</view>
+      <view class="form-group">
+        <text class="form-label"><text class="required">*</text>现场描述</text>
+        <textarea class="form-input" placeholder="请描述现场实际情况" value="{{form.siteDesc}}" bindinput="onInput" data-field="siteDesc" auto-height />
+      </view>
+      <view class="form-group">
+        <text class="form-label"><text class="required">*</text>现场照片</text>
+        <view class="photo-grid">
+          <view class="photo-item" wx:for="{{photos}}" wx:key="index">
+            <image src="{{item}}" mode="aspectFill" />
+            <view class="photo-delete" catchtap="delPhoto" data-index="{{index}}">×</view>
+          </view>
+          <view class="photo-add" bindtap="addPhoto" wx:if="{{photos.length < 9}}">+</view>
+        </view>
+      </view>
+    </view>
+  </block>
+
+  <!-- 责任划分（管理员/文员审核） -->
+  <block wx:if="{{showResponsibility}}">
+    <view class="card">
+      <view class="card-title">责任划分</view>
+      <view class="responsibility-list">
+        <view class="resp-option {{form.responsibility === item ? 'active' : ''}}" wx:for="{{responsibilityList}}" wx:key="*this" bindtap="selectResp" data-value="{{item}}">
+          <text>{{item}}</text>
+        </view>
+      </view>
+      <view class="form-group" style="margin-top:24rpx">
+        <text class="form-label">审核备注</text>
+        <textarea class="form-input" placeholder="填写责任划分说明（可选）" value="{{form.respRemark}}" bindinput="onInput" data-field="respRemark" auto-height />
+      </view>
+    </view>
+  </block>
+
+  <block wx:if="{{item.responsibility}}">
+    <view class="card">
+      <view class="card-title">责任认定</view>
+      <view class="info-row"><text class="info-label">责任方</text><text class="info-value" style="color:#FF3B30;font-weight:600">{{item.responsibility}}</text></view>
+      <text class="remark-text" wx:if="{{item.respRemark}}">{{item.respRemark}}</text>
+    </view>
+  </block>
+
+  <view class="bottom-bar" wx:if="{{isWorker && item.status === '已派单'}}">
+    <view class="btn-primary" bindtap="onSubmitSite" loading="{{submitting}}">提交现场报告</view>
+  </view>
+
+  <view class="bottom-bar" wx:if="{{showResponsibility}}">
+    <view class="btn-outline" style="margin-right:20rpx" bindtap="onCancel">取消</view>
+    <view class="btn-primary" bindtap="onConfirmResp" loading="{{submitting}}">确认责任划分</view>
+  </view>
+</view>

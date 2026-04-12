@@ -1,0 +1,75 @@
+/* 提交完成报告样式 */
+.room-list {
+  background: #F2F2F7;
+  border-radius: 16rpx;
+  padding: 16rpx;
+}
+.room-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16rpx;
+}
+.room-item + .room-item { border-top: 1rpx solid var(--border); }
+.room-name { font-size: 28rpx; font-weight: 600; color: var(--text-primary); }
+.room-check { display: flex; align-items: center; font-size: 26rpx; color: var(--text-secondary); }
+
+/* 增项 */
+.section-inner-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 28rpx;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 16rpx;
+}
+.add-extra {
+  font-size: 26rpx;
+  color: var(--accent);
+  font-weight: 500;
+}
+.extra-item {
+  background: #F2F2F7;
+  border-radius: 16rpx;
+  padding: 20rpx;
+  margin-bottom: 16rpx;
+}
+.extra-row {
+  display: flex;
+  align-items: center;
+  gap: 12rpx;
+}
+.extra-input {
+  flex: 1;
+}
+.extra-delete {
+  font-size: 40rpx;
+  color: var(--danger);
+  padding: 0 8rpx;
+  line-height: 1;
+}
+
+/* 完成方式 */
+.complete-options {
+  display: flex;
+  gap: 16rpx;
+}
+.complete-option {
+  flex: 1;
+  padding: 24rpx 20rpx;
+  border-radius: 16rpx;
+  background: #F2F2F7;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8rpx;
+  transition: all 0.2s;
+}
+.complete-option.active {
+  background: var(--accent-light);
+  border: 2rpx solid var(--accent);
+}
+.co-icon { font-size: 40rpx; }
+.co-text { font-size: 28rpx; font-weight: 600; color: var(--text-primary); }
+.co-hint { font-size: 22rpx; color: var(--text-secondary); }

@@ -1,0 +1,147 @@
+/* 首页 · 黑金Apple HIG */
+
+/* 自定义导航栏 */
+.nav-bar {
+  background: var(--primary);
+  padding-top: env(safe-area-inset-top);
+  padding-left: 32rpx;
+  padding-right: 32rpx;
+  padding-bottom: 24rpx;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+.nav-title {
+  color: #FFFFFF;
+  font-size: 36rpx;
+  font-weight: 600;
+  letter-spacing: 2rpx;
+}
+.nav-avatar {
+  width: 72rpx;
+  height: 72rpx;
+  border-radius: 50%;
+  border: 3rpx solid var(--accent);
+  background: rgba(201,169,110,0.2);
+}
+
+/* 头部区域 */
+.header {
+  background: linear-gradient(180deg, var(--primary) 0%, var(--primary-light) 60%, var(--bg) 100%);
+  padding: 32rpx 32rpx 60rpx;
+}
+.user-info { display: flex; align-items: center; }
+.avatar {
+  width: 96rpx;
+  height: 96rpx;
+  border-radius: 50%;
+  border: 3rpx solid var(--accent);
+  margin-right: 24rpx;
+  background: rgba(201,169,110,0.15);
+}
+.user-text { display: flex; flex-direction: column; }
+.user-name {
+  font-size: 36rpx;
+  font-weight: 600;
+  color: #FFFFFF;
+}
+.user-role {
+  font-size: 24rpx;
+  color: var(--accent);
+  margin-top: 8rpx;
+  opacity: 0.85;
+}
+
+/* 统计卡片 */
+.stats-card {
+  margin-top: -40rpx;
+  position: relative;
+  z-index: 1;
+  margin-left: 32rpx;
+  margin-right: 32rpx;
+}
+.stats-row { display: flex; justify-content: space-around; }
+.stat-item { text-align: center; flex: 1; }
+.stat-num {
+  display: block;
+  font-size: 48rpx;
+  font-weight: 700;
+  color: var(--accent);
+}
+.stat-label {
+  font-size: 24rpx;
+  color: var(--text-secondary);
+  margin-top: 8rpx;
+  display: block;
+}
+
+/* 快捷操作 */
+.quick-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20rpx;
+  padding: 0 32rpx;
+  margin-bottom: 8rpx;
+}
+.action-item {
+  width: calc(25% - 15rpx);
+  background: var(--card);
+  border-radius: var(--radius-xl);
+  padding: 32rpx 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-shadow: var(--shadow-card);
+  transition: transform 0.2s ease;
+}
+.action-item:active { transform: scale(0.95); }
+.action-icon {
+  font-size: 52rpx;
+  margin-bottom: 12rpx;
+  width: 96rpx;
+  height: 96rpx;
+  border-radius: 24rpx;
+  background: rgba(201,169,110,0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.action-item text {
+  font-size: 24rpx;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+/* 最近任务卡片 */
+.task-row { display: flex; justify-content: space-between; align-items: center; }
+.task-info { flex: 1; display: flex; flex-direction: column; }
+.task-type {
+  font-size: 30rpx;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+.task-customer {
+  font-size: 26rpx;
+  color: var(--text-secondary);
+  margin-top: 8rpx;
+}
+.task-addr {
+  font-size: 24rpx;
+  color: var(--text-hint);
+  margin-top: 4rpx;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.task-right {
+  flex-shrink: 0;
+  margin-left: 16rpx;
+}
+
+/* 页面底部留白（TabBar） */
+.page-index {
+  padding-bottom: calc(24rpx + env(safe-area-inset-bottom));
+}

@@ -1,0 +1,209 @@
+/* 登录页 · 极简黑金 */
+.login-page {
+  min-height: 100vh;
+  background: #1A1A2E;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.login-glow {
+  position: absolute;
+  top: -200rpx;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 600rpx;
+  height: 600rpx;
+  background: radial-gradient(circle, rgba(201,169,110,0.15) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.login-content {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  padding: 0 60rpx;
+  padding-top: 120rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Logo */
+.logo-section {
+  text-align: center;
+  margin-bottom: 80rpx;
+}
+.logo-icon-wrap {
+  width: 120rpx;
+  height: 120rpx;
+  border-radius: 30rpx;
+  background: linear-gradient(135deg, rgba(201,169,110,0.2) 0%, rgba(201,169,110,0.05) 100%);
+  border: 2rpx solid rgba(201,169,110,0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto;
+}
+.logo-icon { font-size: 60rpx; }
+.app-name {
+  display: block;
+  color: #FFFFFF;
+  font-size: 44rpx;
+  font-weight: 600;
+  margin-top: 24rpx;
+  letter-spacing: 4rpx;
+}
+.app-desc {
+  display: block;
+  color: rgba(201,169,110,0.7);
+  font-size: 24rpx;
+  margin-top: 10rpx;
+  letter-spacing: 6rpx;
+}
+
+/* 输入卡片 */
+.login-card {
+  width: 100%;
+  padding: 20rpx 0;
+}
+
+/* 输入框 */
+.input-item {
+  position: relative;
+  margin-bottom: 0;
+  border-bottom: 1rpx solid rgba(255,255,255,0.1);
+  padding: 28rpx 0;
+}
+.input-field {
+  width: 100%;
+  background: rgba(255,255,255,0.06);
+  border: none;
+  border-radius: 0;
+  padding: 24rpx 20rpx;
+  font-size: 30rpx;
+  color: #FFFFFF;
+  box-sizing: border-box;
+}
+.input-placeholder {
+  color: rgba(255,255,255,0.3);
+  font-size: 30rpx;
+}
+
+/* 密码眼睛 */
+.eye-btn {
+  position: absolute;
+  right: 8rpx;
+  top: 50%;
+  transform: translateY(-50%);
+  padding: 16rpx;
+}
+.eye-icon { font-size: 32rpx; }
+
+/* 忘记密码 */
+.forgot-row {
+  display: flex;
+  justify-content: flex-end;
+  padding: 16rpx 0 8rpx;
+}
+.forgot-link {
+  color: #C9A96E;
+  font-size: 24rpx;
+}
+
+/* 验证码行 */
+.code-row {
+  display: flex;
+  align-items: center;
+}
+.input-code { flex: 1; }
+.btn-get-code {
+  width: 140rpx;
+  height: 72rpx;
+  background: rgba(201,169,110,0.2);
+  border: 1rpx solid rgba(201,169,110,0.4);
+  border-radius: 12rpx;
+  color: #C9A96E;
+  font-size: 24rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;
+  margin-left: 16rpx;
+}
+.btn-get-code.disabled { opacity: 0.5; }
+
+/* 登录按钮 */
+.btn-login {
+  width: 100%;
+  background: linear-gradient(135deg, #C9A96E 0%, #E8D5A8 100%);
+  color: #1A1A2E;
+  border-radius: 16rpx;
+  font-size: 32rpx;
+  font-weight: 600;
+  padding: 28rpx 0;
+  border: none;
+  line-height: 1;
+  box-shadow: 0 8rpx 24rpx rgba(201, 169, 110, 0.35);
+  letter-spacing: 8rpx;
+  margin-top: 48rpx;
+}
+.btn-login::after { border: none; }
+.btn-login:active {
+  opacity: 0.9;
+  transform: scale(0.98);
+  transition: all 0.15s;
+}
+
+/* 切换登录方式 */
+.switch-row {
+  margin-top: 28rpx;
+}
+.switch-link {
+  color: #C9A96E;
+  font-size: 26rpx;
+}
+
+/* 注册 */
+.register-row {
+  margin-top: 20rpx;
+  display: flex;
+  align-items: center;
+}
+.register-text {
+  color: rgba(255,255,255,0.5);
+  font-size: 26rpx;
+}
+.register-link {
+  color: #C9A96E;
+  font-size: 26rpx;
+  margin-left: 8rpx;
+}
+
+/* 协议 */
+.agreement {
+  position: fixed;
+  bottom: 60rpx;
+  left: 0;
+  right: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.agree-row {
+  display: flex;
+  align-items: center;
+  gap: 8rpx;
+}
+.agree-checkbox { transform: scale(0.65); }
+.agree-text {
+  color: rgba(255,255,255,0.4);
+  font-size: 22rpx;
+}
+.agree-link {
+  color: #C9A96E;
+  font-size: 22rpx;
+  margin-top: 4rpx;
+}

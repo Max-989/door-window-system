@@ -1,0 +1,76 @@
+<!-- 登录页 · 极简黑金 -->
+<view class="login-page">
+  <view class="login-glow"></view>
+
+  <view class="login-content">
+    <!-- Logo区 -->
+    <view class="logo-section">
+      <view class="logo-icon-wrap">
+        <text class="logo-icon">🏠</text>
+      </view>
+      <text class="app-name">门窗安装管家</text>
+      <text class="app-desc">高效协同 · 智慧服务</text>
+    </view>
+
+    <!-- 输入区 -->
+    <view class="login-card">
+      <!-- 手机号 -->
+      <view class="input-item">
+        <input class="input-field" type="number" maxlength="11" placeholder="手机号" placeholder-class="input-placeholder" value="{{phone}}" bindinput="onPhoneInput" />
+      </view>
+
+      <!-- 密码登录 -->
+      <block wx:if="{{loginMode === 'password'}}">
+        <view class="input-item">
+          <input class="input-field" placeholder="密码" placeholder-class="input-placeholder" password="{{!showPassword}}" value="{{password}}" bindinput="onPasswordInput" />
+          <view class="eye-btn" bindtap="onTogglePassword">
+            <text wx:if="{{showPassword}}" class="eye-icon">👁️</text>
+            <text wx:else class="eye-icon">🚫</text>
+          </view>
+        </view>
+        <view class="forgot-row">
+          <text class="forgot-link">忘记密码？</text>
+        </view>
+      </block>
+
+      <!-- 验证码登录 -->
+      <block wx:elif="{{loginMode === 'code'}}">
+        <view class="input-item code-row">
+          <input class="input-field input-code" type="number" maxlength="6" placeholder="验证码" placeholder-class="input-placeholder" value="{{verifyCode}}" bindinput="onCodeInput" />
+          <view class="btn-get-code {{codeCountdown > 0 ? 'disabled' : ''}}" bindtap="onGetCode">
+            <text wx:if="{{codeCountdown > 0}}">{{codeCountdown}}s</text>
+            <text wx:else>获取</text>
+          </view>
+        </view>
+      </block>
+
+      <!-- 登录按钮 -->
+      <button class="btn-login" bindtap="onLogin" loading="{{loading}}">登 录</button>
+    </view>
+
+    <!-- 切换登录方式 -->
+    <view class="switch-row">
+      <text class="switch-link" bindtap="onSwitchLoginMode">
+        <text wx:if="{{loginMode === 'password'}}">验证码登录</text>
+        <text wx:else>密码登录</text>
+      </text>
+    </view>
+
+    <!-- 注册 -->
+    <view class="register-row">
+      <text class="register-text">还没有账号？</text>
+      <text class="register-link" bindtap="onRegister">立即注册</text>
+    </view>
+
+    <!-- 协议 -->
+    <view class="agreement">
+      <checkbox-group bindchange="onAgreeChange">
+        <label class="agree-row">
+          <checkbox class="agree-checkbox" checked="{{agreed}}" color="#C9A96E" />
+          <text class="agree-text">登录即同意</text>
+        </label>
+      </checkbox-group>
+      <text class="agree-link">《用户协议》和《隐私政策》</text>
+    </view>
+  </view>
+</view>

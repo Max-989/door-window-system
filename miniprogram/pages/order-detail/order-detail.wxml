@@ -1,0 +1,97 @@
+<!-- 订单详情 -->
+<view class="container">
+  <view class="status-header">
+    <view class="status-top">
+      <text class="status-text">{{order.status}}</text>
+      <text class="status-badge">{{order.orderNo}}</text>
+    </view>
+    <text class="status-sub" wx:if="{{showPrice}}">订单金额 ¥{{order.total}}</text>
+  </view>
+
+  <!-- 订单进度条 -->
+  <view class="card" wx:if="{{order.productionStatus}}">
+    <view class="card-title">订单进度</view>
+    <view class="progress-steps">
+      <view class="step {{order.productionStatus >= 1 ? 'done' : ''}}">
+        <view class="step-dot"></view>
+        <text>待确认</text>
+      </view>
+      <view class="step-line {{order.productionStatus >= 2 ? 'done' : ''}}"></view>
+      <view class="step {{order.productionStatus >= 2 ? 'done' : ''}}">
+        <view class="step-dot"></view>
+        <text>生产中</text>
+      </view>
+      <view class="step-line {{order.productionStatus >= 3 ? 'done' : ''}}"></view>
+      <view class="step {{order.productionStatus >= 3 ? 'done' : ''}}">
+        <view class="step-dot"></view>
+        <text>已发货</text>
+      </view>
+      <view class="step-line {{order.productionStatus >= 4 ? 'done' : ''}}"></view>
+      <view class="step {{order.productionStatus >= 4 ? 'done' : ''}}">
+        <view class="step-dot"></view>
+        <text>已到货</text>
+      </view>
+      <view class="step-line {{order.productionStatus >= 5 ? 'done' : ''}}"></view>
+      <view class="step {{order.productionStatus >= 5 ? 'done' : ''}}">
+        <view class="step-dot"></view>
+        <text>已派送</text>
+      </view>
+      <view class="step-line {{order.productionStatus >= 6 ? 'done' : ''}}"></view>
+      <view class="step {{order.productionStatus >= 6 ? 'done' : ''}}">
+        <view class="step-dot"></view>
+        <text>待安装</text>
+      </view>
+      <view class="step-line {{order.productionStatus >= 7 ? 'done' : ''}}"></view>
+      <view class="step {{order.productionStatus >= 7 ? 'done' : ''}}">
+        <view class="step-dot"></view>
+        <text>安装中</text>
+      </view>
+      <view class="step-line {{order.productionStatus >= 8 ? 'done' : ''}}"></view>
+      <view class="step {{order.productionStatus >= 8 ? 'done' : ''}}">
+        <view class="step-dot"></view>
+        <text>已完成</text>
+      </view>
+    </view>
+  </view>
+
+  <view class="card">
+    <view class="card-title">订单信息</view>
+    <view class="info-row"><text class="info-label">来源</text><text class="info-value">{{order.source}}</text></view>
+    <view class="info-row"><text class="info-label">品牌门店</text><text class="info-value">{{order.brand ? order.brand : '直营'}}</text></view>
+    <view class="info-row"><text class="info-label">客户</text><text class="info-value" style="font-weight:600">{{order.customer}}</text></view>
+    <view class="info-row"><text class="info-label">电话</text><text class="info-value link" bindtap="callPhone">{{order.phone}} 📞</text></view>
+    <view class="info-row"><text class="info-label">地址</text><text class="info-value">{{order.address}}</text></view>
+    <view class="info-row" wx:if="{{showPrice}}"><text class="info-label">金额</text><text class="info-value price">¥{{order.total}}</text></view>
+    <view class="info-row"><text class="info-label">下单时间</text><text class="info-value">{{order.createdAt}}</text></view>
+  </view>
+
+  <view class="card">
+    <view class="card-title">产品明细</view>
+    <view class="product-item" wx:for="{{order.products}}" wx:key="index">
+      <view class="product-header">
+        <text class="product-name">{{item.name}}</text>
+        <text class="product-qty">×{{item.qty}}</text>
+      </view>
+      <text class="product-spec">规格：{{item.spec}}</text>
+      <text class="product-spec" wx:if="{{item.room}}">房间：{{item.room}}</text>
+    </view>
+  </view>
+
+  <view class="card" wx:if="{{order.tasks && order.tasks.length > 0}}">
+    <view class="card-title">关联任务</view>
+    <view class="task-link" wx:for="{{order.tasks}}" wx:key="id" bindtap="goToTask" data-id="{{item.id}}">
+      <view>
+        <text style="font-size:28rpx;font-weight:500">{{item.type}} · {{item.status}}</text>
+      </view>
+      <text class="link-arrow">›</text>
+    </view>
+  </view>
+
+  <!-- 装企文员操作 -->
+  <view class="bottom-bar" wx:if="{{isClerk && order.status === '待确认'}}">
+    <view class="btn-primary" bindtap="confirmOrder">确认订单</view>
+  </view>
+  <view class="bottom-bar" wx:if="{{isCustomer && order.status === '安装中'}}">
+    <view class="btn-primary" bindtap="confirmReceive">确认收货</view>
+  </view>
+</view>
