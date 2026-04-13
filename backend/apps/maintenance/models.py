@@ -158,7 +158,9 @@ class MaintenanceTask(models.Model):
 
     # 补发配件
     accessory_reissue = models.BooleanField(default=False, verbose_name="是否补发配件")
+    accessory_reissue_reason = models.TextField("补发原因", blank=True, default="")
     reissue_items = models.JSONField(default=list, blank=True, verbose_name="补发配件明细")
+    repair_details = models.JSONField(default=list, blank=True, verbose_name="维修详情")
 
     # 部分完成
     parent_task = models.ForeignKey(
