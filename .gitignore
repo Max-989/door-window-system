@@ -85,7 +85,7 @@ htmlcov/
 
 # Docker
 *.dockerignore
-Dockerfile
+# Dockerfile  # 注释掉，因为CI需要检查Dockerfile
 docker-compose.override.yml
 
 # Logs
