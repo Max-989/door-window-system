@@ -18,7 +18,7 @@ DATABASES = {
         "NAME": ":memory:",  # In-memory SQLite for fastest tests
         "TEST": {
             "NAME": ":memory:",  # Also use in-memory for test database
-        }
+        },
     }
 }
 
