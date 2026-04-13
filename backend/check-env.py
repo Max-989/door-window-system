@@ -249,7 +249,7 @@ def main():
     # 健康检查端点（可选）
     try:
         results.append(("健康检查", check_health_endpoint()))
-    except:
+    except Exception:
         print_status("健康检查", False, "跳过检查（需要完整Django环境）")
         results.append(("健康检查", False))
 

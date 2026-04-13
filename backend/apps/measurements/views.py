@@ -9,7 +9,7 @@ from rest_framework.filters import OrderingFilter, SearchFilter
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
-from apps.orders.models import Order, OrderItem
+from apps.orders.models import OrderItem
 from apps.orders.serializers import OrderItemSerializer
 from common.utils import generate_task_no
 

@@ -443,7 +443,7 @@ class StocktakeView(viewsets.ViewSet):
 
         if warehouse_type not in model_map:
             return Response(
-                {"error": f"无效仓库类型，可选: hardware/accessory"},
+                {"error": "无效仓库类型，可选: hardware/accessory"},
                 status=status.HTTP_400_BAD_REQUEST,
             )
 

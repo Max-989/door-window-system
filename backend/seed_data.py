@@ -5,7 +5,7 @@ seed_data.py - 测试数据灌入脚本
 """
 import os
 import sys
-from datetime import date, datetime, timedelta
+from datetime import datetime, timedelta
 from decimal import Decimal
 
 import django
@@ -23,7 +23,6 @@ from apps.users.models import Branch, User, UserProfile
 from common.enums import (
     AlloyOpenMethod,
     AlloyTrackType,
-    DecorationStaffRole,
     DecorationStatus,
     GlassType,
     InstallationStatus,

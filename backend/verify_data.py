@@ -71,7 +71,7 @@ def verify():
     orders = Order.objects.all()
     status_dist = Counter(orders.values_list("status", flat=True))
     print(f"\n[订单] {orders.count()} 条")
-    print(f"  状态分布:")
+    print("  状态分布:")
     for status_val, label in OrderStatus.CHOICES:
         cnt = status_dist.get(status_val, 0)
         marker = "OK" if cnt > 0 else "MISSING!"
@@ -110,7 +110,7 @@ def verify():
     if missing:
         print(f"  [WARNING] 订单未覆盖状态: {missing}")
     else:
-        print(f"  [OK] 订单状态全覆盖!")
+        print("  [OK] 订单状态全覆盖!")
     print(f"{'=' * 60}")
 
 
