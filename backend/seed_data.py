@@ -10,21 +10,7 @@ from decimal import Decimal
 
 import django
 import pytz
-
-# 设置 Django 环境
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "config.settings.dev")
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-sys.path.insert(0, BASE_DIR)
-django.setup()
-
 from django.contrib.auth.hashers import make_password
-
-TZ = pytz.timezone("Asia/Shanghai")
-
-
-def now_aware():
-    return datetime.now(TZ)
-
 
 from apps.decoration.models import Brand, DecorationStaff, Store
 from apps.installations.models import InstallationTask
@@ -59,6 +45,19 @@ from common.enums import (
     WoodSurfaceProcess,
     WorkerSkillType,
 )
+
+# 设置 Django 环境
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "config.settings.dev")
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+sys.path.insert(0, BASE_DIR)
+django.setup()
+
+
+TZ = pytz.timezone("Asia/Shanghai")
+
+
+def now_aware():
+    return datetime.now(TZ)
 
 
 def clear_all():

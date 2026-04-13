@@ -2,15 +2,9 @@
 """verify_data.py - 验证测试数据"""
 import os
 import sys
+from collections import Counter
 
 import django
-
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "config.settings.dev")
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-sys.path.insert(0, BASE_DIR)
-django.setup()
-
-from collections import Counter
 
 from apps.decoration.models import Brand, DecorationStaff, Store
 from apps.installations.models import InstallationTask
@@ -21,6 +15,11 @@ from apps.personnel.models import Foreman, WageStandard, Worker
 from apps.products.models import AlloyProduct, SecurityProduct, Supplier, WoodProduct
 from apps.users.models import Branch, User
 from common.enums import OrderStatus
+
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "config.settings.dev")
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+sys.path.insert(0, BASE_DIR)
+django.setup()
 
 
 def verify():

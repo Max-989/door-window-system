@@ -1,4 +1,4 @@
-﻿"""
+"""
 orders app - 视图
 """
 import openpyxl

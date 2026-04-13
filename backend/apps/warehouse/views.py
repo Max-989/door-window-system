@@ -1,4 +1,4 @@
-﻿"""
+"""
 warehouse app - 视图
 """
 import openpyxl

@@ -3,12 +3,7 @@
 """
 from rest_framework import serializers
 
-from .models import (
-    Menu,
-    PermissionLog,
-    Role,
-    RoleFieldPermission,
-)
+from .models import Menu, PermissionLog, Role, RoleFieldPermission
 
 
 class MenuTreeSerializer(serializers.ModelSerializer):

@@ -1,4 +1,4 @@
-﻿"""
+"""
 products app - 视图
 """
 from django_filters.rest_framework import DjangoFilterBackend

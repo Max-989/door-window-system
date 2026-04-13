@@ -1,4 +1,4 @@
-﻿"""
+"""
 measurements app - 视图
 """
 from django.utils import timezone
