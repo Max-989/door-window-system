@@ -2,9 +2,11 @@
 仓库管理模块单元测试
 测试门窗安装管理系统的仓库管理功能
 """
-from django.test import TestCase
-from apps.warehouse.models import WarehouseProduct, HardwareInventory
 import uuid
+
+from django.test import TestCase
+
+from apps.warehouse.models import HardwareInventory, WarehouseProduct
 
 
 class WarehouseProductModelTest(TestCase):

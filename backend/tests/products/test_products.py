@@ -3,7 +3,8 @@
 测试门窗安装管理系统的产品库功能
 """
 from django.test import TestCase
-from apps.products.models import Supplier, ProductCategory, WoodProduct
+
+from apps.products.models import ProductCategory, Supplier, WoodProduct
 from common.enums import ProductLine, ProductStatus
 
 

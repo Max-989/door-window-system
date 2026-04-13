@@ -7,8 +7,8 @@ from django.contrib.auth import get_user_model
 from rest_framework.test import APIClient
 from rest_framework_simplejwt.tokens import RefreshToken
 
+from apps.decoration.models import Brand, DecorationStaff, Store
 from apps.orders.models import Order
-from apps.decoration.models import Brand, Store, DecorationStaff
 from apps.users.models import Branch
 
 User = get_user_model()

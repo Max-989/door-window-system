@@ -2,10 +2,12 @@
 安装管理模块单元测试
 测试门窗安装管理系统的安装任务功能
 """
+import uuid
+
 from django.test import TestCase
+
 from apps.installations.models import InstallationTask
 from common.enums import InstallationStatus, OrderSource
-import uuid
 
 
 class InstallationTaskModelTest(TestCase):

@@ -2,10 +2,11 @@
 Test settings - used for CI/CD and local testing.
 Uses SQLite in-memory database for fast tests.
 """
-from datetime import timedelta
-from .base import *  # noqa: F401, F403
-import tempfile
 import os
+import tempfile
+from datetime import timedelta
+
+from .base import *  # noqa: F401, F403
 
 DEBUG = False
 

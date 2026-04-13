@@ -4,6 +4,7 @@ Door & Window Installation Management System - Root URL Configuration
 """
 import os
 import sys
+
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin

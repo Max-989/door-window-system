@@ -4,10 +4,10 @@
 验证门窗安装管理系统开发环境配置是否正确
 """
 
-import sys
 import os
-import subprocess
 import platform
+import subprocess
+import sys
 
 
 def run_command(cmd, capture_output=True):
@@ -192,10 +192,10 @@ def check_health_endpoint():
     try:
         # 导入健康检查模块
         sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-        from common.health import health_check, ping
-
         # 模拟请求
         from django.test import RequestFactory
+
+        from common.health import health_check, ping
 
         factory = RequestFactory()
 

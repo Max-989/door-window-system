@@ -2,9 +2,11 @@
 人员管理模块单元测试
 测试门窗安装管理系统的师傅和工头管理功能
 """
-from django.test import TestCase
-from apps.personnel.models import Worker, Foreman
 import uuid
+
+from django.test import TestCase
+
+from apps.personnel.models import Foreman, Worker
 
 
 class WorkerModelTest(TestCase):

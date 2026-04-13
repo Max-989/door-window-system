@@ -2,10 +2,12 @@
 维护管理模块单元测试
 测试门窗安装管理系统的维修任务功能
 """
-from django.test import TestCase
-from apps.maintenance.models import MaintenanceTask
-from common.enums import MaintenanceStatus, MaintenanceResponsibility, OrderSource
 import uuid
+
+from django.test import TestCase
+
+from apps.maintenance.models import MaintenanceTask
+from common.enums import MaintenanceResponsibility, MaintenanceStatus, OrderSource
 
 
 class MaintenanceTaskModelTest(TestCase):

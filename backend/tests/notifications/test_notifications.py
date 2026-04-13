@@ -2,11 +2,13 @@
 通知管理模块单元测试
 测试门窗安装管理系统的通知功能
 """
+import uuid
+
 from django.test import TestCase
+
 from apps.notifications.models import Notification
 from apps.users.models import User
 from common.enums import NotificationType
-import uuid
 
 
 class NotificationModelTest(TestCase):

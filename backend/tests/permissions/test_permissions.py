@@ -3,7 +3,8 @@
 测试门窗安装管理系统的权限管理功能
 """
 from django.test import TestCase
-from apps.permissions.models import Role, Menu, RoleMenuPermission
+
+from apps.permissions.models import Menu, Role, RoleMenuPermission
 
 
 class RoleModelTest(TestCase):
