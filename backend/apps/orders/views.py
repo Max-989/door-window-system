@@ -231,7 +231,9 @@ class OrderViewSet(viewsets.ModelViewSet):
         output.write("订单号,来源,客户姓名,客户电话,客户地址,产品线,状态,创建时间\n")
         for order in queryset:
             output.write(
-                f"{order.order_no},{order.source},{order.customer_name},{order.customer_phone},{order.customer_address},{order.product_line},{order.status},{order.created_at}\n"
+                f"{order.order_no},{order.source},{order.customer_name},"
+                f"{order.customer_phone},{order.customer_address},"
+                f"{order.product_line},{order.status},{order.created_at}\n"
             )
 
         response = HttpResponse(output.getvalue(), content_type="text/csv")
@@ -259,7 +261,7 @@ class OrderChangeLogViewSet(viewsets.ModelViewSet):
     def get_permissions(self):
         # 日志只读
         if self.action in ["create", "update", "partial_update", "destroy"]:
-            from rest_framework.permissions import IsAdminUser, IsAuthenticated
+            from rest_framework.permissions import IsAdminUser
 
             return [IsAdminUser()]
         return []

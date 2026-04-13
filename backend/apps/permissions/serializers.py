@@ -1,7 +1,6 @@
 """
 权限管理序列化器
 """
-from django.contrib.auth.models import User
 from rest_framework import serializers
 
 from .models import (
@@ -9,8 +8,6 @@ from .models import (
     PermissionLog,
     Role,
     RoleFieldPermission,
-    RoleMember,
-    RoleMenuPermission,
 )
 
 
