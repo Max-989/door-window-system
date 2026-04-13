@@ -94,7 +94,7 @@ class OrderSource:
     BRAND_STORE = "brand_store"  # 装企品牌门店
     DIRECT = "direct"  # 直单
     DIRECT_TASK = "direct_task"  # 直接任务（无订单）
-    DIRECT_INSTALLATION = "direct_installation"  # 直接安装单（无订单）
+    DIRECT_INSTALLATION = "direct_installation"  # 直接安装任务
     INDEPENDENT = "independent"  # 独立创建（售后单等）
     ORDER = "order"  # 从订单创建
     INSTALLATION = "installation"  # 从安装单创建
@@ -102,11 +102,10 @@ class OrderSource:
         (BRAND_STORE, "品牌门店"),
         (DIRECT, "直单"),
         (DIRECT_TASK, "直接任务"),
-        (DIRECT_INSTALLATION, "直接安装单"),
+        (DIRECT_INSTALLATION, "直接安装任务"),
         (INDEPENDENT, "独立创建"),
         (ORDER, "从订单创建"),
         (INSTALLATION, "从安装单创建"),
-        (DIRECT_INSTALLATION, "直接安装任务"),
     ]
 
 
@@ -143,12 +142,14 @@ class InstallationStatus:
 
     PENDING = "pending"
     ASSIGNED = "assigned"
+    IN_PROGRESS = "in_progress"
     COMPLETED = "completed"
     CANCELLED = "cancelled"
     PARTIAL = "partial"
     CHOICES = [
         (PENDING, "待派单"),
         (ASSIGNED, "已派单"),
+        (IN_PROGRESS, "进行中"),
         (COMPLETED, "已完成"),
         (CANCELLED, "已取消"),
         (PARTIAL, "部分完成"),
