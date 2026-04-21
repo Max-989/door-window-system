@@ -6,13 +6,13 @@ import os
 from .base import *  # noqa: F401, F403
 
 # SECRET_KEY must be set in production environment
-SECRET_KEY = os.environ.get("SECRET_KEY")
+SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY")
 if not SECRET_KEY:
-    raise ValueError("SECRET_KEY environment variable is required in production")
+    raise ValueError("DJANGO_SECRET_KEY environment variable is required in production")
 
 DEBUG = False
 
-ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS", "").split(",")
+ALLOWED_HOSTS = [h for h in os.environ.get("ALLOWED_HOSTS", "").split(",") if h]
 
 # Production database (MySQL)
 DATABASES = {
@@ -30,7 +30,7 @@ DATABASES = {
     }
 }
 
-CORS_ALLOWED_ORIGINS = os.environ.get("CORS_ALLOWED_ORIGINS", "").split(",")
+CORS_ALLOWED_ORIGINS = [o for o in os.environ.get("CORS_ALLOWED_ORIGINS", "").split(",") if o]
 
 SECURE_SSL_REDIRECT = True
 SESSION_COOKIE_SECURE = True

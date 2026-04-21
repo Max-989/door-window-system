@@ -1,0 +1,21 @@
+## Codebase Patterns
+- Django project root is `backend/`. Config files are in `backend/config/settings/`.
+- Backend tests are run with `pytest` using `config.settings.test` settings.
+- Linting uses `flake8` with configuration in `.flake8`.
+- Frontend type checking uses `tsc --noEmit` via `npm run type-check`.
+- Secret key environment variable is `DJANGO_SECRET_KEY` (changed from `SECRET_KEY`).
+- Base config sets `DEBUG = False`, dev overrides to `True`.
+
+## 2026-04-22 - US-001
+- Modified `backend/config/settings/base.py`: set `DEBUG = False`, removed hardcoded `SECRET_KEY` default, changed environment variable to `DJANGO_SECRET_KEY` with validation.
+- Modified `backend/config/settings/prod.py`: updated environment variable to `DJANGO_SECRET_KEY` and error message.
+- Ran backend tests: 88 passed, 3 skipped.
+- Ran linting on config/settings: no errors.
+- Ran frontend typecheck: existing errors unrelated to changes (pre-existing).
+- Updated PRD to set `passes: true` for US-001.
+
+**Learnings for future iterations:**
+  - When modifying config files, ensure both `base.py` and `prod.py` are updated.
+  - Backend tests require `DJANGO_SECRET_KEY` environment variable set (any value works).
+  - Frontend type check has pre-existing errors that need to be fixed in later stories.
+---
