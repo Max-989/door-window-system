@@ -62,8 +62,8 @@ const usePermissionStore = create<PermissionState>()((set, get) => ({
     try {
       await Promise.all([get().fetchMenus(), get().fetchPermissions()])
     } catch (e) {
-      // API 失败时默认放行，避免白屏
-      console.warn('Permission init failed, defaulting to allow:', e)
+      // API 失败时默认拒绝访问，避免未授权访问
+      console.warn('Permission init failed, defaulting to deny:', e)
     }
     set({ loading: false, initialized: true })
   },
@@ -71,8 +71,8 @@ const usePermissionStore = create<PermissionState>()((set, get) => ({
   hasPermission: (code: string) => {
     const { permissions, initialized } = get()
     if (!initialized) return false
-    // 权限为空时默认放行
-    if (permissions.length === 0) return true
+    // 权限为空时拒绝访问
+    if (permissions.length === 0) return false
     return permissions.includes(code)
   },
 
@@ -80,8 +80,8 @@ const usePermissionStore = create<PermissionState>()((set, get) => ({
     const { menus, initialized } = get()
     // 未获取菜单数据时禁止访问
     if (!initialized) return false
-    // 菜单为空时也默认放行（可能后端未配置或开发模式）
-    if (menus.length === 0) return true
+    // 菜单为空时拒绝访问（可能后端未配置或开发模式）
+    if (menus.length === 0) return false
     // 检查菜单树中是否有该 code
     const findMenu = (items: MenuItem[]): boolean => {
       for (const item of items) {

@@ -6,6 +6,7 @@
 - Secret key environment variable is `DJANGO_SECRET_KEY` (changed from `SECRET_KEY`).
 - Base config sets `DEBUG = False`, dev overrides to `True`.
 - When overriding nested settings like REST_FRAMEWORK, use copy.deepcopy to preserve base configuration.
+- Permission store empty permissions/menus should deny access (security default).
 
 ## 2026-04-22 - US-001
 - Modified `backend/config/settings/base.py`: set `DEBUG = False`, removed hardcoded `SECRET_KEY` default, changed environment variable to `DJANGO_SECRET_KEY` with validation.
@@ -83,4 +84,16 @@
 - **Learnings for future iterations:**
   - Backend reset_password view requires authentication; frontend forgot password flow may need separate endpoint
   - Old password validation prevents unauthorized password reset
+---
+## 2026-04-22 - US-007
+- Modified permissionStore.ts to deny access when permissions empty (changed `if (permissions.length === 0) return true` to `false`)
+- Modified permissionStore.ts to deny access when menus empty (changed `if (menus.length === 0) return true` to `false`)
+- Updated comments and warning message to reflect deny behavior
+- PermissionRoute component already handles denial via hasMenuPermission; no changes needed
+- Files changed: web-admin/src/stores/permissionStore.ts
+- **Learnings for future iterations:**
+  - When permissions or menus are empty (due to API failure or user having no permissions), deny access rather than default allow
+  - Ensure `initialized` check remains to prevent access before permission data loads
+  - Frontend type check passes (no new errors introduced)
+  - Browser verification needed: manual test recommended to ensure 403 page appears when user lacks permissions
 ---
