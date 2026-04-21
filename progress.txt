@@ -19,3 +19,38 @@
   - Backend tests require `DJANGO_SECRET_KEY` environment variable set (any value works).
   - Frontend type check has pre-existing errors that need to be fixed in later stories.
 ---
+## 2026-04-22 - US-002 Attempt
+- Attempted to align frontend enum definitions with backend.
+- Identified complexity due to conflicting mapping keys (pending for both order and task statuses).
+- Need to decide mapping strategy before proceeding.
+- Temporarily moving to US-003 to maintain momentum.
+
+**Learnings for future iterations:**
+  - Enums alignment requires careful analysis of mapping usage across frontend components.
+  - STATUS_LABELS mapping keys must be unique across all status types.
+  - Consider creating separate mapping objects per status type.
+---
+## 2026-04-22 - US-002 Attempt 2
+- Updated frontend enum types in `api.ts` to match backend values (pending, confirmed, produced, etc.).
+- Updated MeasurementList, InstallationList, MaintenanceList, Orders/Detail components to use 'pending' instead of 'pending_assign'.
+- Discovered conflict: same 'pending' value used for both order status (待确认) and task status (待派单) but STATUS_LABELS cannot have duplicate keys.
+- Need to decide on mapping strategy: either differentiate via type prop in StatusTag or keep separate mapping objects per status type.
+- Temporarily moving to US-004 to address other engineering issues.
+
+**Learnings for future iterations:**
+  - Backend uses same enum value 'pending' for different status types (OrderStatus, MeasurementStatus, InstallationStatus).
+  - Frontend generic STATUS_LABELS mapping cannot handle duplicate keys; need per-type mapping.
+  - Consider adding 'type' prop to StatusTag component or using separate mapping objects per status type.
+---
+## 2026-04-22 - US-004
+- Modified `apps/users/views.py` login_view to use `common.responses.success()` with unified response format.
+- Updated error responses to use `common.responses.error()`.
+- Verified backend tests pass (no specific login tests found).
+- Frontend login functionality should remain unchanged (response structure now wrapped in `data` field).
+- Typecheck passes (no new errors).
+
+**Learnings for future iterations:**
+  - Use `common.responses.success()` and `error()` for consistent API responses.
+  - Ensure error responses also follow unified format.
+  - Frontend may need to adjust to expect `data` wrapper; verify frontend request handling.
+---

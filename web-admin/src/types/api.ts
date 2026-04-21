@@ -23,31 +23,32 @@ export type ProductLine = 'wood' | 'alloy' | 'security'
 
 // 订单状态
 export type OrderStatus =
-  | 'pending_confirm'   // 待确认
-  | 'confirmed'         // 已确认
-  | 'in_production'     // 生产中
-  | 'shipped'           // 已发货
-  | 'arrived'           // 已到货
-  | 'delivered'         // 已派送
-  | 'installing'        // 安装中
-  | 'completed'         // 已完成
-  | 'cancelled'         // 已取消
-  | 'closed'            // 已关闭
+  | 'pending'   // 待确认
+  | 'confirmed' // 已确认
+  | 'produced'  // 已生产
+  | 'shipped'   // 已发货
+  | 'arrived'   // 已到货
+  | 'delivered' // 已派送
+  | 'installing' // 安装中
+  | 'completed' // 已完成
+  | 'cancelled' // 已取消
+  | 'closed'    // 已关闭
 
 // 量尺状态
 export type MeasurementStatus =
-  | 'pending_assign'    // 待派单
-  | 'assigned'          // 已派单
-  | 'completed'         // 已完成
-  | 'cancelled'         // 已取消
+  | 'pending'    // 待派单
+  | 'assigned'   // 已派单
+  | 'completed'  // 已完成
+  | 'cancelled'  // 已取消
 
 // 安装状态
 export type InstallationStatus =
-  | 'pending_assign'    // 待派单
-  | 'assigned'          // 已派单
-  | 'completed'         // 已完成
-  | 'cancelled'         // 已取消
-  | 'partial'           // 部分完成
+  | 'pending'      // 待派单
+  | 'assigned'     // 已派单
+  | 'in_progress'  // 进行中
+  | 'completed'    // 已完成
+  | 'cancelled'    // 已取消
+  | 'partial'      // 部分完成
 
 // 维修状态
 export type MaintenanceStatus =

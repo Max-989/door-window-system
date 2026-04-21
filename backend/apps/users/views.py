@@ -11,6 +11,7 @@ from rest_framework.filters import OrderingFilter, SearchFilter
 from rest_framework.permissions import AllowAny, IsAdminUser, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
+from common import responses
 
 from apps.permissions.models import Role as PermRole
 
@@ -182,26 +183,22 @@ def login_view(request):
     user = User.objects.filter(phone=username).first() if username else None
 
     if not user or not user.check_password(password):
-        return Response({"detail": "账号或密码错误"}, status=http_status.HTTP_400_BAD_REQUEST)
+        return responses.error(message="账号或密码错误", code=400)
 
     # 检查 UserProfile 状态
     try:
         profile = user.profile
         if profile.status == "rejected":
-            return Response(
-                {"detail": "注册申请已被驳回"}, status=http_status.HTTP_403_FORBIDDEN
-            )
+            return responses.error(message="注册申请已被驳回", code=403)
         if profile.status == "pending":
-            return Response(
-                {"detail": "注册申请待审核"}, status=http_status.HTTP_403_FORBIDDEN
-            )
+            return responses.error(message="注册申请待审核", code=403)
         if profile.status == "disabled":
-            return Response({"detail": "账号已被禁用"}, status=http_status.HTTP_403_FORBIDDEN)
+            return responses.error(message="账号已被禁用", code=403)
     except UserProfile.DoesNotExist:
         pass
 
     if not user.is_active:
-        return Response({"detail": "账号已被禁用"}, status=http_status.HTTP_403_FORBIDDEN)
+        return responses.error(message="账号已被禁用", code=403)
 
     token = _generate_token(user)
 
@@ -214,11 +211,9 @@ def login_view(request):
     try:
         profile = user.profile
         if profile.status == "rejected":
-            return Response(
-                {"detail": "注册申请已被驳回"}, status=http_status.HTTP_403_FORBIDDEN
-            )
+            return responses.error(message="注册申请已被驳回", code=403)
         if profile.status == "disabled":
-            return Response({"detail": "账号已被禁用"}, status=http_status.HTTP_403_FORBIDDEN)
+            return responses.error(message="账号已被禁用", code=403)
         if profile.status == "pending":
             # 乙方待审核：允许登录但标记 is_approved=false
             if identity != "customer":
@@ -247,8 +242,8 @@ def login_view(request):
         "is_approved": is_approved,
     }
 
-    return Response(
-        {
+    return responses.success(
+        data={
             "token": token["access"],
             "refresh": token["refresh"],
             "user": user_data,

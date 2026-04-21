@@ -43,7 +43,7 @@ const toCamel = (r: any): InstallationTask => ({
   customerName: r.customer_name ?? r.customerName ?? '',
   customerPhone: r.customer_phone ?? r.customerPhone ?? '',
   customerAddress: r.customer_address ?? r.customerAddress ?? '',
-  status: r.status ?? 'pending_assign',
+  status: r.status ?? 'pending',
   // 安装师傅：优先使用 assigned_to_name（单个姓名），其次 installers_name，最后拼接 installers 数组
   assignedWorkers: r.assigned_to_name
     ? [r.assigned_to_name]
@@ -495,7 +495,7 @@ const InstallationList = () => {
       title: '操作', width: 240, fixed: 'right',
       render: (_, r) => (
         <Space>
-          {(r.status === 'pending_assign') && (
+          {(r.status === 'pending') && (
             <Authorized permission="tasks-dispatch">
               <Button type="primary" size="small" icon={<SendOutlined />} onClick={() => handleDispatch(r)}>派单</Button>
             </Authorized>
@@ -505,7 +505,7 @@ const InstallationList = () => {
               <Button type="primary" size="small" style={{ background: '#52c41a', borderColor: '#52c41a' }} icon={<CheckCircleOutlined />} onClick={() => handleComplete(r)}>完成</Button>
             </Authorized>
           )}
-          {(r.status === 'pending_assign' || r.status === 'assigned') && (
+          {(r.status === 'pending' || r.status === 'assigned') && (
             <Authorized permission="tasks-cancel">
               <Popconfirm
                 title="确认取消"
@@ -541,7 +541,7 @@ const InstallationList = () => {
         searchFields={[{ key: 'taskNo', label: '任务号', placeholder: '搜索任务号/客户名' }]}
         onSearch={handleSearch}
         filterOptions={[{ key: 'status', label: '状态', options: [
-          { value: 'pending_assign', label: '待派单' }, { value: 'assigned', label: '已派单' },
+          { value: 'pending', label: '待派单' }, { value: 'assigned', label: '已派单' },
           { value: 'completed', label: '已完成' }, { value: 'partial', label: '部分完成' },
           { value: 'cancelled', label: '已取消' },
         ]}]}

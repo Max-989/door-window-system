@@ -485,7 +485,7 @@ const MaintenanceList = () => {
         searchFields={[{ key: 'taskNo', label: '任务号', placeholder: '搜索任务号/客户名' }]}
         onSearch={handleFilterAndSearch}
         filterOptions={[{ key: 'status', label: '状态', options: [
-          { value: 'pending_assign', label: '待派单' }, { value: 'assigned', label: '已派单' },
+          { value: 'pending', label: '待派单' }, { value: 'assigned', label: '已派单' },
           { value: 'completed', label: '已完成' }, { value: 'partial', label: '部分完成' },
         ]}, { key: 'responsibility', label: '责任方', options: [
           { value: 'factory', label: '工厂' }, { value: 'logistics', label: '物流' },

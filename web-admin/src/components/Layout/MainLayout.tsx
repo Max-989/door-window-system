@@ -1,9 +1,9 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { useNavigate, useLocation, Outlet } from 'react-router-dom'
 import { Layout, Menu, Button, Avatar, Dropdown, Breadcrumb } from 'antd'
 import {
-  DashboardOutlined, ShoppingOutlined, RulerOutlined, ToolOutlined,
-  CustomerServiceOutlined, TeamOutlined, BankOutlined, HomeOutlined,
+  DashboardOutlined, ShoppingOutlined, ToolOutlined,
+  TeamOutlined, BankOutlined, HomeOutlined,
   AppstoreOutlined, BarChartOutlined, SettingOutlined, SafetyOutlined,
   MenuFoldOutlined, MenuUnfoldOutlined, UserOutlined, LogoutOutlined,
   AuditOutlined,
@@ -15,9 +15,7 @@ const { Sider, Header, Content } = Layout
 const menuItems = [
   { key: '/app/dashboard', icon: <DashboardOutlined />, label: '数据概览' },
   { key: '/app/orders', icon: <ShoppingOutlined />, label: '订单管理' },
-  { key: '/app/measurements', icon: <RulerOutlined />, label: '量尺管理' },
-  { key: '/app/installations', icon: <ToolOutlined />, label: '安装管理' },
-  { key: '/app/maintenance', icon: <CustomerServiceOutlined />, label: '维修管理' },
+  { key: '/app/tasks', icon: <ToolOutlined />, label: '任务管理' },
   { key: '/app/personnel', icon: <TeamOutlined />, label: '人员管理' },
   { key: '/app/decoration-company', icon: <BankOutlined />, label: '装企管理' },
   { key: '/app/warehouse', icon: <HomeOutlined />, label: '仓库管理' },
@@ -36,11 +34,10 @@ const menuItems = [
 ]
 
 const breadcrumbMap: Record<string, string> = {
-  '/app/dashboard': '数据概览', '/app/orders': '订单管理', '/app/measurements': '量尺管理',
-  '/app/installations': '安装管理', '/app/maintenance': '维修管理', '/app/personnel': '人员管理',
-  '/app/decoration-company': '装企管理', '/app/warehouse': '仓库管理', '/app/products': '产品库管理',
-  '/app/reports': '数据看板', '/app/settings': '系统设置', '/app/settings/permissions': '权限管理',
-  '/app/settings/approval': '注册审核',
+  '/app/dashboard': '数据概览', '/app/orders': '订单管理', '/app/tasks': '任务管理',
+  '/app/personnel': '人员管理', '/app/decoration-company': '装企管理', '/app/warehouse': '仓库管理',
+  '/app/products': '产品库管理', '/app/reports': '数据看板', '/app/settings': '系统设置',
+  '/app/settings/permissions': '权限管理', '/app/settings/approval': '注册审核',
 }
 
 export default function MainLayout() {

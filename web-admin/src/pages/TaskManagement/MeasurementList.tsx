@@ -18,7 +18,7 @@ import { phoneRules } from '../../utils/validators'
 
 // 状态映射
 const STATUS_MAP: Record<string, { label: string; color: string }> = {
-  pending_assign: { label: '待派单', color: 'orange' },
+  pending: { label: '待派单', color: 'orange' },
   assigned: { label: '已派单', color: 'blue' },
   completed: { label: '已完成', color: 'green' },
   cancelled: { label: '已取消', color: 'default' },
@@ -314,7 +314,7 @@ const MeasurementList = () => {
       title: '操作', width: 260, fixed: 'right',
       render: (_, record) => (
         <Space>
-          {record.status === 'pending_assign' && (
+          {record.status === 'pending' && (
             <Authorized permission="tasks-dispatch">
               <Button type="primary" size="small" icon={<SendOutlined />} onClick={() => handleDispatch(record)}>派单</Button>
             </Authorized>
@@ -324,7 +324,7 @@ const MeasurementList = () => {
               <Button type="primary" size="small" style={{ background: '#52c41a', borderColor: '#52c41a' }} icon={<CheckCircleOutlined />} onClick={() => handleComplete(record)}>完成</Button>
             </Authorized>
           )}
-          {(record.status === 'pending_assign' || record.status === 'assigned') && (
+          {(record.status === 'pending' || record.status === 'assigned') && (
             <Authorized permission="tasks-cancel">
               <Popconfirm
                 title="确认取消"
@@ -356,7 +356,7 @@ const MeasurementList = () => {
       key: 'status', 
       label: '状态', 
       options: [
-        { value: 'pending_assign', label: '待派单' },
+        { value: 'pending', label: '待派单' },
         { value: 'assigned', label: '已派单' },
         { value: 'completed', label: '已完成' },
         { value: 'cancelled', label: '已取消' },

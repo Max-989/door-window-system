@@ -26,7 +26,7 @@ const measurementTasks = [
 ]
 
 const installationTasks = [
-  { id: 1, taskNo: 'INS-20260403-001', customer: '张三', address: '南京市鼓楼区XX小区', workers: ['赵安装', '钱安装'], status: 'pending_assign' },
+  { id: 1, taskNo: 'INS-20260403-001', customer: '张三', address: '南京市鼓楼区XX小区', workers: ['赵安装', '钱安装'], status: 'pending' },
 ]
 
 const operationLogs = [
