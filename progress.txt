@@ -5,6 +5,7 @@
 - Frontend type checking uses `tsc --noEmit` via `npm run type-check`.
 - Secret key environment variable is `DJANGO_SECRET_KEY` (changed from `SECRET_KEY`).
 - Base config sets `DEBUG = False`, dev overrides to `True`.
+- When overriding nested settings like REST_FRAMEWORK, use copy.deepcopy to preserve base configuration.
 
 ## 2026-04-22 - US-001
 - Modified `backend/config/settings/base.py`: set `DEBUG = False`, removed hardcoded `SECRET_KEY` default, changed environment variable to `DJANGO_SECRET_KEY` with validation.
@@ -53,4 +54,24 @@
   - Use `common.responses.success()` and `error()` for consistent API responses.
   - Ensure error responses also follow unified format.
   - Frontend may need to adjust to expect `data` wrapper; verify frontend request handling.
+---## 2026-04-22 - US-002
+- Updated frontend enum definitions to match backend: MaintenanceStatus changed from 'pending_assign' to 'pending'.
+- Added mapping logic in StatusTag component to differentiate order pending vs task pending using type prop (fallback inference).
+- Added role mapping in auth.store.ts to align Chinese role names from permissions.Role with frontend UserRole codes.
+- Updated UserRole type to include new roles: clerk, project_manager, sales_guide, service_personnel.
+- Files changed: web-admin/src/types/api.ts, web-admin/src/components/StatusTag/index.tsx, web-admin/src/stores/auth.store.ts.
+- **Learnings for future iterations:**
+  - Backend uses same 'pending' value for different status types (OrderStatus, MeasurementStatus, InstallationStatus, MaintenanceStatus). Frontend mapping keys must be unique; consider using type prop or separate mapping objects per status type.
+  - Role system uses permissions.Role model with Chinese names; frontend expects codes. Provide mapping in auth store.
+  - When modifying auth.store.ts, avoid naming conflict between imported 'get' and store getter; rename import.
+---
+
+## 2026-04-22 - US-005
+- Fixed settings merge override issue in dev.py by using deepcopy to preserve base REST_FRAMEWORK configuration.
+- Added SessionAuthentication for browsable API in development.
+- Files changed: backend/config/settings/dev.py, backend/config/settings/CLAUDE.md
+- **Learnings for future iterations:**
+  - When overriding nested settings like REST_FRAMEWORK, always use copy.deepcopy to preserve critical configuration (DEFAULT_AUTHENTICATION_CLASSES, etc.).
+  - Development environment can safely add SessionAuthentication for browsable API login.
+  - Existing tests pass; two unrelated test failures exist (notification ordering and login token assertion).
 ---
