@@ -6,6 +6,7 @@ from rest_framework import generics, viewsets
 from rest_framework.filters import OrderingFilter, SearchFilter
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+from common.responses import error
 
 from .models import (
     AlloyProduct,
@@ -89,9 +90,7 @@ class ProductSearchView(generics.ListAPIView):
         q = request.query_params.get("q", "").strip()
 
         if product_line not in ("wood", "alloy", "security"):
-            return Response(
-                {"error": "product_line 必须为 wood / alloy / security"}, status=400
-            )
+            return error(message="product_line 必须为 wood / alloy / security", code=400)
 
         if product_line == "wood":
             qs = WoodProduct.objects.filter(status="on_sale")

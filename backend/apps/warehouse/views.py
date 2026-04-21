@@ -10,6 +10,7 @@ from rest_framework.decorators import action
 from rest_framework.filters import OrderingFilter, SearchFilter
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+from common.responses import error
 
 from .models import (
     AccessoryInventory,
@@ -90,20 +91,13 @@ class HardwareInventoryViewSet(viewsets.ModelViewSet):
 
             # 参数校验
             if not quantity or not isinstance(quantity, int) or quantity <= 0:
-                return Response(
-                    {"error": "quantity 必须是正整数"}, status=status.HTTP_400_BAD_REQUEST
-                )
+                return error(message="quantity 必须是正整数", code=status.HTTP_400_BAD_REQUEST)
             if not reason:
-                return Response(
-                    {"error": "reason 必填"}, status=status.HTTP_400_BAD_REQUEST
-                )
+                return error(message="reason 必填", code=status.HTTP_400_BAD_REQUEST)
 
             # 库存检查
             if item.current_stock < quantity:
-                return Response(
-                    {"error": f"库存不足，当前库存 {item.current_stock}，出库数量 {quantity}"},
-                    status=status.HTTP_400_BAD_REQUEST,
-                )
+                return error(message=f"库存不足，当前库存 {item.current_stock}，出库数量 {quantity}", code=status.HTTP_400_BAD_REQUEST)
 
             # 减少库存
             item.current_stock -= quantity
@@ -151,11 +145,9 @@ class HardwareInventoryViewSet(viewsets.ModelViewSet):
 
         # 参数校验
         if not quantity or not isinstance(quantity, int) or quantity <= 0:
-            return Response(
-                {"error": "quantity 必须是正整数"}, status=status.HTTP_400_BAD_REQUEST
-            )
+            return error(message="quantity 必须是正整数", code=status.HTTP_400_BAD_REQUEST)
         if not reason:
-            return Response({"error": "reason 必填"}, status=status.HTTP_400_BAD_REQUEST)
+            return error(message="reason 必填", code=status.HTTP_400_BAD_REQUEST)
 
         # 增加库存
         item.current_stock += quantity
@@ -245,20 +237,13 @@ class AccessoryInventoryViewSet(viewsets.ModelViewSet):
 
             # 参数校验
             if not quantity or not isinstance(quantity, int) or quantity <= 0:
-                return Response(
-                    {"error": "quantity 必须是正整数"}, status=status.HTTP_400_BAD_REQUEST
-                )
+                return error(message="quantity 必须是正整数", code=status.HTTP_400_BAD_REQUEST)
             if not reason:
-                return Response(
-                    {"error": "reason 必填"}, status=status.HTTP_400_BAD_REQUEST
-                )
+                return error(message="reason 必填", code=status.HTTP_400_BAD_REQUEST)
 
             # 库存检查
             if item.current_stock < quantity:
-                return Response(
-                    {"error": f"库存不足，当前库存 {item.current_stock}，出库数量 {quantity}"},
-                    status=status.HTTP_400_BAD_REQUEST,
-                )
+                return error(message=f"库存不足，当前库存 {item.current_stock}，出库数量 {quantity}", code=status.HTTP_400_BAD_REQUEST)
 
             # 减少库存
             item.current_stock -= quantity
@@ -293,11 +278,9 @@ class AccessoryInventoryViewSet(viewsets.ModelViewSet):
 
         # 参数校验
         if not quantity or not isinstance(quantity, int) or quantity <= 0:
-            return Response(
-                {"error": "quantity 必须是正整数"}, status=status.HTTP_400_BAD_REQUEST
-            )
+            return error(message="quantity 必须是正整数", code=status.HTTP_400_BAD_REQUEST)
         if not reason:
-            return Response({"error": "reason 必填"}, status=status.HTTP_400_BAD_REQUEST)
+            return error(message="reason 必填", code=status.HTTP_400_BAD_REQUEST)
 
         # 增加库存
         item.current_stock += quantity
@@ -406,13 +389,10 @@ class WarehouseTransferViewSet(viewsets.ModelViewSet):
         transfer = self.get_object()
         new_status = request.data.get("status")
         if not new_status:
-            return Response({"error": "status字段必填"}, status=status.HTTP_400_BAD_REQUEST)
+            return error(message="status字段必填", code=status.HTTP_400_BAD_REQUEST)
         valid_statuses = ["pending", "confirmed", "transit", "completed"]
         if new_status not in valid_statuses:
-            return Response(
-                {"error": f"无效状态，可选: {valid_statuses}"},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
+            return error(message=f"无效状态，可选: {valid_statuses}", code=status.HTTP_400_BAD_REQUEST)
         transfer.status = new_status
         if new_status in ("confirmed", "completed") and request.user.is_authenticated:
             transfer.confirmed_by = request.user
@@ -442,21 +422,16 @@ class StocktakeView(viewsets.ViewSet):
         }
 
         if warehouse_type not in model_map:
-            return Response(
-                {"error": "无效仓库类型，可选: hardware/accessory"},
-                status=status.HTTP_400_BAD_REQUEST,
-            )
+            return error(message="无效仓库类型，可选: hardware/accessory", code=status.HTTP_400_BAD_REQUEST)
 
         model_class, stock_field = model_map[warehouse_type]
         if model_class is None:
-            return Response(
-                {"error": "该仓库类型暂不支持盘点"}, status=status.HTTP_400_BAD_REQUEST
-            )
+            return error(message="该仓库类型暂不支持盘点", code=status.HTTP_400_BAD_REQUEST)
 
         try:
             item = model_class.objects.get(id=item_id)
         except model_class.DoesNotExist:
-            return Response({"error": "物品不存在"}, status=status.HTTP_404_NOT_FOUND)
+            return error(message="物品不存在", code=status.HTTP_404_NOT_FOUND)
 
         system_qty = getattr(item, stock_field, 0)
         difference = actual_qty - system_qty

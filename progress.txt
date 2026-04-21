@@ -123,3 +123,15 @@
   - Frontend error handling works with new format (expects data.message)
   - Backend tests pass with DJANGO_SECRET_KEY environment variable set
 ---
+
+## 2026-04-22 - US-010
+- Fixed non-standard error responses in warehouse/views.py and products/views.py
+- Updated out_stock, in_stock, update_status, StocktakeView error returns to use common.responses.error
+- Updated ProductSearchView error return to use common.responses.error
+- Files changed: backend/apps/warehouse/views.py, backend/apps/products/views.py
+- **Learnings for future iterations:**
+  - Use `common.responses.error(message="...", code=status.HTTP_XXX)` for unified error responses
+  - Remember to import `from common.responses import error` in views
+  - For dynamic error messages, use f-strings within error call: `error(message=f"...", code=...)`
+  - Ensure error responses follow unified format with code, message, timestamp fields
+---
