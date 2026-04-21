@@ -8,6 +8,7 @@
 - When overriding nested settings like REST_FRAMEWORK, use copy.deepcopy to preserve base configuration.
 - Permission store empty permissions/menus should deny access (security default).
 - To avoid import conflicts between `common/utils.py` and `common/utils/` directory, rename file to `utils_core.py` and create `__init__.py` that re-exports symbols.
+- Use common.responses.success/error/created for unified API responses.
 
 ## 2026-04-22 - US-001
 - Modified `backend/config/settings/base.py`: set `DEBUG = False`, removed hardcoded `SECRET_KEY` default, changed environment variable to `DJANGO_SECRET_KEY` with validation.
