@@ -303,7 +303,7 @@ const Login = () => {
               await fetch('/api/v1/users/reset-password/', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ phone: values.phone, new_password: values.newPassword }),
+                body: JSON.stringify({ phone: values.phone, old_password: values.oldPassword, new_password: values.newPassword }),
               })
             } catch { /* 后端不存在，mock 成功 */ }
             message.success('密码已重置，请登录')
@@ -318,6 +318,11 @@ const Login = () => {
             { pattern: /^1[3-9]\d{9}$/, message: '手机号格式不正确' },
           ]}>
             <Input prefix={<MobileOutlined style={{ color: '#86868B' }} />} placeholder="请输入注册手机号" maxLength={11} />
+          </Form.Item>
+          <Form.Item name="oldPassword" label="原密码" rules={[
+            { required: true, message: '请输入原密码' },
+          ]}>
+            <Input.Password prefix={<LockOutlined style={{ color: '#86868B' }} />} placeholder="请输入原密码" />
           </Form.Item>
           <Form.Item name="newPassword" label="新密码" rules={[
             { required: true, message: '请输入新密码' },

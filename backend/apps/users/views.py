@@ -291,12 +291,19 @@ def me_view(request):
 def reset_password(request):
     """重置密码 - 仅限修改自己的密码"""
     phone = request.data.get("phone", "")
+    old_password = request.data.get("old_password", "")
     new_password = request.data.get("new_password", "")
 
+    if not old_password:
+        return Response({"detail": "原密码不能为空"}, status=http_status.HTTP_400_BAD_REQUEST)
     if not new_password:
         return Response({"detail": "新密码不能为空"}, status=http_status.HTTP_400_BAD_REQUEST)
     if len(new_password) < 6:
         return Response({"detail": "密码至少6位"}, status=http_status.HTTP_400_BAD_REQUEST)
+
+    # 验证原密码
+    if not request.user.check_password(old_password):
+        return Response({"detail": "原密码错误"}, status=http_status.HTTP_400_BAD_REQUEST)
 
     # 只能重置自己的密码
     if phone and phone != request.user.phone:

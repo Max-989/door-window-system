@@ -75,3 +75,12 @@
   - Development environment can safely add SessionAuthentication for browsable API login.
   - Existing tests pass; two unrelated test failures exist (notification ordering and login token assertion).
 ---
+
+## 2026-04-22 - US-006
+- Implemented old_password validation in reset_password view
+- Added old_password field to frontend forgot password modal
+- Files changed: backend/apps/users/views.py, web-admin/src/pages/Login/index.tsx
+- **Learnings for future iterations:**
+  - Backend reset_password view requires authentication; frontend forgot password flow may need separate endpoint
+  - Old password validation prevents unauthorized password reset
+---
