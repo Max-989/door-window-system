@@ -7,6 +7,7 @@
 - Base config sets `DEBUG = False`, dev overrides to `True`.
 - When overriding nested settings like REST_FRAMEWORK, use copy.deepcopy to preserve base configuration.
 - Permission store empty permissions/menus should deny access (security default).
+- To avoid import conflicts between `common/utils.py` and `common/utils/` directory, rename file to `utils_core.py` and create `__init__.py` that re-exports symbols.
 
 ## 2026-04-22 - US-001
 - Modified `backend/config/settings/base.py`: set `DEBUG = False`, removed hardcoded `SECRET_KEY` default, changed environment variable to `DJANGO_SECRET_KEY` with validation.
@@ -96,4 +97,28 @@
   - Ensure `initialized` check remains to prevent access before permission data loads
   - Frontend type check passes (no new errors introduced)
   - Browser verification needed: manual test recommended to ensure 403 page appears when user lacks permissions
+---
+## 2026-04-22 - US-008
+- Renamed `common/utils.py` to `common/utils_core.py` to resolve package conflict with `common/utils/` directory
+- Created `common/utils/__init__.py` that re-exports functions from utils_core.py
+- Updated CLAUDE.md in common directory with pattern documentation
+- Verified imports still work (`from common.utils import ...`)
+- Ran linting (flake8) and backend tests (pytest) — no new failures introduced
+- Typecheck passes (existing frontend type errors unchanged)
+- **Learnings for future iterations:**
+  - When resolving Python package conflicts, rename conflicting file and create `__init__.py` that re-exports symbols
+  - Use relative imports (`from ..utils_core import`) inside package `__init__.py`
+  - Existing imports can remain unchanged if package structure preserves the same public API
+  - Add relevant patterns to CLAUDE.md for future developers working in the same module
+---
+
+## 2026-04-22 - US-009
+- Updated register_decoration and register_staff functions to use unified response format (common.responses.success/error/created)
+- Replaced direct Response returns with responses.error() for validation errors and responses.created() for success responses
+- Files changed: backend/apps/users/views.py
+- **Learnings for future iterations:**
+  - Use responses.created() for HTTP 201 Created responses with data field
+  - Error responses should use responses.error() with message and code parameters
+  - Frontend error handling works with new format (expects data.message)
+  - Backend tests pass with DJANGO_SECRET_KEY environment variable set
 ---

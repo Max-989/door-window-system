@@ -22,3 +22,7 @@ For SQLite compatibility, a placeholder `JSONField` class exists in `utils_core.
 ## Order and Task Number Generation
 
 Functions `generate_order_no`, `generate_request_no`, `generate_task_no` create formatted IDs with date prefix and random suffix. Used by order, measurement, installation, and maintenance modules.
+
+## Unified Response Format
+
+Use `common.responses.success()`, `common.responses.created()`, and `common.responses.error()` for consistent API responses. These functions wrap data with `code`, `message`, `timestamp` fields. Use `created()` for HTTP 201 responses. Ensure error responses include appropriate HTTP status codes via `code` parameter.

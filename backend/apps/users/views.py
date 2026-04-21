@@ -54,10 +54,10 @@ def register_decoration(request):
     password = data.get("password")
 
     if not phone or not isinstance(phone, str) or not phone.strip():
-        return Response({"error": "手机号必填"}, status=http_status.HTTP_400_BAD_REQUEST)
+        return responses.error(message="手机号必填", code=http_status.HTTP_400_BAD_REQUEST)
 
     if not password or not isinstance(password, str) or len(password) < 6:
-        return Response({"error": "密码必填且至少6位"}, status=http_status.HTTP_400_BAD_REQUEST)
+        return responses.error(message="密码必填且至少6位", code=http_status.HTTP_400_BAD_REQUEST)
 
     phone = phone.strip()
 
@@ -70,25 +70,19 @@ def register_decoration(request):
         try:
             brand_id = int(brand_id)
         except (TypeError, ValueError):
-            return Response(
-                {"error": "brand_id 必须为整数"}, status=http_status.HTTP_400_BAD_REQUEST
-            )
+            return responses.error(message="brand_id 必须为整数", code=http_status.HTTP_400_BAD_REQUEST)
 
     if store_id is not None:
         try:
             store_id = int(store_id)
         except (TypeError, ValueError):
-            return Response(
-                {"error": "store_id 必须为整数"}, status=http_status.HTTP_400_BAD_REQUEST
-            )
+            return responses.error(message="store_id 必须为整数", code=http_status.HTTP_400_BAD_REQUEST)
 
     if role_id is not None:
         try:
             role_id = int(role_id)
         except (TypeError, ValueError):
-            return Response(
-                {"error": "role_id 必须为整数"}, status=http_status.HTTP_400_BAD_REQUEST
-            )
+            return responses.error(message="role_id 必须为整数", code=http_status.HTTP_400_BAD_REQUEST)
 
     contact_name = data.get("contact_name", "")
     if contact_name is None:
@@ -98,7 +92,7 @@ def register_decoration(request):
     # captcha = request.data.get('captcha', '')
 
     if User.objects.filter(phone=phone).exists():
-        return Response({"error": "该手机号已注册"}, status=http_status.HTTP_400_BAD_REQUEST)
+        return responses.error(message="该手机号已注册", code=http_status.HTTP_400_BAD_REQUEST)
 
     # 创建 User
     user = User.objects.create_user(
@@ -133,9 +127,7 @@ def register_decoration(request):
     profile.save()
 
     token = _generate_token(user)
-    return Response(
-        {"message": "注册成功", "token": token}, status=http_status.HTTP_201_CREATED
-    )
+    return responses.created(data={"token": token}, message="注册成功")
 
 
 @api_view(["POST"])
@@ -148,13 +140,13 @@ def register_staff(request):
     user_type = request.data.get("user_type", "management")
 
     if not phone or not password:
-        return Response({"error": "手机号和密码必填"}, status=http_status.HTTP_400_BAD_REQUEST)
+        return responses.error(message="手机号和密码必填", code=http_status.HTTP_400_BAD_REQUEST)
 
     if user_type not in ("management", "service"):
-        return Response({"error": "用户类型无效"}, status=http_status.HTTP_400_BAD_REQUEST)
+        return responses.error(message="用户类型无效", code=http_status.HTTP_400_BAD_REQUEST)
 
     if User.objects.filter(phone=phone).exists():
-        return Response({"error": "该手机号已注册"}, status=http_status.HTTP_400_BAD_REQUEST)
+        return responses.error(message="该手机号已注册", code=http_status.HTTP_400_BAD_REQUEST)
 
     user = User.objects.create_user(
         phone=phone, password=password, real_name=real_name, identity="contractor"
@@ -166,7 +158,7 @@ def register_staff(request):
         status="pending",
     )
 
-    return Response({"message": "注册成功，请等待管理员审核"}, status=http_status.HTTP_201_CREATED)
+    return responses.created(data=None, message="注册成功，请等待管理员审核")
 
 
 # ==================== 登录视图 ====================
