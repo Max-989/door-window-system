@@ -9,11 +9,15 @@ export type UserRole =
   | 'clerk_wood'        // 文员-木门
   | 'clerk_alloy'       // 文员-合金门
   | 'clerk_security'    // 文员-防盗门
+  | 'clerk'             // 文员（通用）
   | 'warehouse'         // 仓库人员（含送货师傅）
   | 'measurer'          // 量尺师傅
   | 'installer'         // 安装师傅
   | 'repairman'         // 维修师傅
   | 'foreman'           // 工头
+  | 'service_personnel' // 现场服务人员
+  | 'project_manager'   // 项目经理
+  | 'sales_guide'       // 导购
 
 // 用户状态
 export type UserStatus = 'active' | 'inactive' | 'disabled'
@@ -52,7 +56,7 @@ export type InstallationStatus =
 
 // 维修状态
 export type MaintenanceStatus =
-  | 'pending_assign'    // 待派单
+  | 'pending'    // 待派单
   | 'assigned'          // 已派单
   | 'completed'         // 已完成
   | 'cancelled'         // 已取消

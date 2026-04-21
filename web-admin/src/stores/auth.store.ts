@@ -1,7 +1,33 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 import type { User, LoginRequest, LoginResponse, UserRole } from '../types/api'
-import { post, get } from '@/utils/request'
+import { post, get as requestGet } from '@/utils/request'
+
+// Mapping from backend role names to frontend UserRole codes
+const ROLE_NAME_TO_CODE: Record<string, UserRole> = {
+  // permissions.Role names (Chinese) to codes
+  '系统管理员': 'system_admin',
+  '项目经理': 'project_manager',
+  '导购': 'sales_guide',
+  '仓库管理员': 'warehouse',
+  '现场服务人员': 'service_personnel',
+  '文员': 'clerk',
+  // existing codes map to themselves
+  'system_admin': 'system_admin',
+  'admin': 'admin',
+  'clerk_wood': 'clerk_wood',
+  'clerk_alloy': 'clerk_alloy',
+  'clerk_security': 'clerk_security',
+  'warehouse': 'warehouse',
+  'measurer': 'measurer',
+  'installer': 'installer',
+  'repairman': 'repairman',
+  'foreman': 'foreman',
+}
+
+function mapRoleToCode(role: string): UserRole {
+  return ROLE_NAME_TO_CODE[role] || role as UserRole
+}
 
 interface AuthState {
   user: User | null
@@ -25,7 +51,7 @@ const useAuthStore = create<AuthState>()(
           username: credentials.phone,
           password: credentials.password,
         })
-        const { token, refresh, user } = data
+        const { token, user } = data
         set({ user, isAuthenticated: true, token })
         return data
       },
@@ -35,14 +61,16 @@ const useAuthStore = create<AuthState>()(
       me: async () => {
         const token = get().token
         if (!token) throw new Error('未登录')
-        const user = await get<User>('/api/v1/users/me/')
+        const user = await requestGet<User>('/api/v1/users/me/')
         set({ user, isAuthenticated: true })
         return user
       },
 
       hasRole: (...roles: UserRole[]) => {
         const { user } = get()
-        return !!user && roles.includes(user.role)
+        if (!user) return false
+        const userRoleCode = mapRoleToCode(user.role)
+        return roles.includes(userRoleCode)
       },
     }),
     { name: 'auth-storage', partialize: (s) => ({ user: s.user, isAuthenticated: s.isAuthenticated, token: s.token }) }
