@@ -32,13 +32,16 @@ except ImportError as e:
     )
 
 # Swagger/OpenAPI 配置
+CONTACT_EMAIL = os.getenv("SWAGGER_CONTACT_EMAIL", "support@doorsystem.local")
+TERMS_URL = os.getenv("SWAGGER_TERMS_URL", "https://doorsystem.local/terms/")
+
 schema_view = get_schema_view(
     openapi.Info(
         title="门窗安装管理系统 API",
         default_version="v1",
         description="门窗安装管理系统 REST API 文档",
-        terms_of_service="https://www.example.com/terms/",
-        contact=openapi.Contact(email="contact@example.com"),
+        terms_of_service=TERMS_URL,
+        contact=openapi.Contact(email=CONTACT_EMAIL),
         license=openapi.License(name="MIT License"),
     ),
     public=True,

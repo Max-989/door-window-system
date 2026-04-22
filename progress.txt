@@ -419,3 +419,34 @@
   - New migrations needed: earlier stories modified model fields (validators, choices) without creating migrations
   - Django 5.2.13 detects validator additions as AlterField operations
 ---
+
+## 2026-04-22 - US-029
+- Added db_index=True to commonly filtered fields across 6 models:
+  - Order: source, customer_phone, customer_address, status, created_at
+  - MeasurementTask: source, status, created_at
+  - InstallationTask: source, status, created_at
+  - MaintenanceTask: source, status, responsibility, created_at
+  - WarehouseProduct: product_type, status, city
+  - User: identity, status, city, created_at
+- Created 6 new migration files for index changes
+- Backend tests: 85 passed, 3 failed (pre-existing), 3 skipped — no regressions
+- Files changed: 6 model files + 6 migration files
+- **Learnings for future iterations:**
+  - Add db_index=True to fields used in filter, search, and sort operations
+  - Focus on status, source, created_at fields — universally filtered across all task/order models
+  - ForeignKey fields already have implicit indexes in Django, no need to add db_index
+  - Index migrations are schema-only changes; no data migration needed
+---
+
+## 2026-04-22 - US-030
+- Replaced placeholder contact email and terms URL in Swagger config
+- Made both values configurable via environment variables (SWAGGER_CONTACT_EMAIL, SWAGGER_TERMS_URL)
+- Default contact: support@doorsystem.local
+- Default terms URL: https://doorsystem.local/terms/
+- Backend tests: 85 passed, 3 failed (pre-existing), 3 skipped — no regressions
+- Files changed: `backend/config/urls.py`
+- **Learnings for future iterations:**
+  - Use environment variables for Swagger contact info so it's deploy-configurable
+  - drf_yasg openapi.Info accepts env-configured values at import time
+  - No migration or typecheck concerns for URL config changes
+---
