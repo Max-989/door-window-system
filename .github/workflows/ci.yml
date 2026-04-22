@@ -12,6 +12,7 @@ on:
 env:
   # 环境变量
   DJANGO_SETTINGS_MODULE: config.settings.test
+  DJANGO_SECRET_KEY: 'test-secret-key-for-ci-1234567890abcdef'
   PYTHON_VERSION: '3.12'
   NODE_VERSION: '18'
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
@@ -29,6 +30,7 @@ jobs:
     
     env:
       PYTHONPATH: /github/workspace/backend
+      DJANGO_SECRET_KEY: 'test-secret-key-for-ci-1234567890abcdef'
 
     steps:
       - name: Checkout code

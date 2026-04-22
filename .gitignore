@@ -110,3 +110,11 @@ junit.xml
 .cache
 .sass-cache/
 .stylelintcache
+
+# Ralph automation tools
+ralph/
+scripts/
+archive/
+*.output
+progress.txt
+prd.json
