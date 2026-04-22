@@ -4,6 +4,7 @@
 users app - 用户认证与权限管理
 按需求文档重构：10个角色、分公司、产品线
 """
+
 from django.conf import settings
 from django.contrib.auth.models import (
     AbstractBaseUser,
@@ -87,14 +88,20 @@ class User(AbstractBaseUser, PermissionsMixin):
         related_name="users",
         verbose_name="分公司",
     )
-    city = models.CharField("城市", max_length=50, blank=True, default="", db_index=True)
+    city = models.CharField(
+        "城市", max_length=50, blank=True, default="", db_index=True
+    )
     product_line = models.CharField(
         "文员产品线", max_length=20, choices=ProductLine.CHOICES, blank=True, default=""
     )
 
     # 状态
     status = models.CharField(
-        "状态", max_length=20, choices=UserStatus.CHOICES, default=UserStatus.ACTIVE, db_index=True
+        "状态",
+        max_length=20,
+        choices=UserStatus.CHOICES,
+        default=UserStatus.ACTIVE,
+        db_index=True,
     )
     is_staff = models.BooleanField("员工", default=False)
     is_active = models.BooleanField("激活", default=True)

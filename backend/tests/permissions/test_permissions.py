@@ -4,6 +4,7 @@
 权限管理模块单元测试
 测试门窗安装管理系统的权限管理功能
 """
+
 from django.test import TestCase
 
 from apps.permissions.models import Menu, Role, RoleMenuPermission
@@ -15,7 +16,11 @@ class RoleModelTest(TestCase):
     def test_create_role(self):
         """测试创建角色"""
         role = Role.objects.create(
-            name="测试角色", code="test_role", description="这是一个测试角色描述", is_system=False, data_scope="city"
+            name="测试角色",
+            code="test_role",
+            description="这是一个测试角色描述",
+            is_system=False,
+            data_scope="city",
         )
         self.assertEqual(role.name, "测试角色")
         self.assertEqual(role.description, "这是一个测试角色描述")
@@ -26,7 +31,11 @@ class RoleModelTest(TestCase):
     def test_system_role(self):
         """测试系统预设角色"""
         role = Role.objects.create(
-            name="系统角色", code="system", description="系统预设角色", is_system=True, data_scope="all"
+            name="系统角色",
+            code="system",
+            description="系统预设角色",
+            is_system=True,
+            data_scope="all",
         )
         self.assertTrue(role.is_system)
         self.assertEqual(role.data_scope, "all")
@@ -34,19 +43,27 @@ class RoleModelTest(TestCase):
     def test_role_data_scope_choices(self):
         """测试数据范围选项"""
         # 全部数据
-        role1 = Role.objects.create(name="全部数据角色", code="all_data", data_scope="all")
+        role1 = Role.objects.create(
+            name="全部数据角色", code="all_data", data_scope="all"
+        )
         self.assertEqual(role1.data_scope, "all")
 
         # 本城市数据
-        role2 = Role.objects.create(name="城市数据角色", code="city_data", data_scope="city")
+        role2 = Role.objects.create(
+            name="城市数据角色", code="city_data", data_scope="city"
+        )
         self.assertEqual(role2.data_scope, "city")
 
         # 本部门数据
-        role3 = Role.objects.create(name="部门数据角色", code="dept_data", data_scope="department")
+        role3 = Role.objects.create(
+            name="部门数据角色", code="dept_data", data_scope="department"
+        )
         self.assertEqual(role3.data_scope, "department")
 
         # 仅自己创建的数据
-        role4 = Role.objects.create(name="自己数据角色", code="self_data", data_scope="self")
+        role4 = Role.objects.create(
+            name="自己数据角色", code="self_data", data_scope="self"
+        )
         self.assertEqual(role4.data_scope, "self")
 
     def test_role_str_representation(self):
@@ -138,7 +155,9 @@ class RoleMenuPermissionModelTest(TestCase):
 
     def setUp(self):
         """测试前置设置：创建角色和菜单"""
-        self.role = Role.objects.create(name="测试角色", code="test_role", data_scope="all")
+        self.role = Role.objects.create(
+            name="测试角色", code="test_role", data_scope="all"
+        )
         self.menu = Menu.objects.create(name="测试菜单", code="test_menu")
 
     def test_create_role_menu_permission(self):

@@ -2,6 +2,7 @@
 Development settings - inherits from base.
 Uses SQLite for local dev, enables debug toolbar features.
 """
+
 import copy
 from .base import *  # noqa: F401, F403
 

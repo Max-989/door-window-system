@@ -4,6 +4,7 @@
 products app - 产品库管理
 按需求文档第十六节重构：木门、合金门、防盗门、五金配件、供货厂家
 """
+
 from django.db import models
 
 from common.enums import (
@@ -26,7 +27,9 @@ class Supplier(models.Model):
     """供货厂家"""
 
     name = models.CharField("厂家名称", max_length=200)
-    product_type = models.CharField("产品类型", max_length=20, choices=ProductLine.CHOICES)
+    product_type = models.CharField(
+        "产品类型", max_length=20, choices=ProductLine.CHOICES
+    )
     contact_person = models.CharField("联系人", max_length=50, blank=True, default="")
     phone = models.CharField(
         "联系电话",
@@ -91,8 +94,12 @@ class WoodProduct(models.Model):
         related_name="wood_products",
         verbose_name="供货厂家",
     )
-    cost_price = models.DecimalField("成本价", max_digits=12, decimal_places=2, default=0)
-    image = models.ImageField("产品图片", upload_to="products/wood/", blank=True, null=True)
+    cost_price = models.DecimalField(
+        "成本价", max_digits=12, decimal_places=2, default=0
+    )
+    image = models.ImageField(
+        "产品图片", upload_to="products/wood/", blank=True, null=True
+    )
     status = models.CharField(
         "状态",
         max_length=20,
@@ -120,7 +127,11 @@ class AlloyProduct(models.Model):
         "开启方式", max_length=20, choices=AlloyOpenMethod.CHOICES
     )
     track_type = models.CharField(
-        "轨道类型", max_length=20, choices=AlloyTrackType.CHOICES, blank=True, default=""
+        "轨道类型",
+        max_length=20,
+        choices=AlloyTrackType.CHOICES,
+        blank=True,
+        default="",
     )
     profile = models.CharField("型材", max_length=100, blank=True, default="")
     colors = models.JSONField("颜色", default=list, blank=True)
@@ -174,7 +185,9 @@ class SecurityProduct(models.Model):
 
     name = models.CharField("产品名称", max_length=200)
     model = models.CharField("型号", max_length=100)
-    door_colors = models.JSONField("门扇颜色", default=list, blank=True, help_text="可选多选")
+    door_colors = models.JSONField(
+        "门扇颜色", default=list, blank=True, help_text="可选多选"
+    )
     open_method = models.CharField(
         "开启方式", max_length=20, choices=SecurityOpenMethod.CHOICES
     )
@@ -193,7 +206,10 @@ class SecurityProduct(models.Model):
     )
     frame_type = models.CharField("门框类型", max_length=100, blank=True, default="")
     fixed_config = models.JSONField(
-        "固定配置", default=dict, blank=True, help_text="门板材质/表面处理/铰链/填充/密封条/门槛等"
+        "固定配置",
+        default=dict,
+        blank=True,
+        help_text="门板材质/表面处理/铰链/填充/密封条/门槛等",
     )
     smart_lock_upcharge = models.DecimalField(
         "智能锁补差价", max_digits=12, decimal_places=2, default=0
@@ -239,7 +255,9 @@ class Hardware(models.Model):
     """五金配件库"""
 
     name = models.CharField("五金名称", max_length=200)
-    hardware_type = models.CharField("类型", max_length=20, choices=HardwareType.CHOICES)
+    hardware_type = models.CharField(
+        "类型", max_length=20, choices=HardwareType.CHOICES
+    )
     sub_type = models.CharField(
         "子类型", max_length=30, choices=HardwareSubType.CHOICES, blank=True, default=""
     )
@@ -255,7 +273,9 @@ class Hardware(models.Model):
         related_name="hardware_items",
         verbose_name="供应商",
     )
-    cost_price = models.DecimalField("成本价", max_digits=12, decimal_places=2, default=0)
+    cost_price = models.DecimalField(
+        "成本价", max_digits=12, decimal_places=2, default=0
+    )
     image = models.ImageField(
         "产品图片", upload_to="products/hardware/", blank=True, null=True
     )

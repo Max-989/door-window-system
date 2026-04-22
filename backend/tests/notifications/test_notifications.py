@@ -4,6 +4,7 @@
 通知管理模块单元测试
 测试门窗安装管理系统的通知功能
 """
+
 import time
 import uuid
 
@@ -64,7 +65,10 @@ class NotificationModelTest(TestCase):
     def test_notification_read_status(self):
         """测试通知阅读状态"""
         notification = Notification.objects.create(
-            user=self.user, type=NotificationType.SYSTEM, title="未读通知", is_read=False
+            user=self.user,
+            type=NotificationType.SYSTEM,
+            title="未读通知",
+            is_read=False,
         )
         self.assertFalse(notification.is_read)
         self.assertIsNone(notification.read_at)
@@ -114,7 +118,7 @@ class NotificationModelTest(TestCase):
         )
 
         # 获取按创建时间倒序排列的通知
-        notifications = list(Notification.objects.order_by('-created_at'))
+        notifications = list(Notification.objects.order_by("-created_at"))
         self.assertEqual(notifications[0].title, "通知3")  # 最新创建
         self.assertEqual(notifications[1].title, "通知2")
         self.assertEqual(notifications[2].title, "通知1")

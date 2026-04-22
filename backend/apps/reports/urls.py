@@ -3,6 +3,7 @@
 """
 reports app - URL配置
 """
+
 from django.urls import path
 
 from . import views

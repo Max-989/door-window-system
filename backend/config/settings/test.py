@@ -2,6 +2,7 @@
 Test settings - used for CI/CD and local testing.
 Uses SQLite in-memory database for fast tests.
 """
+
 import os
 import tempfile
 from datetime import timedelta

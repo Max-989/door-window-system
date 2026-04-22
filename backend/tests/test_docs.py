@@ -4,6 +4,7 @@
 API文档端点测试
 验证Swagger/OpenAPI文档生成是否正常工作
 """
+
 import pytest
 from django.test import TestCase
 from django.urls import reverse

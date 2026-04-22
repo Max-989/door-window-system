@@ -3,6 +3,7 @@
 """
 maintenance app - 序列化器
 """
+
 from rest_framework import serializers
 
 from .models import MaintenanceTask
@@ -107,7 +108,9 @@ class MaintenanceTaskCreateSerializer(serializers.ModelSerializer):
             if not isinstance(item, dict):
                 raise serializers.ValidationError(f"第 {i+1} 个配件必须是对象")
             if not item.get("name") or not isinstance(item.get("name"), str):
-                raise serializers.ValidationError(f"第 {i+1} 个配件名称不能为空且必须是字符串")
+                raise serializers.ValidationError(
+                    f"第 {i+1} 个配件名称不能为空且必须是字符串"
+                )
             quantity = item.get("quantity")
             if not isinstance(quantity, int) or quantity < 1:
                 raise serializers.ValidationError(f"第 {i+1} 个配件数量必须是正整数")
@@ -217,7 +220,9 @@ class CreateFromOrderSerializer(serializers.Serializer):
         required=False, help_text="安装单ID（可选）"
     )
     issue_description = serializers.CharField(
-        required=False, default="从订单创建", help_text='问题描述（可选，默认"从订单创建"）'
+        required=False,
+        default="从订单创建",
+        help_text='问题描述（可选，默认"从订单创建"）',
     )
     site_photos = serializers.ListField(
         child=serializers.CharField(), required=False, default=list
@@ -231,7 +236,9 @@ class CreateFromInstallationSerializer(serializers.Serializer):
 
     installation_task_id = serializers.IntegerField(required=True, help_text="安装单ID")
     issue_description = serializers.CharField(
-        required=False, default="从安装单创建", help_text='问题描述（可选，默认"从安装单创建"）'
+        required=False,
+        default="从安装单创建",
+        help_text='问题描述（可选，默认"从安装单创建"）',
     )
     site_photos = serializers.ListField(
         child=serializers.CharField(), required=False, default=list

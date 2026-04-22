@@ -4,6 +4,7 @@
 人员管理模块单元测试
 测试门窗安装管理系统的师傅和工头管理功能
 """
+
 import uuid
 
 from django.test import TestCase
@@ -67,7 +68,9 @@ class WorkerModelTest(TestCase):
         phone = f"138{str(uuid.uuid4().int)[:8]}"
 
         # 在职状态
-        worker1 = Worker.objects.create(name="在职师傅", phone=phone + "1", status="active")
+        worker1 = Worker.objects.create(
+            name="在职师傅", phone=phone + "1", status="active"
+        )
         self.assertEqual(worker1.status, "active")
 
         # 离职状态
@@ -137,7 +140,9 @@ class ForemanModelTest(TestCase):
     def test_foreman_status_flow(self):
         """测试工头状态流转"""
         phone = f"139{str(uuid.uuid4().int)[:8]}"
-        foreman = Foreman.objects.create(name="状态测试工头", phone=phone, status="active")
+        foreman = Foreman.objects.create(
+            name="状态测试工头", phone=phone, status="active"
+        )
         self.assertEqual(foreman.status, "active")
 
         foreman.status = "resigned"

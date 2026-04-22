@@ -1,6 +1,7 @@
 """
 Production settings - inherits from base.
 """
+
 import os
 
 from .base import *  # noqa: F401, F403
@@ -30,7 +31,9 @@ DATABASES = {
     }
 }
 
-CORS_ALLOWED_ORIGINS = [o for o in os.environ.get("CORS_ALLOWED_ORIGINS", "").split(",") if o]
+CORS_ALLOWED_ORIGINS = [
+    o for o in os.environ.get("CORS_ALLOWED_ORIGINS", "").split(",") if o
+]
 
 SECURE_SSL_REDIRECT = True
 SESSION_COOKIE_SECURE = True

@@ -4,6 +4,7 @@
 orders app - 信号处理
 订单状态变更自动同步到流转仓
 """
+
 from django.db import transaction
 from django.db.models.signals import post_save
 from django.dispatch import receiver

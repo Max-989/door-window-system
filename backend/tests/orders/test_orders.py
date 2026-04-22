@@ -4,6 +4,7 @@
 订单模块测试
 测试订单创建、查询、状态流转等核心功能
 """
+
 import pytest
 from django.contrib.auth import get_user_model
 from rest_framework.test import APIClient
@@ -54,7 +55,9 @@ class TestOrderManagement:
     @pytest.fixture
     def test_store(self, test_brand):
         """创建测试门店"""
-        store = Store.objects.create(name="测试门店", brand=test_brand, address="测试地址")
+        store = Store.objects.create(
+            name="测试门店", brand=test_brand, address="测试地址"
+        )
         yield store
         store.delete()
 

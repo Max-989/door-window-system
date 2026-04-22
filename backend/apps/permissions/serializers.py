@@ -3,6 +3,7 @@
 """
 权限管理序列化器
 """
+
 from rest_framework import serializers
 
 from .models import Menu, PermissionLog, Role, RoleFieldPermission

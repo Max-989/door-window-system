@@ -3,6 +3,7 @@
 """
 seed_menus - 初始化菜单种子数据
 """
+
 from django.core.management.base import BaseCommand
 
 from apps.permissions.models import Menu

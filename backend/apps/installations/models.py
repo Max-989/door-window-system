@@ -4,6 +4,7 @@
 installations app - 安装管理
 按需求文档第十一节重构：部分完成、增项费用、多师傅支持
 """
+
 from django.db import models
 
 from common.enums import InstallationStatus, OrderSource
@@ -64,10 +65,14 @@ class InstallationTask(models.Model):
     customer_phone = models.CharField(
         "客户电话", max_length=20, blank=True, default="", validators=[phone_validator]
     )
-    customer_address = models.CharField("客户地址", max_length=500, blank=True, default="")
+    customer_address = models.CharField(
+        "客户地址", max_length=500, blank=True, default=""
+    )
 
     # 直接安装单信息
-    door_types = models.JSONField("门种类", default=list, blank=True, help_text="直接安装单填写")
+    door_types = models.JSONField(
+        "门种类", default=list, blank=True, help_text="直接安装单填写"
+    )
     door_quantity = models.IntegerField("门数量", default=0)
     size_list = models.JSONField("尺寸单", default=list, blank=True)
 
@@ -100,13 +105,23 @@ class InstallationTask(models.Model):
 
     # 师傅提交
     room_photos = models.JSONField("按房间安装照片", default=list, blank=True)
-    installed_quantity = models.IntegerField("安装数量", default=0, help_text="自动生成可改")
+    installed_quantity = models.IntegerField(
+        "安装数量", default=0, help_text="自动生成可改"
+    )
     additional_items = models.TextField("增项说明", blank=True, default="")
     additional_fee = models.DecimalField(
-        "增项费用", max_digits=10, decimal_places=2, default=0, help_text="文员/后台填写"
+        "增项费用",
+        max_digits=10,
+        decimal_places=2,
+        default=0,
+        help_text="文员/后台填写",
     )
     subsidy = models.DecimalField(
-        "补贴", max_digits=10, decimal_places=2, default=0, help_text="安装确认时填入，默认0"
+        "补贴",
+        max_digits=10,
+        decimal_places=2,
+        default=0,
+        help_text="安装确认时填入，默认0",
     )
     notes = models.TextField("备注", blank=True, default="")
 
@@ -123,7 +138,11 @@ class InstallationTask(models.Model):
 
     # 部分完成时生成新任务的类型
     partial_next_type = models.CharField(
-        "部分完成后任务类型", max_length=20, blank=True, default="", help_text="售后/安装"
+        "部分完成后任务类型",
+        max_length=20,
+        blank=True,
+        default="",
+        help_text="售后/安装",
     )
     parent_task = models.ForeignKey(
         "self",

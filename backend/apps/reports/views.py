@@ -4,6 +4,7 @@
 reports app - 数据看板
 按需求文档第十七节：利润统计、师傅绩效、维修统计
 """
+
 from datetime import timedelta
 
 from django.db.models import Count, DecimalField, F, Q, Sum

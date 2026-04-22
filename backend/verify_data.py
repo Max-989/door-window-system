@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 """verify_data.py - 验证测试数据"""
+
 import os
 import sys
 from collections import Counter

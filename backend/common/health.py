@@ -4,6 +4,7 @@
 健康检查端点
 用于Docker健康检查和系统监控
 """
+
 from django.core.cache import cache
 from django.db import connection
 from django.http import JsonResponse
@@ -50,7 +51,10 @@ def health_check(request):
         if cached_value == "test":
             status["components"]["redis"] = {"status": "healthy"}
         else:
-            status["components"]["redis"] = {"status": "unhealthy", "error": "缓存读写失败"}
+            status["components"]["redis"] = {
+                "status": "unhealthy",
+                "error": "缓存读写失败",
+            }
             status["status"] = "unhealthy"
     except Exception as e:
         status["components"]["redis"] = {"status": "unhealthy", "error": str(e)}

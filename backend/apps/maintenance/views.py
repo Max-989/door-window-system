@@ -3,6 +3,7 @@
 """
 maintenance app - 视图
 """
+
 from django.db import transaction
 from django.utils import timezone
 from django_filters.rest_framework import DjangoFilterBackend
@@ -80,7 +81,9 @@ class MaintenanceTaskViewSet(viewsets.ModelViewSet):
             if not _check_can_create_independent(self.request.user):
                 from rest_framework import serializers as drf_serializers
 
-                raise drf_serializers.ValidationError("无权限创建独立售后单，请从订单或安装单关联创建")
+                raise drf_serializers.ValidationError(
+                    "无权限创建独立售后单，请从订单或安装单关联创建"
+                )
 
         task_no = generate_task_no("MT")  # MT = Maintenance Task
         warning = serializer.context.pop("installation_warning", None)
@@ -108,12 +111,16 @@ class MaintenanceTaskViewSet(viewsets.ModelViewSet):
         task = self.get_object()
         if task.status != "pending":
             return Response(
-                {"error": f"当前状态为{task.get_status_display()}，只有待派单才能执行此操作"},
+                {
+                    "error": f"当前状态为{task.get_status_display()}，只有待派单才能执行此操作"
+                },
                 status=status.HTTP_400_BAD_REQUEST,
             )
         installer_id = request.data.get("installer")
         if not installer_id:
-            return Response({"error": "请指定维修师傅"}, status=status.HTTP_400_BAD_REQUEST)
+            return Response(
+                {"error": "请指定维修师傅"}, status=status.HTTP_400_BAD_REQUEST
+            )
 
         from apps.personnel.models import Worker
 
@@ -135,7 +142,9 @@ class MaintenanceTaskViewSet(viewsets.ModelViewSet):
         task = self.get_object()
         if task.status != "assigned":
             return Response(
-                {"error": f"当前状态为{task.get_status_display()}，只有已派单才能执行此操作"},
+                {
+                    "error": f"当前状态为{task.get_status_display()}，只有已派单才能执行此操作"
+                },
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
@@ -157,7 +166,9 @@ class MaintenanceTaskViewSet(viewsets.ModelViewSet):
         task = self.get_object()
         if task.status not in ("pending", "assigned"):
             return Response(
-                {"error": f"当前状态为{task.get_status_display()}，只有待派单或已派单才能取消"},
+                {
+                    "error": f"当前状态为{task.get_status_display()}，只有待派单或已派单才能取消"
+                },
                 status=status.HTTP_400_BAD_REQUEST,
             )
         task.status = "cancelled"
@@ -209,7 +220,10 @@ class MaintenanceTaskViewSet(viewsets.ModelViewSet):
         ).first()
         if existing:
             return Response(
-                {"error": f"该订单已存在售后单 {existing.task_no}", "task_id": existing.id},
+                {
+                    "error": f"该订单已存在售后单 {existing.task_no}",
+                    "task_id": existing.id,
+                },
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
@@ -227,7 +241,8 @@ class MaintenanceTaskViewSet(viewsets.ModelViewSet):
                     installer = first_installer
             except InstallationTask.DoesNotExist:
                 return Response(
-                    {"error": "安装单不存在或不属于该订单"}, status=status.HTTP_400_BAD_REQUEST
+                    {"error": "安装单不存在或不属于该订单"},
+                    status=status.HTTP_400_BAD_REQUEST,
                 )
 
         with transaction.atomic():
@@ -278,7 +293,10 @@ class MaintenanceTaskViewSet(viewsets.ModelViewSet):
         ).first()
         if existing:
             return Response(
-                {"error": f"该安装单已存在售后单 {existing.task_no}", "task_id": existing.id},
+                {
+                    "error": f"该安装单已存在售后单 {existing.task_no}",
+                    "task_id": existing.id,
+                },
                 status=status.HTTP_400_BAD_REQUEST,
             )
 

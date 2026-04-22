@@ -1,6 +1,7 @@
 """
 OSS Storage utility
 """
+
 import uuid
 
 import oss2

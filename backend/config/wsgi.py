@@ -1,6 +1,7 @@
 """
 WSGI config for door-window-system.
 """
+
 import os
 
 from django.core.wsgi import get_wsgi_application

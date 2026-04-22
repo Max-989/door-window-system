@@ -3,6 +3,7 @@
 """
 健康检查端点测试
 """
+
 from unittest.mock import MagicMock, patch
 
 from django.test import Client, TestCase

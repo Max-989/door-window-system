@@ -3,6 +3,7 @@
 seed_data.py - 测试数据灌入脚本
 使用方式: python manage.py seed_data (或 python seed_data.py)
 """
+
 import os
 import sys
 from datetime import datetime, timedelta
@@ -121,7 +122,9 @@ def seed_brands_and_stores():
         if b not in brands:
             brands.append(b)
         s, _ = Store.objects.get_or_create(
-            brand=b, name=store_name, defaults={"address": f"{store_name}地址某某路50号"}
+            brand=b,
+            name=store_name,
+            defaults={"address": f"{store_name}地址某某路50号"},
         )
         if s not in stores:
             stores.append(s)
@@ -160,10 +163,38 @@ def seed_users(branches):
     users = []
     password = make_password("123456")
     data = [
-        ("13100000001", "系统管理员", "admin", UserIdentity.CONTRACTOR, branches[0], True),
-        ("13100000002", "文员小李", "clerk1", UserIdentity.CONTRACTOR, branches[0], False),
-        ("13100000003", "文员小王", "clerk2", UserIdentity.CONTRACTOR, branches[1], False),
-        ("13100000004", "文员小赵", "clerk3", UserIdentity.CONTRACTOR, branches[2], False),
+        (
+            "13100000001",
+            "系统管理员",
+            "admin",
+            UserIdentity.CONTRACTOR,
+            branches[0],
+            True,
+        ),
+        (
+            "13100000002",
+            "文员小李",
+            "clerk1",
+            UserIdentity.CONTRACTOR,
+            branches[0],
+            False,
+        ),
+        (
+            "13100000003",
+            "文员小王",
+            "clerk2",
+            UserIdentity.CONTRACTOR,
+            branches[1],
+            False,
+        ),
+        (
+            "13100000004",
+            "文员小赵",
+            "clerk3",
+            UserIdentity.CONTRACTOR,
+            branches[2],
+            False,
+        ),
         (
             "13100000005",
             "装企经理",
@@ -244,7 +275,14 @@ def seed_products(suppliers):
             suppliers[1],
             2500,
         ),
-        ("金迪模压门-D04", WoodSurfaceProcess.BARE, "JD-D04", ["白色"], suppliers[1], 600),
+        (
+            "金迪模压门-D04",
+            WoodSurfaceProcess.BARE,
+            "JD-D04",
+            ["白色"],
+            suppliers[1],
+            600,
+        ),
         (
             "美心拼色门-E05",
             WoodSurfaceProcess.PAINT,
@@ -578,7 +616,9 @@ def seed_personnel(branches):
         )
         workers.append(w)
 
-    print(f"  -> 工费标准 {len(wage_standards)}, 工头 {len(foremen)}, 师傅 {len(workers)}")
+    print(
+        f"  -> 工费标准 {len(wage_standards)}, 工头 {len(foremen)}, 师傅 {len(workers)}"
+    )
     return wage_standards, foremen, workers
 
 
@@ -748,9 +788,11 @@ def seed_installation_tasks(orders, workers, users, brands, stores, branches):
             door_quantity=(i % 5) + 1,
             status=status,
             assigned_by=user if status != InstallationStatus.PENDING else None,
-            installed_quantity=(i % 5) + 1
-            if status in [InstallationStatus.COMPLETED, InstallationStatus.PARTIAL]
-            else 0,
+            installed_quantity=(
+                (i % 5) + 1
+                if status in [InstallationStatus.COMPLETED, InstallationStatus.PARTIAL]
+                else 0
+            ),
             additional_fee=Decimal("50") if i % 3 == 0 else Decimal("0"),
         )
         task.created_at = created_time
@@ -810,9 +852,11 @@ def seed_measurement_tasks(
             assigned_to=worker if status != MeasurementStatus.PENDING else None,
             assigned_by=user if status != MeasurementStatus.PENDING else None,
             status=status,
-            wage_amount=Decimal("100")
-            if status == MeasurementStatus.COMPLETED
-            else Decimal("0"),
+            wage_amount=(
+                Decimal("100")
+                if status == MeasurementStatus.COMPLETED
+                else Decimal("0")
+            ),
         )
 
         if status == MeasurementStatus.COMPLETED:
@@ -881,22 +925,34 @@ def seed_maintenance_tasks(orders, workers, users, brands, stores, branches):
             status=status,
             responsibility=resp if status != MaintenanceStatus.PENDING else "",
             reviewed_by=user if status == MaintenanceStatus.COMPLETED else None,
-            reviewed_at=now_aware() - timedelta(days=1)
-            if status == MaintenanceStatus.COMPLETED
-            else None,
-            maintenance_fee=Decimal("200")
-            if status == MaintenanceStatus.COMPLETED
-            else Decimal("0"),
-            wage_amount=Decimal("150")
-            if status == MaintenanceStatus.COMPLETED
-            else Decimal("0"),
-            deduction_amount=Decimal("50")
-            if resp == MaintenanceResponsibility.INSTALLATION
-            else Decimal("0"),
-            deduction_worker=worker
-            if resp == MaintenanceResponsibility.INSTALLATION
-            else None,
-            resolution="更换新门扇，已验收通过" if status == MaintenanceStatus.COMPLETED else "",
+            reviewed_at=(
+                now_aware() - timedelta(days=1)
+                if status == MaintenanceStatus.COMPLETED
+                else None
+            ),
+            maintenance_fee=(
+                Decimal("200")
+                if status == MaintenanceStatus.COMPLETED
+                else Decimal("0")
+            ),
+            wage_amount=(
+                Decimal("150")
+                if status == MaintenanceStatus.COMPLETED
+                else Decimal("0")
+            ),
+            deduction_amount=(
+                Decimal("50")
+                if resp == MaintenanceResponsibility.INSTALLATION
+                else Decimal("0")
+            ),
+            deduction_worker=(
+                worker if resp == MaintenanceResponsibility.INSTALLATION else None
+            ),
+            resolution=(
+                "更换新门扇，已验收通过"
+                if status == MaintenanceStatus.COMPLETED
+                else ""
+            ),
         )
 
         if status == MaintenanceStatus.COMPLETED:

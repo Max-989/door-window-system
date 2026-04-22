@@ -3,6 +3,7 @@
 """
 通用校验器
 """
+
 from django.core.validators import RegexValidator
 
 # 中国大陆手机号校验器（11位，1开头，第二位3-9）

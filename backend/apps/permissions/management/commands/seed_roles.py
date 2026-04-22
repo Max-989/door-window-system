@@ -3,6 +3,7 @@
 """
 seed_roles - 初始化预设角色及菜单权限
 """
+
 from django.core.management.base import BaseCommand
 
 from apps.permissions.models import Menu, Role, RoleMenuPermission

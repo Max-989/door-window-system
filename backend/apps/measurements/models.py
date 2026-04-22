@@ -4,6 +4,7 @@
 measurements app - 量尺管理
 按需求文档第十节重构：4个状态
 """
+
 from django.db import models
 
 from common.enums import MeasurementStatus
@@ -17,7 +18,11 @@ class MeasurementTask(models.Model):
 
     # 来源信息
     source = models.CharField(
-        "来源", max_length=20, default="direct", help_text="brand_store/direct", db_index=True
+        "来源",
+        max_length=20,
+        default="direct",
+        help_text="brand_store/direct",
+        db_index=True,
     )
     brand = models.ForeignKey(
         "decoration.Brand",
@@ -100,7 +105,9 @@ class MeasurementTask(models.Model):
     notes = models.TextField("备注", blank=True, default="")
 
     # 工费
-    wage_amount = models.DecimalField("工费", max_digits=10, decimal_places=2, default=0)
+    wage_amount = models.DecimalField(
+        "工费", max_digits=10, decimal_places=2, default=0
+    )
 
     created_at = models.DateTimeField("创建时间", auto_now_add=True, db_index=True)
     updated_at = models.DateTimeField("更新时间", auto_now=True)

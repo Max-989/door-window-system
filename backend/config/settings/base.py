@@ -3,6 +3,7 @@
 """
 Django settings for door-window-system - Base configuration.
 """
+
 import os
 from datetime import timedelta
 from pathlib import Path

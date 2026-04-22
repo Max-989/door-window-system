@@ -4,6 +4,7 @@
 personnel app - 人员管理（师傅/工头/工费）
 按需求文档第十三节新增
 """
+
 from django.db import models
 
 from common.enums import ContractMode, WageBillingType, WorkerSkillType
@@ -19,7 +20,9 @@ class Worker(models.Model):
     )
     wechat = models.CharField("微信号", max_length=100, blank=True, default="")
     bank_card_no = models.CharField("银行卡号", max_length=30, blank=True, default="")
-    skills = models.JSONField("技能类型", default=list, help_text="量尺/安装/维修/送货多选")
+    skills = models.JSONField(
+        "技能类型", default=list, help_text="量尺/安装/维修/送货多选"
+    )
     foreman = models.ForeignKey(
         "Foreman",
         on_delete=models.SET_NULL,
@@ -147,7 +150,11 @@ class WageStandard(models.Model):
         verbose_name="分公司",
     )
     product_line = models.CharField(
-        "产品线细分", max_length=20, blank=True, default="", help_text="安装/送货按产品细分"
+        "产品线细分",
+        max_length=20,
+        blank=True,
+        default="",
+        help_text="安装/送货按产品细分",
     )
     is_default = models.BooleanField("是否默认模板", default=False)
     created_at = models.DateTimeField("创建时间", auto_now_add=True)
@@ -166,7 +173,10 @@ class WageSettlement(models.Model):
     """月结算记录"""
 
     worker = models.ForeignKey(
-        Worker, on_delete=models.CASCADE, related_name="settlements", verbose_name="师傅"
+        Worker,
+        on_delete=models.CASCADE,
+        related_name="settlements",
+        verbose_name="师傅",
     )
     month = models.DateField("结算月份", help_text="格式：YYYY-MM-01")
     measurement_fee = models.DecimalField(
@@ -185,7 +195,9 @@ class WageSettlement(models.Model):
     deduction = models.DecimalField(
         "扣费", max_digits=10, decimal_places=2, default=0, help_text="责任扣费等"
     )
-    total_fee = models.DecimalField("总工费", max_digits=10, decimal_places=2, default=0)
+    total_fee = models.DecimalField(
+        "总工费", max_digits=10, decimal_places=2, default=0
+    )
     status = models.CharField(
         "状态",
         max_length=20,
@@ -240,7 +252,9 @@ class ContractModeSetting(models.Model):
     contract_mode = models.CharField(
         "承包模式", max_length=20, choices=ContractMode.CHOICES
     )
-    contractor_name = models.CharField("承包商名称", max_length=100, blank=True, default="")
+    contractor_name = models.CharField(
+        "承包商名称", max_length=100, blank=True, default=""
+    )
     settlement_price = models.DecimalField(
         "承包结算价", max_digits=12, decimal_places=2, default=0
     )

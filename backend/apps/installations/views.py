@@ -3,6 +3,7 @@
 """
 installations app - 视图
 """
+
 from django.db import transaction
 from django.utils import timezone
 from django_filters.rest_framework import DjangoFilterBackend
@@ -105,7 +106,9 @@ class InstallationTaskViewSet(viewsets.ModelViewSet):
         order = serializer.validated_data.get("order")
         if not order:
             if not _check_can_create_independent(self.request.user):
-                raise drf_serializers.ValidationError("无权限创建独立安装任务，请从订单关联创建")
+                raise drf_serializers.ValidationError(
+                    "无权限创建独立安装任务，请从订单关联创建"
+                )
 
         task_no = generate_task_no("IT")  # IT = Installation Task
         serializer.save(task_no=task_no, assigned_by=self.request.user)
@@ -116,7 +119,9 @@ class InstallationTaskViewSet(viewsets.ModelViewSet):
         task = self.get_object()
         if task.status != "pending":
             return Response(
-                {"error": f"当前状态为{task.get_status_display()}，只有待派单才能执行此操作"},
+                {
+                    "error": f"当前状态为{task.get_status_display()}，只有待派单才能执行此操作"
+                },
                 status=status.HTTP_400_BAD_REQUEST,
             )
         installer_ids = request.data.get("installers")
@@ -129,7 +134,9 @@ class InstallationTaskViewSet(viewsets.ModelViewSet):
 
         workers = Worker.objects.filter(id__in=installer_ids)
         if workers.count() != len(installer_ids):
-            return Response({"error": "部分师傅不存在"}, status=status.HTTP_400_BAD_REQUEST)
+            return Response(
+                {"error": "部分师傅不存在"}, status=status.HTTP_400_BAD_REQUEST
+            )
 
         task.status = "assigned"
         task.assigned_at = timezone.now()
@@ -144,7 +151,9 @@ class InstallationTaskViewSet(viewsets.ModelViewSet):
         task = self.get_object()
         if task.status != "assigned":
             return Response(
-                {"error": f"当前状态为{task.get_status_display()}，只有已派单才能执行此操作"},
+                {
+                    "error": f"当前状态为{task.get_status_display()}，只有已派单才能执行此操作"
+                },
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
@@ -166,7 +175,9 @@ class InstallationTaskViewSet(viewsets.ModelViewSet):
         task = self.get_object()
         if task.status not in ("pending", "assigned"):
             return Response(
-                {"error": f"当前状态为{task.get_status_display()}，只有待派单或已派单才能取消"},
+                {
+                    "error": f"当前状态为{task.get_status_display()}，只有待派单或已派单才能取消"
+                },
                 status=status.HTTP_400_BAD_REQUEST,
             )
         task.status = "cancelled"
@@ -229,7 +240,9 @@ class InstallationTaskViewSet(viewsets.ModelViewSet):
         ]
         if order.status not in allowed_statuses:
             return Response(
-                {"error": f"订单状态为 {order.get_status_display()}，只有已确认和已发货状态才能生成安装单"},
+                {
+                    "error": f"订单状态为 {order.get_status_display()}，只有已确认和已发货状态才能生成安装单"
+                },
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
@@ -237,7 +250,10 @@ class InstallationTaskViewSet(viewsets.ModelViewSet):
         existing = InstallationTask.objects.filter(order=order, source="order").first()
         if existing:
             return Response(
-                {"error": f"该订单已生成安装单 {existing.task_no}", "task_id": existing.id},
+                {
+                    "error": f"该订单已生成安装单 {existing.task_no}",
+                    "task_id": existing.id,
+                },
                 status=status.HTTP_400_BAD_REQUEST,
             )
 

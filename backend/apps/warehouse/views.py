@@ -3,6 +3,7 @@
 """
 warehouse app - 视图
 """
+
 import openpyxl
 from django_filters import rest_framework as filters
 from django_filters.rest_framework import DjangoFilterBackend
@@ -281,7 +282,10 @@ class WarehouseTransferViewSet(viewsets.ModelViewSet):
             return error(message="status字段必填", code=status.HTTP_400_BAD_REQUEST)
         valid_statuses = ["pending", "confirmed", "transit", "completed"]
         if new_status not in valid_statuses:
-            return error(message=f"无效状态，可选: {valid_statuses}", code=status.HTTP_400_BAD_REQUEST)
+            return error(
+                message=f"无效状态，可选: {valid_statuses}",
+                code=status.HTTP_400_BAD_REQUEST,
+            )
         transfer.status = new_status
         if new_status in ("confirmed", "completed") and request.user.is_authenticated:
             transfer.confirmed_by = request.user
@@ -305,17 +309,24 @@ class StocktakeView(viewsets.ViewSet):
         model_map = {
             "hardware": (HardwareInventory, "current_stock"),
             "accessory": (AccessoryInventory, "current_stock"),
-            "pending": (PendingGoods, "current_stock")
-            if hasattr(PendingGoods, "current_stock")
-            else None,
+            "pending": (
+                (PendingGoods, "current_stock")
+                if hasattr(PendingGoods, "current_stock")
+                else None
+            ),
         }
 
         if warehouse_type not in model_map:
-            return error(message="无效仓库类型，可选: hardware/accessory", code=status.HTTP_400_BAD_REQUEST)
+            return error(
+                message="无效仓库类型，可选: hardware/accessory",
+                code=status.HTTP_400_BAD_REQUEST,
+            )
 
         model_class, stock_field = model_map[warehouse_type]
         if model_class is None:
-            return error(message="该仓库类型暂不支持盘点", code=status.HTTP_400_BAD_REQUEST)
+            return error(
+                message="该仓库类型暂不支持盘点", code=status.HTTP_400_BAD_REQUEST
+            )
 
         try:
             item = model_class.objects.get(id=item_id)

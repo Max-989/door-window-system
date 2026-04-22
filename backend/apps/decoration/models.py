@@ -4,6 +4,7 @@
 decoration app - 装企管理
 按需求文档第十四节新增
 """
+
 from django.db import models
 
 from common.enums import DecorationStaffRole, DecorationStatus

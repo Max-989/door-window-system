@@ -4,6 +4,7 @@
 仓库管理模块单元测试
 测试门窗安装管理系统的仓库管理功能
 """
+
 import uuid
 
 from django.test import TestCase
@@ -86,7 +87,10 @@ class WarehouseProductModelTest(TestCase):
 
         # 测试自动生成标记
         product2 = WarehouseProduct.objects.create(
-            order_no=order_no + "2", product_type="合金门", quantity=2, auto_generated=True
+            order_no=order_no + "2",
+            product_type="合金门",
+            quantity=2,
+            auto_generated=True,
         )
         self.assertTrue(product2.auto_generated)
 
@@ -163,9 +167,7 @@ class HardwareInventoryModelTest(TestCase):
             operator=user,
         )
 
-        records = StockRecord.objects.filter(
-            item_type="hardware", item_id=inventory.pk
-        )
+        records = StockRecord.objects.filter(item_type="hardware", item_id=inventory.pk)
         self.assertEqual(records.count(), 2)
         self.assertEqual(records[0].record_type, "out")
         self.assertEqual(records[0].quantity, 20)
@@ -174,7 +176,9 @@ class HardwareInventoryModelTest(TestCase):
 
     def test_hardware_inventory_minimal_fields(self):
         """测试最小字段创建五金库存"""
-        inventory = HardwareInventory.objects.create(name="最小库存", hardware_type="通用")
+        inventory = HardwareInventory.objects.create(
+            name="最小库存", hardware_type="通用"
+        )
         self.assertEqual(inventory.name, "最小库存")
         self.assertEqual(inventory.hardware_type, "通用")
         self.assertEqual(inventory.current_stock, 0)  # 默认值

@@ -4,6 +4,7 @@
 产品模块单元测试
 测试门窗安装管理系统的产品库功能
 """
+
 from django.test import TestCase
 
 from apps.products.models import ProductCategory, Supplier, WoodProduct
@@ -30,7 +31,9 @@ class SupplierModelTest(TestCase):
 
     def test_supplier_str_representation(self):
         """测试供货厂家的字符串表示"""
-        supplier = Supplier.objects.create(name="测试厂家", product_type=ProductLine.ALLOY)
+        supplier = Supplier.objects.create(
+            name="测试厂家", product_type=ProductLine.ALLOY
+        )
         self.assertEqual(str(supplier), "测试厂家")
 
     def test_supplier_phone_validation(self):

@@ -4,6 +4,7 @@
 维护管理模块单元测试
 测试门窗安装管理系统的维修任务功能
 """
+
 import uuid
 
 from django.test import TestCase

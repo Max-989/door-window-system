@@ -3,6 +3,7 @@
 """
 personnel app - 序列化器
 """
+
 from rest_framework import serializers
 
 from .models import ContractModeSetting, Foreman, WageSettlement, WageStandard, Worker

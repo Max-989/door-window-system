@@ -4,13 +4,16 @@
 permissions app - 权限管理模块
 菜单、角色、权限分配、操作日志
 """
+
 from django.conf import settings
 from django.db import models
 
 
 class Role(models.Model):
     name = models.CharField(max_length=50, verbose_name="角色名称")
-    code = models.CharField(max_length=50, unique=True, null=True, verbose_name="角色代码")
+    code = models.CharField(
+        max_length=50, unique=True, null=True, verbose_name="角色代码"
+    )
     description = models.TextField(blank=True, verbose_name="描述")
     is_system = models.BooleanField(default=False, verbose_name="系统预设角色")
     data_scope = models.CharField(
