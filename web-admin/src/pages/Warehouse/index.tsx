@@ -174,7 +174,7 @@ const Warehouse = () => {
       if (flowBrandId) params.set('brand_id', String(flowBrandId))
       if (flowStoreId) params.set('store_id', String(flowStoreId))
       const res = await get<any>(`/warehouse/products/?${params.toString()}`)
-      const items = res.results || res.data?.items || res.data || res || []
+      const items = Array.isArray(res) ? res : (res.items || res.results || [])
       setFlow(Array.isArray(items) ? items : [])
     } catch (err: any) {
       message.error(err.message || '加载流转仓数据失败')
@@ -187,7 +187,7 @@ const Warehouse = () => {
   const fetchBrandOptions = useCallback(async () => {
     try {
       const res = await get<any>('/brands/')
-      const items = res.results || res.data?.items || res.data || res || []
+      const items = Array.isArray(res) ? res : (res.items || res.results || [])
       setBrandOptions(Array.isArray(items) ? items.map((b: any) => ({ value: b.id, label: b.name })) : [])
     } catch { /* ignore */ }
   }, [])
@@ -196,7 +196,7 @@ const Warehouse = () => {
   const fetchStoreOptions = useCallback(async () => {
     try {
       const res = await get<any>('/stores/')
-      const items = res.results || res.data?.items || res.data || res || []
+      const items = Array.isArray(res) ? res : (res.items || res.results || [])
       setStoreOptions(Array.isArray(items) ? items.map((s: any) => ({ value: s.id, label: s.name })) : [])
     } catch { /* ignore */ }
   }, [])
@@ -205,7 +205,7 @@ const Warehouse = () => {
     setHardwareLoading(true)
     try {
       const res = await get<any>('/warehouse/hardware/')
-      const items = res.results || res.data?.items || res.data || res || []
+      const items = Array.isArray(res) ? res : (res.items || res.results || [])
       setHardware(Array.isArray(items) ? items : [])
     } catch (err: any) {
       message.error(err.message || '加载五金仓数据失败')
@@ -218,7 +218,7 @@ const Warehouse = () => {
     setAccessoryLoading(true)
     try {
       const res = await get<any>('/warehouse/accessories/')
-      const items = res.results || res.data?.items || res.data || res || []
+      const items = Array.isArray(res) ? res : (res.items || res.results || [])
       setAccessory(Array.isArray(items) ? items : [])
     } catch (err: any) {
       message.error(err.message || '加载配件仓数据失败')
@@ -231,7 +231,7 @@ const Warehouse = () => {
     setPendingLoading(true)
     try {
       const res = await get<any>('/warehouse/pending/')
-      const items = res.results || res.data?.items || res.data || res || []
+      const items = Array.isArray(res) ? res : (res.items || res.results || [])
       setPending(Array.isArray(items) ? items : [])
     } catch (err: any) {
       message.error(err.message || '加载暂存仓数据失败')
@@ -244,7 +244,7 @@ const Warehouse = () => {
     setTransferLoading(true)
     try {
       const res = await get<any>('/warehouse/transfers/')
-      const items = res.results || res.data?.items || res.data || res || []
+      const items = Array.isArray(res) ? res : (res.items || res.results || [])
       setTransfer(Array.isArray(items) ? items : [])
     } catch (err: any) {
       message.error(err.message || '加载调拨数据失败')
@@ -673,7 +673,7 @@ const Warehouse = () => {
             />
           </Space>
         }
-        hidePagination
+        pagination={false}
       />
     )},
     { key: 'hardware', label: `五金仓 (${hardware.length})`, children: (
@@ -684,7 +684,7 @@ const Warehouse = () => {
         rowKey="id"
         onAdd={hasPermission('warehouse-create') ? () => handleAdd('hardware') : undefined}
         addText="新增入库"
-        hidePagination
+        pagination={false}
       />
     )},
     { key: 'accessory', label: `配件仓 (${accessory.length})`, children: (
@@ -695,7 +695,7 @@ const Warehouse = () => {
         rowKey="id"
         onAdd={hasPermission('warehouse-create') ? () => handleAdd('accessory') : undefined}
         addText="新增入库"
-        hidePagination
+        pagination={false}
       />
     )},
     { key: 'pending', label: `货品暂存仓 (${pending.length})`, children: (
@@ -706,7 +706,7 @@ const Warehouse = () => {
         rowKey="id"
         onAdd={hasPermission('warehouse-create') ? () => handleAdd('pending') : undefined}
         addText="新增入库"
-        hidePagination
+        pagination={false}
       />
     )},
     { key: 'transfer', label: `城市调拨 (${transfer.length})`, children: (
@@ -717,7 +717,7 @@ const Warehouse = () => {
         rowKey="id"
         onAdd={hasPermission('warehouse-transfer') ? () => { transferForm.resetFields(); setTransferModalVisible(true) } : undefined}
         addText="新建调拨"
-        hidePagination
+        pagination={false}
       />
     )},
   ]

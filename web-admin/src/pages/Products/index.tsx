@@ -58,9 +58,9 @@ function useCrudApi<T extends { id: number }>(apiUrl: string) {
       if (search) params.set('search', search)
       if (statusFilter) params.set('status', statusFilter)
       const res = await get<any>(`${apiUrl}?${params.toString()}`)
-      const results = res.results || res.data?.items || res.data || res || []
+      const results = Array.isArray(res) ? res : (res.items || res.results || [])
       setData(Array.isArray(results) ? results : [])
-      setTotal(res.count ?? res.data?.total ?? (Array.isArray(results) ? results.length : 0))
+      setTotal(res.total ?? res.count ?? (Array.isArray(results) ? results.length : 0))
     } catch (err: any) {
       message.error(err.message || '加载数据失败')
     } finally {
@@ -388,7 +388,7 @@ const Products = () => {
         onSearch={woodCrud.handleSearch}
         onAdd={hasPermission('products-create') ? () => handleAdd('wood') : undefined}
         addText="新增木门"
-        hidePagination
+        pagination={false}
         scroll={{ x: 960 }}
       />
     )},
@@ -414,7 +414,7 @@ const Products = () => {
         onSearch={alloyCrud.handleSearch}
         onAdd={hasPermission('products-create') ? () => handleAdd('alloy') : undefined}
         addText="新增合金门"
-        hidePagination
+        pagination={false}
         scroll={{ x: 1060 }}
       />
     )},
@@ -439,7 +439,7 @@ const Products = () => {
         onSearch={securityCrud.handleSearch}
         onAdd={hasPermission('products-create') ? () => handleAdd('security') : undefined}
         addText="新增防盗门"
-        hidePagination
+        pagination={false}
         scroll={{ x: 960 }}
       />
     )},
@@ -463,7 +463,7 @@ const Products = () => {
         onSearch={hardwareCrud.handleSearch}
         onAdd={hasPermission('products-create') ? () => handleAdd('hardware') : undefined}
         addText="新增五金配件"
-        hidePagination
+        pagination={false}
         scroll={{ x: 960 }}
       />
     )},
@@ -484,7 +484,7 @@ const Products = () => {
         onSearch={supplierCrud.handleSearch}
         onAdd={hasPermission('products-create') ? () => handleAdd('supplier') : undefined}
         addText="新增供货厂家"
-        hidePagination
+        pagination={false}
         scroll={{ x: 800 }}
       />
     )},

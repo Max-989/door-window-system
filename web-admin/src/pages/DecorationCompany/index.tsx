@@ -64,7 +64,7 @@ const DecorationCompany = () => {
     setBrandsLoading(true)
     try {
       const res = await get<any>('/decoration/brands/')
-      const items = res.results || res.data?.items || res.data || res || []
+      const items = Array.isArray(res) ? res : (res.items || res.results || [])
       setBrands(Array.isArray(items) ? items : [])
     } catch (err: any) {
       message.error(err.message || '加载品牌失败')
@@ -77,7 +77,7 @@ const DecorationCompany = () => {
     setStoresLoading(true)
     try {
       const res = await get<any>('/decoration/stores/')
-      const items = res.results || res.data?.items || res.data || res || []
+      const items = Array.isArray(res) ? res : (res.items || res.results || [])
       setStores(Array.isArray(items) ? items : [])
     } catch (err: any) {
       message.error(err.message || '加载门店失败')
@@ -90,7 +90,7 @@ const DecorationCompany = () => {
     setStaffLoading(true)
     try {
       const res = await get<any>('/decoration/staff/')
-      const items = res.results || res.data?.items || res.data || res || []
+      const items = Array.isArray(res) ? res : (res.items || res.results || [])
       setStaff(Array.isArray(items) ? items : [])
     } catch (err: any) {
       message.error(err.message || '加载人员失败')
@@ -325,7 +325,7 @@ const DecorationCompany = () => {
         rowKey="id"
         onAdd={hasPermission('decoration-company-create') ? () => handleAdd('brand') : undefined}
         addText="新增品牌"
-        hidePagination
+        pagination={false}
       />
     )},
     { key: 'store', label: `门店 (${stores.length})`, children: (
@@ -337,7 +337,7 @@ const DecorationCompany = () => {
         searchFields={[{ key: 'name', label: '门店名称', placeholder: '搜索门店' }]}
         onAdd={hasPermission('decoration-company-create') ? () => handleAdd('store') : undefined}
         addText="新增门店"
-        hidePagination
+        pagination={false}
       />
     )},
     { key: 'staff', label: `人员 (${staff.length})`, children: (
@@ -349,7 +349,7 @@ const DecorationCompany = () => {
         searchFields={[{ key: 'name', label: '姓名', placeholder: '搜索人员' }]}
         onAdd={hasPermission('decoration-company-create') ? () => handleAdd('staff') : undefined}
         addText="新增人员"
-        hidePagination
+        pagination={false}
       />
     )},
   ]

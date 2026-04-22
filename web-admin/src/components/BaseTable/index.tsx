@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react'
+import { useState } from 'react'
 import { Table, Input, Select, DatePicker, Button, Space, Row, Col } from 'antd'
 import { SearchOutlined, ReloadOutlined, PlusOutlined } from '@ant-design/icons'
 import type { ColumnsType, TablePaginationConfig } from 'antd/es/table'
@@ -37,68 +37,22 @@ interface BaseTableProps<T> {
   title?: string
   rowKey?: string | ((record: T) => string)
   scroll?: { x?: number | string; y?: number | string }
-  /** 服务端分页配置，传入则使用服务端分页，否则使用客户端分页 */
-  pagination?: ServerPagination
-  /** 是否隐藏客户端分页栏（服务端分页时由 Table 组件原生处理） */
-  hidePagination?: boolean
+  /** 服务端分页配置。传入 ServerPagination 启用分页，false 禁用分页栏 */
+  pagination?: ServerPagination | false
 }
-
-const PAGE_SIZE = 20
 
 const BaseTable = <T extends Record<string, any>>({
   columns, dataSource, loading, onSearch, searchFields = [], filterOptions = [],
   extraFilters, onAdd, addText = '新建', toolbarExtra, title, rowKey = 'id', scroll,
-  pagination: serverPagination, hidePagination,
+  pagination,
 }: BaseTableProps<T>) => {
   const [searchValues, setSearchValues] = useState<Record<string, string>>({})
   const [filterValues, setFilterValues] = useState<Record<string, string>>({})
   const [dateRange, setDateRange] = useState<[any, any] | null>(null)
-  const [pagination, setPagination] = useState({ current: 1, pageSize: PAGE_SIZE })
-
-  const isServerPagination = !!serverPagination
-
-  // 客户端筛选（仅非服务端分页时使用）
-  const filteredData = useMemo(() => {
-    if (isServerPagination) return dataSource
-    let data = [...dataSource]
-    // 关键词搜索：匹配第一个搜索字段
-    const keyword = searchValues[searchFields[0]?.key] || ''
-    if (keyword) {
-      data = data.filter(item =>
-        searchFields.some(field => {
-          const val = item[field.key]
-          return val && String(val).toLowerCase().includes(keyword.toLowerCase())
-        })
-      )
-    }
-    // 状态筛选
-    Object.entries(filterValues).forEach(([key, value]) => {
-      if (value) {
-        data = data.filter(item => item[key] === value)
-      }
-    })
-    // 日期范围筛选
-    if (dateRange) {
-      data = data.filter(item => {
-        const d = new Date(item.createdAt || item.createdAt)
-        return d >= dateRange[0].startOf('day') && d <= dateRange[1].endOf('day')
-      })
-    }
-    return data
-  }, [dataSource, searchValues, filterValues, dateRange, searchFields, isServerPagination])
-
-  const displayData = isServerPagination
-    ? dataSource
-    : filteredData.slice(
-        (pagination.current - 1) * pagination.pageSize,
-        pagination.current * pagination.pageSize
-      )
 
   const handleSearch = () => {
-    if (isServerPagination) {
-      serverPagination.onChange?.(1, serverPagination.pageSize)
-    } else {
-      setPagination({ ...pagination, current: 1 })
+    if (pagination && typeof pagination === 'object') {
+      pagination.onChange?.(1, pagination.pageSize)
     }
     onSearch?.({ ...searchValues, ...filterValues })
   }
@@ -107,20 +61,17 @@ const BaseTable = <T extends Record<string, any>>({
     setSearchValues({})
     setFilterValues({})
     setDateRange(null)
-    if (isServerPagination) {
-      serverPagination.onChange?.(1, serverPagination.pageSize)
-    } else {
-      setPagination({ current: 1, pageSize: PAGE_SIZE })
+    if (pagination && typeof pagination === 'object') {
+      pagination.onChange?.(1, pagination.pageSize)
     }
   }
 
-  // 服务端分页配置
-  const tablePaginationConfig: TablePaginationConfig | false = isServerPagination
+  const tablePaginationConfig: TablePaginationConfig | false = pagination && typeof pagination === 'object'
     ? {
-        current: serverPagination.current,
-        pageSize: serverPagination.pageSize,
-        total: serverPagination.total,
-        onChange: serverPagination.onChange,
+        current: pagination.current,
+        pageSize: pagination.pageSize,
+        total: pagination.total,
+        onChange: pagination.onChange,
         showSizeChanger: true,
         showQuickJumper: true,
         showTotal: (total, range) => `第 ${range[0]}-${range[1]} 条，共 ${total} 条`,
@@ -210,7 +161,7 @@ const BaseTable = <T extends Record<string, any>>({
       <div className="table-container">
         <Table
           columns={columns}
-          dataSource={displayData}
+          dataSource={dataSource}
           loading={loading}
           rowKey={rowKey}
           scroll={scroll}
@@ -218,27 +169,7 @@ const BaseTable = <T extends Record<string, any>>({
           size="middle"
           locale={{ emptyText: '暂无数据' }}
         />
-        {!isServerPagination && !hidePagination && filteredData.length > pagination.pageSize && (
-          <div className="table-pagination">
-            <span style={{ marginRight: 12, color: '#86868b', fontSize: 13 }}>
-              共 {filteredData.length} 条
-            </span>
-            <Select
-              value={pagination.pageSize}
-              onChange={v => setPagination({ current: 1, pageSize: v })}
-              options={[
-                { value: 10, label: '10条/页' },
-                { value: 20, label: '20条/页' },
-                { value: 50, label: '50条/页' },
-              ]}
-              size="small"
-              style={{ width: 100, marginRight: 12 }}
-            />
-          </div>
-        )}
       </div>
-
-
     </div>
   )
 }
