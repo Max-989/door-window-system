@@ -47,6 +47,9 @@ check:
 	isort --check .
 	flake8 .
 
+check-migrations:
+	python manage.py makemigrations --check --dry-run decoration installations maintenance products orders users warehouse permissions
+
 clean:
 	find . -type f -name "*.pyc" -delete
 	find . -type d -name "__pycache__" -delete

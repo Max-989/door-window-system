@@ -72,6 +72,12 @@ jobs:
 
 
 
+      - name: Check migrations are in sync
+        working-directory: ./backend
+        run: |
+          source ../venv/bin/activate
+          python manage.py makemigrations --check --dry-run decoration installations maintenance products orders users warehouse permissions
+
       - name: Run tests with pytest
         working-directory: ./backend
         run: |

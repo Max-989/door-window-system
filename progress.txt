@@ -394,3 +394,28 @@
   - bulk_import and export both need updating to handle new fields
   - The city filter in OrderFilterSet should use exact match on the `city` field (not icontains on full address) after structured fields are added
 ---
+
+## 2026-04-22 - US-027
+- Changed permission API route prefix from `/api/permissions/` to `/api/v1/permissions/` in backend config/urls.py
+- Updated frontend permissionStore.ts API_BASE from `/api/permissions` to `/api/v1/permissions`
+- request.ts auto-prefix logic: URLs starting with `/api` are used as-is, so `/api/v1/permissions/...` works correctly without double prefix
+- Backend tests: 85 passed, 3 failed (pre-existing), 3 skipped — no regressions
+- Frontend typecheck: pre-existing errors only
+- Files changed: `backend/config/urls.py`, `web-admin/src/stores/permissionStore.ts`
+- **Learnings for future iterations:**
+  - request.ts line 62: `url.startsWith('/api') ? url : ${BASE_URL}${url}` — URLs starting with `/api` are used as-is, no extra `/api/v1` prefix added
+  - When moving backend routes to `/api/v1/`, update frontend API_BASE to match (request.ts won't double-prefix since path starts with `/api`)
+---
+
+## 2026-04-22 - US-028
+- Created pending migrations for decoration (phone validators), installations (source/status choices), maintenance (source choices), products (phone validators)
+- Added `make check-migrations` target to backend Makefile
+- Added migration check step to CI workflow
+- Backend tests: 85 passed, 3 failed (pre-existing), 3 skipped — no regressions
+- Files changed: `backend/Makefile`, `.github/workflows/ci.yml`, `backend/apps/decoration/migrations/0004_alter_brand_phone_alter_decorationstaff_phone.py`, `backend/apps/installations/migrations/0005_alter_installationtask_source_and_more.py`, `backend/apps/maintenance/migrations/0007_alter_maintenancetask_source.py`, `backend/apps/products/migrations/0003_alter_supplier_phone.py`
+- **Learnings for future iterations:**
+  - Use `make check-migrations` to verify all model changes have corresponding migration files before committing
+  - CI migration check must specify project apps explicitly to avoid false positives from Django built-in app migrations
+  - New migrations needed: earlier stories modified model fields (validators, choices) without creating migrations
+  - Django 5.2.13 detects validator additions as AlterField operations
+---
