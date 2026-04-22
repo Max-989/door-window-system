@@ -137,8 +137,9 @@ class HardwareInventoryModelTest(TestCase):
 
     def test_hardware_inventory_stock_records(self):
         """测试出入库记录模型"""
-        from apps.warehouse.models import StockRecord
         from django.contrib.auth import get_user_model
+
+        from apps.warehouse.models import StockRecord
 
         User = get_user_model()
         user = User.objects.create_user(

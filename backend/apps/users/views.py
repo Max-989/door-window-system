@@ -14,10 +14,10 @@ from rest_framework.filters import OrderingFilter, SearchFilter
 from rest_framework.permissions import AllowAny, IsAdminUser, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
-from common import responses
-from common.pagination import StandardPagination
 
 from apps.permissions.models import Role as PermRole
+from common import responses
+from common.pagination import StandardPagination
 
 from .models import Branch, Permission, User, UserProfile, UserRole
 from .serializers import (
