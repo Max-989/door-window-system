@@ -74,13 +74,6 @@ class HardwareInventory(models.Model):
     )
     available_stock = models.IntegerField("可用库存", default=0)
     city = models.CharField("城市", max_length=50, blank=True, default="")
-    # 批次5新增：出入库历史记录
-    stock_records = models.JSONField(
-        "出入库记录",
-        default=list,
-        blank=True,
-        help_text='[{"type": "out", "quantity": 10, "reason": "安装使用", "operator": "admin", "created_at": "..."}]',
-    )
     created_at = models.DateTimeField("创建时间", auto_now_add=True)
     updated_at = models.DateTimeField("更新时间", auto_now=True)
 
@@ -101,13 +94,6 @@ class AccessoryInventory(models.Model):
     current_stock = models.IntegerField("当前库存", default=0)
     purchasing_quantity = models.IntegerField("采购中数量", default=0)
     city = models.CharField("城市", max_length=50, blank=True, default="")
-    # 批次5新增：出入库历史记录
-    stock_records = models.JSONField(
-        "出入库记录",
-        default=list,
-        blank=True,
-        help_text='[{"type": "out", "quantity": 10, "reason": "安装使用", "operator": "admin", "created_at": "..."}]',
-    )
     created_at = models.DateTimeField("创建时间", auto_now_add=True)
     updated_at = models.DateTimeField("更新时间", auto_now=True)
 
@@ -191,3 +177,41 @@ class WarehouseTransfer(models.Model):
 
     def __str__(self):
         return f"{self.from_city} → {self.to_city}"
+
+
+class StockRecord(models.Model):
+    """出入库记录"""
+
+    ITEM_TYPE_CHOICES = [
+        ("hardware", "五金"),
+        ("accessory", "配件"),
+    ]
+    RECORD_TYPE_CHOICES = [
+        ("in", "入库"),
+        ("out", "出库"),
+    ]
+
+    item_type = models.CharField("物品类型", max_length=20, choices=ITEM_TYPE_CHOICES)
+    item_id = models.IntegerField("物品ID")
+    record_type = models.CharField("记录类型", max_length=10, choices=RECORD_TYPE_CHOICES)
+    quantity = models.IntegerField("数量")
+    reason = models.TextField("原因", blank=True, default="")
+    operator = models.ForeignKey(
+        "users.User",
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        verbose_name="操作人",
+    )
+    related_task_id = models.CharField("关联任务ID", max_length=50, blank=True, default="")
+    supplier = models.CharField("供应商", max_length=200, blank=True, default="")
+    created_at = models.DateTimeField("创建时间", auto_now_add=True, db_index=True)
+
+    class Meta:
+        db_table = "stock_records"
+        verbose_name = "出入库记录"
+        verbose_name_plural = verbose_name
+        ordering = ["-created_at"]
+
+    def __str__(self):
+        return f"[{self.get_item_type_display()}] {self.get_record_type_display()} {self.quantity} (ID: {self.item_id})"

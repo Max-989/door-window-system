@@ -7,6 +7,7 @@ from .models import (
     AccessoryInventory,
     HardwareInventory,
     PendingGoods,
+    StockRecord,
     WarehouseProduct,
     WarehouseTransfer,
 )
@@ -97,3 +98,14 @@ class BulkImportSerializer(serializers.Serializer):
     """批量导入序列化器"""
 
     file = serializers.FileField(help_text="Excel文件（.xlsx）")
+
+
+class StockRecordSerializer(serializers.ModelSerializer):
+    operator_name = serializers.CharField(
+        source="operator.username", read_only=True, default=""
+    )
+
+    class Meta:
+        model = StockRecord
+        fields = "__all__"
+        read_only_fields = ["created_at"]

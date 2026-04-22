@@ -2,7 +2,6 @@
 warehouse app - 视图
 """
 import openpyxl
-from django.utils import timezone
 from django_filters import rest_framework as filters
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import status, viewsets
@@ -16,6 +15,7 @@ from .models import (
     AccessoryInventory,
     HardwareInventory,
     PendingGoods,
+    StockRecord,
     WarehouseProduct,
     WarehouseTransfer,
 )
@@ -24,6 +24,7 @@ from .serializers import (
     BulkImportSerializer,
     HardwareInventorySerializer,
     PendingGoodsSerializer,
+    StockRecordSerializer,
     StocktakeSerializer,
     WarehouseProductSerializer,
     WarehouseTransferSerializer,
@@ -102,30 +103,23 @@ class HardwareInventoryViewSet(viewsets.ModelViewSet):
             # 减少库存
             item.current_stock -= quantity
             item.available_stock = item.current_stock - item.pending_out_quantity
-
-            # 记录出库历史
-            record = {
-                "type": "out",
-                "quantity": quantity,
-                "reason": reason,
-                "operator": request.user.username
-                if request.user.is_authenticated
-                else "unknown",
-                "created_at": timezone.now().isoformat(),
-            }
-            if related_task_id:
-                record["related_task_id"] = related_task_id
-            if not item.stock_records:
-                item.stock_records = []
-            item.stock_records.append(record)
-
             item.save(
                 update_fields=[
                     "current_stock",
                     "available_stock",
-                    "stock_records",
                     "updated_at",
                 ]
+            )
+
+            # 记录出库历史
+            StockRecord.objects.create(
+                item_type="hardware",
+                item_id=item.pk,
+                record_type="out",
+                quantity=quantity,
+                reason=reason,
+                operator=request.user if request.user.is_authenticated else None,
+                related_task_id=related_task_id or "",
             )
 
         # 检查是否低于预警
@@ -153,29 +147,23 @@ class HardwareInventoryViewSet(viewsets.ModelViewSet):
         item.current_stock += quantity
         item.available_stock = item.current_stock - item.pending_out_quantity
 
-        # 记录入库历史
-        record = {
-            "type": "in",
-            "quantity": quantity,
-            "reason": reason,
-            "operator": request.user.username
-            if request.user.is_authenticated
-            else "unknown",
-            "created_at": timezone.now().isoformat(),
-        }
-        if supplier:
-            record["supplier"] = supplier
-        if not item.stock_records:
-            item.stock_records = []
-        item.stock_records.append(record)
-
         item.save(
             update_fields=[
                 "current_stock",
                 "available_stock",
-                "stock_records",
                 "updated_at",
             ]
+        )
+
+        # 记录入库历史
+        StockRecord.objects.create(
+            item_type="hardware",
+            item_id=item.pk,
+            record_type="in",
+            quantity=quantity,
+            reason=reason,
+            operator=request.user if request.user.is_authenticated else None,
+            supplier=supplier or "",
         )
 
         # 检查是否仍低于预警
@@ -247,24 +235,18 @@ class AccessoryInventoryViewSet(viewsets.ModelViewSet):
 
             # 减少库存
             item.current_stock -= quantity
+            item.save(update_fields=["current_stock", "updated_at"])
 
             # 记录出库历史
-            record = {
-                "type": "out",
-                "quantity": quantity,
-                "reason": reason,
-                "operator": request.user.username
-                if request.user.is_authenticated
-                else "unknown",
-                "created_at": timezone.now().isoformat(),
-            }
-            if related_task_id:
-                record["related_task_id"] = related_task_id
-            if not item.stock_records:
-                item.stock_records = []
-            item.stock_records.append(record)
-
-            item.save(update_fields=["current_stock", "stock_records", "updated_at"])
+            StockRecord.objects.create(
+                item_type="accessory",
+                item_id=item.pk,
+                record_type="out",
+                quantity=quantity,
+                reason=reason,
+                operator=request.user if request.user.is_authenticated else None,
+                related_task_id=related_task_id or "",
+            )
 
         return Response(AccessoryInventorySerializer(item).data)
 
@@ -284,24 +266,18 @@ class AccessoryInventoryViewSet(viewsets.ModelViewSet):
 
         # 增加库存
         item.current_stock += quantity
+        item.save(update_fields=["current_stock", "updated_at"])
 
         # 记录入库历史
-        record = {
-            "type": "in",
-            "quantity": quantity,
-            "reason": reason,
-            "operator": request.user.username
-            if request.user.is_authenticated
-            else "unknown",
-            "created_at": timezone.now().isoformat(),
-        }
-        if supplier:
-            record["supplier"] = supplier
-        if not item.stock_records:
-            item.stock_records = []
-        item.stock_records.append(record)
-
-        item.save(update_fields=["current_stock", "stock_records", "updated_at"])
+        StockRecord.objects.create(
+            item_type="accessory",
+            item_id=item.pk,
+            record_type="in",
+            quantity=quantity,
+            reason=reason,
+            operator=request.user if request.user.is_authenticated else None,
+            supplier=supplier or "",
+        )
 
         return Response(AccessoryInventorySerializer(item).data)
 

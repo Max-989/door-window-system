@@ -129,22 +129,46 @@ class HardwareInventoryModelTest(TestCase):
         self.assertEqual(inventory.pending_out_quantity, 10)
         self.assertEqual(inventory.purchasing_quantity, 5)
 
-    def test_hardware_inventory_stock_records_json(self):
-        """测试出入库记录JSON字段"""
-        records = [
-            {"date": "2026-04-13", "type": "in", "quantity": 50, "operator": "张三"},
-            {"date": "2026-04-12", "type": "out", "quantity": 20, "operator": "李四"},
-        ]
+    def test_hardware_inventory_stock_records(self):
+        """测试出入库记录模型"""
+        from apps.warehouse.models import StockRecord
+        from django.contrib.auth import get_user_model
 
-        inventory = HardwareInventory.objects.create(
-            name="测试螺丝", hardware_type="通用", current_stock=30, stock_records=records
+        User = get_user_model()
+        user = User.objects.create_user(
+            phone="13800138001",
+            password="testpass123",
         )
 
-        self.assertEqual(len(inventory.stock_records), 2)
-        self.assertEqual(inventory.stock_records[0]["type"], "in")
-        self.assertEqual(inventory.stock_records[0]["quantity"], 50)
-        self.assertEqual(inventory.stock_records[1]["date"], "2026-04-12")
-        self.assertEqual(inventory.stock_records[1]["operator"], "李四")
+        inventory = HardwareInventory.objects.create(
+            name="测试螺丝", hardware_type="通用", current_stock=30
+        )
+
+        StockRecord.objects.create(
+            item_type="hardware",
+            item_id=inventory.pk,
+            record_type="in",
+            quantity=50,
+            reason="采购入库",
+            operator=user,
+        )
+        StockRecord.objects.create(
+            item_type="hardware",
+            item_id=inventory.pk,
+            record_type="out",
+            quantity=20,
+            reason="安装使用",
+            operator=user,
+        )
+
+        records = StockRecord.objects.filter(
+            item_type="hardware", item_id=inventory.pk
+        )
+        self.assertEqual(records.count(), 2)
+        self.assertEqual(records[0].record_type, "out")
+        self.assertEqual(records[0].quantity, 20)
+        self.assertEqual(records[1].record_type, "in")
+        self.assertEqual(records[1].quantity, 50)
 
     def test_hardware_inventory_minimal_fields(self):
         """测试最小字段创建五金库存"""
