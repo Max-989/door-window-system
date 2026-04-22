@@ -288,3 +288,22 @@
   - `request.ts` checks `url.startsWith('/api')` to avoid adding `/api/v1` prefix, so `/api/permissions/...` URLs work correctly without extra prefix
   - When replacing `fetch()` with `get()`, remove manual token handling, manual `res.json()`, and manual `res.ok` checks — `request.ts` handles all of these
 ---
+
+## 2026-04-22 - US-020
+- Removed client-side pagination from BaseTable: removed `filteredData`, `displayData` slicing, client pagination `useState`, and client-side pagination UI
+- Changed `pagination` prop type to `ServerPagination | false` (removed `hidePagination`)
+- Replaced all `hidePagination` usages with `pagination={false}` in DecorationCompany, Warehouse, Products pages
+- Vite build passes; tsc errors are pre-existing
+- Files changed: `web-admin/src/components/BaseTable/index.tsx`, `web-admin/src/pages/DecorationCompany/index.tsx`, `web-admin/src/pages/Warehouse/index.tsx`, `web-admin/src/pages/Products/index.tsx`
+- **Learnings for future iterations:**
+  - BaseTable now only supports server-side pagination; `pagination={false}` disables pagination bar entirely
+  - Use `pagination` prop (ServerPagination or false) instead of `hidePagination` boolean
+  - No need to manually manage `filteredData` or `displayData` — pass server-filtered data directly as `dataSource`
+
+## 2026-04-22 - US-021
+- Deleted `web-admin/src/pages/Orders/OrderCreate.tsx.backup` — was untracked, no git change needed
+- No other `.backup` files found in the project
+- No code changes; pre-existing tsc/build errors unrelated
+- Updated PRD to set `passes: true` for US-021
+---
+---

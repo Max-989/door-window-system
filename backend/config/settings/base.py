@@ -160,15 +160,8 @@ SIMPLE_JWT = {
     "USER_ID_CLAIM": "user_id",
 }
 
-# CORS - 开发环境允许所有来源，生产环境请使用 CORS_ALLOWED_ORIGINS
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000",
-    "http://localhost:3001",
-    "http://localhost:3002",
-    "http://127.0.0.1:3000",
-    "http://127.0.0.1:3001",
-    "http://127.0.0.1:3002",
-]
+# CORS - 生产环境必须通过 CORS_ALLOWED_ORIGINS 环境变量配置
+CORS_ALLOWED_ORIGINS = []
 CORS_ALLOW_CREDENTIALS = True
 
 # Logging
