@@ -50,6 +50,11 @@ const useAuthStore = create<AuthState>()(
       refresh: null,
 
       login: async (credentials: LoginRequest) => {
+        // Reset permissions on every login to ensure fresh fetch
+        try {
+          const { default: permissionStore } = await import('./permissionStore')
+          permissionStore.getState().clearPermissions()
+        } catch { /* ignore if store not available */ }
         const response = await post<any>('/api/v1/users/login/', {
           username: credentials.phone,
           password: credentials.password,
@@ -59,7 +64,13 @@ const useAuthStore = create<AuthState>()(
         return response
       },
 
-      logout: () => set({ user: null, isAuthenticated: false, token: null, refresh: null }),
+      logout: () => {
+        try {
+          const { default: permissionStore } = require('./permissionStore')
+          permissionStore.getState().clearPermissions()
+        } catch { /* ignore */ }
+        set({ user: null, isAuthenticated: false, token: null, refresh: null })
+      },
 
       me: async () => {
         const token = get().token
