@@ -7,6 +7,7 @@ from rest_framework.filters import OrderingFilter, SearchFilter
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from common.responses import error
+from common.pagination import StandardPagination
 
 from .models import (
     AlloyProduct,
@@ -84,28 +85,45 @@ class ProductSearchView(generics.ListAPIView):
     """产品搜索 API — 按 product_line 查对应产品表"""
 
     permission_classes = [IsAuthenticated]
+    pagination_class = StandardPagination
 
-    def get(self, request):
-        product_line = request.query_params.get("product_line", "")
-        q = request.query_params.get("q", "").strip()
-
-        if product_line not in ("wood", "alloy", "security"):
-            return error(message="product_line 必须为 wood / alloy / security", code=400)
+    def get_queryset(self):
+        product_line = self.request.query_params.get("product_line", "")
+        q = self.request.query_params.get("q", "").strip()
 
         if product_line == "wood":
             qs = WoodProduct.objects.filter(status="on_sale")
             if q:
                 qs = qs.filter(name__icontains=q)
-            data = WoodProductSearchSerializer(qs[:50], many=True).data
+            return qs
         elif product_line == "alloy":
             qs = AlloyProduct.objects.filter(status="on_sale")
             if q:
                 qs = qs.filter(name__icontains=q)
-            data = AlloyProductSearchSerializer(qs[:50], many=True).data
-        else:
+            return qs
+        elif product_line == "security":
             qs = SecurityProduct.objects.filter(status="on_sale")
             if q:
                 qs = qs.filter(name__icontains=q)
-            data = SecurityProductSearchSerializer(qs[:50], many=True).data
+            return qs
+        else:
+            # Return empty queryset; validation will be handled in get_serializer_class
+            return WoodProduct.objects.none()
 
-        return Response({"code": 200, "data": {"items": data}})
+    def get_serializer_class(self):
+        product_line = self.request.query_params.get("product_line", "")
+        if product_line == "wood":
+            return WoodProductSearchSerializer
+        elif product_line == "alloy":
+            return AlloyProductSearchSerializer
+        elif product_line == "security":
+            return SecurityProductSearchSerializer
+        else:
+            # Default to wood serializer; validation will raise error in list method
+            return WoodProductSearchSerializer
+
+    def list(self, request, *args, **kwargs):
+        product_line = request.query_params.get("product_line", "")
+        if product_line not in ("wood", "alloy", "security"):
+            return error(message="product_line 必须为 wood / alloy / security", code=400)
+        return super().list(request, *args, **kwargs)
