@@ -1,5 +1,5 @@
 import { create } from 'zustand'
-import useAuthStore from './auth.store'
+import { get } from '@/utils/request'
 
 interface MenuItem {
   id: number
@@ -34,24 +34,13 @@ const usePermissionStore = create<PermissionState>()((set, get) => ({
   initialized: false,
 
   fetchMenus: async () => {
-    const token = useAuthStore.getState().token
-    const res = await fetch(`${API_BASE}/my-menus/`, {
-      headers: { Authorization: `Bearer ${token}` },
-    })
-    if (!res.ok) throw new Error('Failed to fetch menus')
-    const data = await res.json()
-    // 后端返回裸数组或 { menus: [...] }
+    const data = await get<any>(`${API_BASE}/my-menus/`)
     const menuList = Array.isArray(data) ? data : (data.menus || [])
     set({ menus: menuList })
   },
 
   fetchPermissions: async () => {
-    const token = useAuthStore.getState().token
-    const res = await fetch(`${API_BASE}/my-permissions/`, {
-      headers: { Authorization: `Bearer ${token}` },
-    })
-    if (!res.ok) throw new Error('Failed to fetch permissions')
-    const data = await res.json()
+    const data = await get<any>(`${API_BASE}/my-permissions/`)
     set({ permissions: data.permissions || [] })
   },
 

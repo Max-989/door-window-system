@@ -1,4 +1,7 @@
 ## Codebase Patterns
+- request.ts auto-unwraps unified responses: if response JSON has `code` and `data` fields, returns `json.data` directly. Callers get the data payload, not the wrapper.
+- After auto-unwrap, use `Array.isArray(res) ? res : (res.items || res.results || [])` for list data and `res.total ?? res.count ?? 0` for total count.
+- Never access `.data` on request responses — it's already unwrapped.
 - Django project root is `backend/`. Config files are in `backend/config/settings/`.
 - Backend tests are run with `pytest` using `config.settings.test` settings. Requires `pytest-django` installed.
 - Linting uses `flake8` with configuration in `.flake8`.
@@ -255,4 +258,33 @@
 - **Learnings for future iterations:**
   - Pre-existing tsc errors unrelated to this change; vite build is the reliable build check
   - Only package.json and package-lock.json are affected by dependency removal
+---
+## 2026-04-22 - US-018
+- Modified `request.ts` to auto-unwrap unified response: if JSON has `code` and `data` fields, return `json.data` directly.
+- Updated retry path (401 handler) with same unwrap logic.
+- Updated error handling to check both `json.detail` and `json.message`.
+- Updated `auth.store.ts` login to remove `.data` access (response is already unwrapped).
+- Updated all page files to use `Array.isArray(res) ? res : (res.items || res.results || [])` pattern instead of `res.results || res.data?.items || res.data || res || []`.
+- Updated `setTotal` calls to use `res.total ?? res.count ?? 0` instead of `res.count ?? res.data?.total ?? ...`.
+- Vite build passes successfully; all tsc errors are pre-existing.
+- Files changed: `web-admin/src/utils/request.ts`, `web-admin/src/stores/auth.store.ts`, `web-admin/src/pages/Dashboard/index.tsx`, `web-admin/src/pages/Personnel/index.tsx`, `web-admin/src/pages/Orders/index.tsx`, `web-admin/src/pages/Warehouse/index.tsx`, `web-admin/src/pages/Products/index.tsx`, `web-admin/src/pages/Orders/OrderCreate.tsx`, `web-admin/src/pages/Settings/Permissions.tsx`, `web-admin/src/pages/DecorationCompany/index.tsx`, `web-admin/src/pages/Settings/index.tsx`, `web-admin/src/pages/Settings/Approval/index.tsx`, `web-admin/src/pages/Reports/index.tsx`, `web-admin/src/pages/TaskManagement/MeasurementList.tsx`, `web-admin/src/pages/TaskManagement/InstallationList.tsx`, `web-admin/src/pages/TaskManagement/MaintenanceList.tsx`
+- **Learnings for future iterations:**
+  - After auto-unwrap, never access `.data` on request responses — it's already the data payload.
+  - Use `Array.isArray(res) ? res : (res.items || res.results || [])` for list extraction.
+  - Use `res.total ?? res.count ?? 0` for pagination total.
+  - Vite build is the reliable build check (tsc has pre-existing errors).
+---
+
+## 2026-04-22 - US-019
+- Replaced raw `fetch()` calls in permissionStore with unified `get()` from `@/utils/request`
+- Removed manual token extraction (`useAuthStore.getState().token`)
+- Removed manual error handling (`if (!res.ok) throw new Error(...)`)
+- Removed `useAuthStore` import (no longer needed)
+- Now benefits from auto auth headers, auto 401 token refresh, and unified response unwrapping
+- Files changed: `web-admin/src/stores/permissionStore.ts`
+- Frontend typecheck: no new errors (all pre-existing)
+- **Learnings for future iterations:**
+  - Permission endpoints (`/api/permissions/my-menus/`, `/api/permissions/my-permissions/`) don't use unified response format, so auto-unwrap doesn't trigger — response is returned as-is
+  - `request.ts` checks `url.startsWith('/api')` to avoid adding `/api/v1` prefix, so `/api/permissions/...` URLs work correctly without extra prefix
+  - When replacing `fetch()` with `get()`, remove manual token handling, manual `res.json()`, and manual `res.ok` checks — `request.ts` handles all of these
 ---
