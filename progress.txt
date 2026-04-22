@@ -1,6 +1,23 @@
 ## Codebase Patterns
 - Django project root is `backend/`. Config files are in `backend/config/settings/`.
-- Backend tests are run with `pytest` using `config.settings.test` settings.
+- Backend tests are run with `pytest` using `config.settings.test` settings. Requires `pytest-django` installed.
+- Linting uses `flake8` with configuration in `.flake8`.
+- Frontend type checking uses `tsc --noEmit` via `npm run type-check`.
+- Secret key environment variable is `DJANGO_SECRET_KEY` (changed from `SECRET_KEY`).
+- Base config sets `DEBUG = False`, dev overrides to `True`.
+- When overriding nested settings like REST_FRAMEWORK, use copy.deepcopy to preserve base configuration.
+- Permission store empty permissions/menus should deny access (security default).
+- To avoid import conflicts between `common/utils.py` and `common/utils/` directory, rename file to `utils_core.py` and create `__init__.py` that re-exports symbols.
+- Use common.responses.success/error/created for unified API responses.
+- Use `common.pagination.StandardPagination` for paginated list APIs; set `pagination_class` attribute on `ListAPIView` or `GenericViewSet`.
+- For token refresh, deduplicate concurrent 401 requests via shared promise to avoid multiple refresh calls.
+- Auth store must persist `refresh` token alongside `access` token in zustand partialize.
+- Token refresh endpoint: use SimpleJWT `TokenRefreshView.as_view()` wrapped in unified response format.
+- Frontend login must unwrap `response.data` after unified API response change (US-004).
+- Use `GenericViewSet` (not `ViewSet`) when view needs pagination. `ViewSet` lacks `paginate_queryset` and `get_paginated_response`.
+- When using `GenericViewSet` with custom `list` action, manually call `self.paginate_queryset()` and `self.get_paginated_response()`.
+- For frontend API calls, use `request` utility (`get`/`post`) instead of raw `fetch()` to get auth headers and token refresh.
+- StandardPagination response format: `{code, message, data: {items, total, page, pageSize, totalPages}, timestamp}`.
 - Linting uses `flake8` with configuration in `.flake8`.
 - Frontend type checking uses `tsc --noEmit` via `npm run type-check`.
 - Secret key environment variable is `DJANGO_SECRET_KEY` (changed from `SECRET_KEY`).
@@ -166,4 +183,36 @@
   - Deduplicate concurrent 401 refresh attempts via module-level shared promise to avoid race conditions
   - After unified response change (US-004), frontend login must access `response.data` not top-level fields
   - Token rotation (ROTATE_REFRESH_TOKENS=True) means refresh endpoint returns both new access and new refresh tokens
+---
+
+## 2026-04-22 - US-013
+- Changed `PendingUserViewSet` from `viewsets.ViewSet` to `viewsets.GenericViewSet` to support pagination
+- Added `pagination_class = StandardPagination` and import
+- Updated frontend approval page: replaced raw `fetch()` with `request` utility (`get`/`post`)
+- Fixed API URL from `/api/users/pending` to `/users/pending` (request adds `/api/v1` prefix)
+- Added pagination state and Ant Design Table server-side pagination
+- Added `PaginatedResponse<T>` interface for type-safe paginated data handling
+- Files changed: `backend/apps/users/views.py`, `web-admin/src/pages/Settings/Approval/index.tsx`
+- Backend tests: 85 passed, 3 failed (pre-existing), 3 skipped
+- Frontend typecheck: pre-existing errors only
+- **Learnings for future iterations:**
+  - `GenericViewSet` provides `paginate_queryset` and `get_paginated_response`; plain `ViewSet` does not
+  - When switching from raw `fetch` to `request` utility, strip `/api/v1` prefix (request auto-adds it)
+  - StandardPagination response uses `data.items` not `results`
+  - `pytest-django` package required but not in requirements; install separately
+---
+## 2026-04-22 - US-014
+- Added `code` field to `permissions.Role` model (CharField, unique, nullable)
+- Created migration `0002_role_code.py`
+- Updated `IsRole` class in `common/permissions.py`: check `request.user.profile.role.code` via FK chain instead of `getattr(request.user, "role", None)` with hardcoded strings
+- Updated `IsInstaller`, `IsCustomer`, `IsOwnerOrAdmin` to use same `_get_role_code()` helper
+- Updated test file to include `code` param in all `Role.objects.create()` calls
+- All 14 permission tests pass; full suite: 85 pass, 3 fail (pre-existing), 3 skip
+- Lint clean, frontend typecheck: pre-existing errors only
+- Files changed: `backend/apps/permissions/models.py`, `backend/apps/permissions/migrations/0002_role_code.py`, `backend/common/permissions.py`, `backend/tests/permissions/test_permissions.py`
+- **Learnings for future iterations:**
+  - `permissions.Role` now has `code` field for role-based permission matching
+  - Use `_get_role_code(user)` helper to safely traverse `user.profile.role.code` FK chain
+  - New `code` field is nullable to avoid breaking existing data; migrate to add codes for existing roles
+  - The `RoleSerializer` uses `__all__` fields so `code` is automatically included in API responses
 ---
