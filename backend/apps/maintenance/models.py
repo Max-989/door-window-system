@@ -21,6 +21,7 @@ class MaintenanceTask(models.Model):
         max_length=20,
         choices=OrderSource.CHOICES,
         default=OrderSource.BRAND_STORE,
+        db_index=True,
     )
     brand = models.ForeignKey(
         "decoration.Brand",
@@ -112,6 +113,7 @@ class MaintenanceTask(models.Model):
         max_length=20,
         choices=MaintenanceStatus.CHOICES,
         default=MaintenanceStatus.PENDING,
+        db_index=True,
     )
     cancel_reason = models.TextField("取消原因", blank=True, default="")
 
@@ -122,6 +124,7 @@ class MaintenanceTask(models.Model):
         choices=MaintenanceResponsibility.CHOICES,
         blank=True,
         default="",
+        db_index=True,
     )
     reviewed_by = models.ForeignKey(
         "users.User",
@@ -176,7 +179,7 @@ class MaintenanceTask(models.Model):
 
     completed_at = models.DateTimeField("完成时间", null=True, blank=True)
     notes = models.TextField("备注", blank=True, default="")
-    created_at = models.DateTimeField("创建时间", auto_now_add=True)
+    created_at = models.DateTimeField("创建时间", auto_now_add=True, db_index=True)
     updated_at = models.DateTimeField("更新时间", auto_now=True)
 
     class Meta:

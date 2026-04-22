@@ -13,7 +13,7 @@ class WarehouseProduct(models.Model):
     """产品流转仓"""
 
     order_no = models.CharField("订单号", max_length=50, db_index=True)
-    product_type = models.CharField("产品类型", max_length=20, help_text="木门/合金门/防盗门")
+    product_type = models.CharField("产品类型", max_length=20, help_text="木门/合金门/防盗门", db_index=True)
     product_model = models.CharField("产品型号", max_length=100, blank=True, default="")
     lock_model = models.CharField("锁具型号", max_length=100, blank=True, default="")
     quantity = models.IntegerField("数量", default=1)
@@ -22,11 +22,12 @@ class WarehouseProduct(models.Model):
         max_length=20,
         choices=WarehouseProductStatus.CHOICES,
         default=WarehouseProductStatus.PENDING_SHIP,
+        db_index=True,
     )
     logistics_no = models.CharField("物流单号", max_length=100, blank=True, default="")
     pickup_time = models.DateTimeField("提货时间", null=True, blank=True)
     delivery_photos = models.JSONField("派送图片", default=list, blank=True)
-    city = models.CharField("城市", max_length=50, blank=True, default="")
+    city = models.CharField("城市", max_length=50, blank=True, default="", db_index=True)
     operator = models.ForeignKey(
         "users.User",
         on_delete=models.SET_NULL,

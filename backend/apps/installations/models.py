@@ -32,6 +32,7 @@ class InstallationTask(models.Model):
         choices=OrderSource.CHOICES,
         default=OrderSource.BRAND_STORE,
         help_text="订单自动生成/手动创建/直接安装",
+        db_index=True,
     )
     brand = models.ForeignKey(
         "decoration.Brand",
@@ -93,6 +94,7 @@ class InstallationTask(models.Model):
         max_length=20,
         choices=InstallationStatus.CHOICES,
         default=InstallationStatus.PENDING,
+        db_index=True,
     )
     cancel_reason = models.TextField("取消原因", blank=True, default="")
 
@@ -133,7 +135,7 @@ class InstallationTask(models.Model):
     )
 
     completed_at = models.DateTimeField("完成时间", null=True, blank=True)
-    created_at = models.DateTimeField("创建时间", auto_now_add=True)
+    created_at = models.DateTimeField("创建时间", auto_now_add=True, db_index=True)
     updated_at = models.DateTimeField("更新时间", auto_now=True)
 
     class Meta:

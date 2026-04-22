@@ -77,6 +77,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         max_length=20,
         choices=UserIdentity.CHOICES,
         default=UserIdentity.CONTRACTOR,
+        db_index=True,
     )
     branch = models.ForeignKey(
         Branch,
@@ -86,20 +87,20 @@ class User(AbstractBaseUser, PermissionsMixin):
         related_name="users",
         verbose_name="分公司",
     )
-    city = models.CharField("城市", max_length=50, blank=True, default="")
+    city = models.CharField("城市", max_length=50, blank=True, default="", db_index=True)
     product_line = models.CharField(
         "文员产品线", max_length=20, choices=ProductLine.CHOICES, blank=True, default=""
     )
 
     # 状态
     status = models.CharField(
-        "状态", max_length=20, choices=UserStatus.CHOICES, default=UserStatus.ACTIVE
+        "状态", max_length=20, choices=UserStatus.CHOICES, default=UserStatus.ACTIVE, db_index=True
     )
     is_staff = models.BooleanField("员工", default=False)
     is_active = models.BooleanField("激活", default=True)
     last_login_at = models.DateTimeField("最后登录时间", null=True, blank=True)
 
-    created_at = models.DateTimeField("创建时间", auto_now_add=True)
+    created_at = models.DateTimeField("创建时间", auto_now_add=True, db_index=True)
     updated_at = models.DateTimeField("更新时间", auto_now=True)
 
     USERNAME_FIELD = "phone"

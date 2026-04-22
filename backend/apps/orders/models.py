@@ -16,7 +16,7 @@ class Order(models.Model):
     order_no = models.CharField("订单编号", max_length=50, unique=True, db_index=True)
 
     # 来源与关联
-    source = models.CharField("来源", max_length=20, choices=OrderSource.CHOICES)
+    source = models.CharField("来源", max_length=20, choices=OrderSource.CHOICES, db_index=True)
     brand = models.ForeignKey(
         "decoration.Brand",
         on_delete=models.SET_NULL,
@@ -66,9 +66,9 @@ class Order(models.Model):
     # 客户信息
     customer_name = models.CharField("客户姓名", max_length=50, blank=True, default="")
     customer_phone = models.CharField(
-        "客户电话", max_length=20, blank=True, default="", validators=[phone_validator]
+        "客户电话", max_length=20, blank=True, default="", validators=[phone_validator], db_index=True
     )
-    customer_address = models.CharField("客户地址", max_length=500)
+    customer_address = models.CharField("客户地址", max_length=500, db_index=True)
     province = models.CharField("省", max_length=50, blank=True, default="", db_index=True)
     city = models.CharField("市", max_length=50, blank=True, default="", db_index=True)
     district = models.CharField("区", max_length=50, blank=True, default="")
@@ -83,7 +83,7 @@ class Order(models.Model):
 
     # 状态
     status = models.CharField(
-        "订单状态", max_length=20, choices=OrderStatus.CHOICES, default=OrderStatus.PENDING
+        "订单状态", max_length=20, choices=OrderStatus.CHOICES, default=OrderStatus.PENDING, db_index=True
     )
     product_line = models.CharField(
         "产品线", max_length=20, choices=ProductLine.CHOICES, help_text="木门/合金门/防盗门"
@@ -124,7 +124,7 @@ class Order(models.Model):
         "导购电话", max_length=20, blank=True, default="", validators=[phone_validator]
     )
 
-    created_at = models.DateTimeField("创建时间", auto_now_add=True)
+    created_at = models.DateTimeField("创建时间", auto_now_add=True, db_index=True)
     updated_at = models.DateTimeField("更新时间", auto_now=True)
 
     class Meta:
