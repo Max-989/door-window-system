@@ -18,16 +18,16 @@ from common.pagination import StandardPagination
 
 from apps.permissions.models import Role as PermRole
 
-from .models import Branch, Permission, Role, User, UserProfile
+from .models import Branch, Permission, User, UserProfile, UserRole
 from .serializers import (
     BranchListSerializer,
     BranchSerializer,
     PendingUserSerializer,
     PermissionSerializer,
-    RoleSerializer,
     UserCreateSerializer,
     UserDetailSerializer,
     UserListSerializer,
+    UserRoleSerializer,
     UserUpdateSerializer,
 )
 
@@ -458,11 +458,11 @@ class UserViewSet(viewsets.ModelViewSet):
         return Response(serializer.data)
 
 
-class RoleViewSet(viewsets.ModelViewSet):
-    """角色管理"""
+class UserRoleViewSet(viewsets.ModelViewSet):
+    """角色管理（已废弃，使用 permissions.Role）"""
 
-    queryset = Role.objects.all()
-    serializer_class = RoleSerializer
+    queryset = UserRole.objects.all()
+    serializer_class = UserRoleSerializer
     filter_backends = [SearchFilter]
     search_fields = ["name", "code"]
 

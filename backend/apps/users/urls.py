@@ -11,7 +11,7 @@ from . import views
 router = DefaultRouter()
 router.register(r"branches", views.BranchViewSet)
 router.register(r"users", views.UserViewSet, basename="user")
-router.register(r"roles", views.RoleViewSet)
+router.register(r"roles", views.UserRoleViewSet)
 router.register(r"permissions", views.PermissionViewSet)
 router.register(r"pending", views.PendingUserViewSet, basename="pending-user")
 

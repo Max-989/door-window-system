@@ -182,8 +182,8 @@ class UserProfile(models.Model):
         )
 
 
-class Role(models.Model):
-    """角色表 - 用于精细权限配置"""
+class UserRole(models.Model):
+    """角色表 - 已废弃，改用 permissions.Role"""
 
     name = models.CharField("角色名称", max_length=50, unique=True)
     code = models.CharField("角色代码", max_length=50, unique=True)
@@ -195,7 +195,7 @@ class Role(models.Model):
 
     class Meta:
         db_table = "roles"
-        verbose_name = "角色"
+        verbose_name = "角色(已废弃)"
         verbose_name_plural = verbose_name
 
     def __str__(self):

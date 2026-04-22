@@ -5,7 +5,7 @@ users app - 序列化器
 """
 from rest_framework import serializers
 
-from .models import Branch, Permission, Role, User, UserProfile
+from .models import Branch, Permission, User, UserProfile, UserRole
 
 
 class BranchSerializer(serializers.ModelSerializer):
@@ -101,9 +101,9 @@ class UserDetailSerializer(serializers.ModelSerializer):
         read_only_fields = ["password", "last_login_at", "created_at", "updated_at"]
 
 
-class RoleSerializer(serializers.ModelSerializer):
+class UserRoleSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Role
+        model = UserRole
         fields = "__all__"
         read_only_fields = ["created_at", "updated_at"]
 
