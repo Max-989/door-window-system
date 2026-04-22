@@ -69,6 +69,9 @@ class Order(models.Model):
         "客户电话", max_length=20, blank=True, default="", validators=[phone_validator]
     )
     customer_address = models.CharField("客户地址", max_length=500)
+    province = models.CharField("省", max_length=50, blank=True, default="", db_index=True)
+    city = models.CharField("市", max_length=50, blank=True, default="", db_index=True)
+    district = models.CharField("区", max_length=50, blank=True, default="")
 
     # 价格
     customer_price = models.DecimalField(

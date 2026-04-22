@@ -376,3 +376,21 @@
   - Migration `0003_preset_roles.py` uses historical `apps.get_model('users', 'Role')` — Django migration state preserves old name, so it still works
   - No test changes needed — no tests directly reference `users.Role`
 ---
+
+## 2026-04-22 - US-026
+- Added `province`, `city`, `district` CharField to Order model (city and province have db_index=True)
+- Updated OrderListSerializer, OrderCreateSerializer, OrderUpdateSerializer to include new fields (OrderDetailSerializer uses `__all__` — auto-included)
+- Updated OrderFilterSet `city` filter: now filters on `city` field directly (exact match) instead of `customer_address__icontains`
+- Updated bulk_import to read province/city/district from Excel columns 6-8
+- Updated CSV export to include province/city/district columns
+- Created migration `0006_add_province_city_district_to_order.py` and applied
+- Backend tests: 85 passed, 3 failed (pre-existing), 3 skipped — no regressions
+- Lint: clean
+- Frontend typecheck: pre-existing errors only
+- Files changed: `backend/apps/orders/models.py`, `backend/apps/orders/serializers.py`, `backend/apps/orders/views.py`, `backend/apps/orders/migrations/0006_add_province_city_district_to_order.py`
+- **Learnings for future iterations:**
+  - When adding address fields to Order, all 3 serializers (List, Create, Update) need explicit field listing; Detail uses `__all__` and auto-includes
+  - `db_index=True` on province and city enables efficient filtering queries
+  - bulk_import and export both need updating to handle new fields
+  - The city filter in OrderFilterSet should use exact match on the `city` field (not icontains on full address) after structured fields are added
+---

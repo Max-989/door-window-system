@@ -31,7 +31,7 @@ class OrderFilterSet(filters.FilterSet):
     """订单筛选"""
 
     city = filters.CharFilter(
-        field_name="customer_address", lookup_expr="icontains", help_text="城市（客户地址模糊匹配）"
+        field_name="city", lookup_expr="exact", help_text="城市"
     )
     brand = filters.NumberFilter(field_name="brand", help_text="品牌ID")
     product_line = filters.CharFilter(field_name="product_line", help_text="品类/产品线")
@@ -210,7 +210,10 @@ class OrderViewSet(viewsets.ModelViewSet):
                     customer_name=str(row[2]).strip() if len(row) > 2 else "",
                     customer_phone=str(row[3]).strip() if len(row) > 3 else "",
                     customer_address=str(row[4]).strip() if len(row) > 4 else "",
-                    product_line=str(row[5]).strip() if len(row) > 5 else "wood",
+                    province=str(row[5]).strip() if len(row) > 5 else "",
+                    city=str(row[6]).strip() if len(row) > 6 else "",
+                    district=str(row[7]).strip() if len(row) > 7 else "",
+                    product_line=str(row[8]).strip() if len(row) > 8 else "wood",
                 )
                 created_count += 1
             except Exception as e:
@@ -230,11 +233,12 @@ class OrderViewSet(viewsets.ModelViewSet):
 
         # Simple CSV export
         output = io.StringIO()
-        output.write("订单号,来源,客户姓名,客户电话,客户地址,产品线,状态,创建时间\n")
+        output.write("订单号,来源,客户姓名,客户电话,客户地址,省,市,区,产品线,状态,创建时间\n")
         for order in queryset:
             output.write(
                 f"{order.order_no},{order.source},{order.customer_name},"
                 f"{order.customer_phone},{order.customer_address},"
+                f"{order.province},{order.city},{order.district},"
                 f"{order.product_line},{order.status},{order.created_at}\n"
             )
 
