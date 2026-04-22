@@ -10,6 +10,10 @@
 - To avoid import conflicts between `common/utils.py` and `common/utils/` directory, rename file to `utils_core.py` and create `__init__.py` that re-exports symbols.
 - Use common.responses.success/error/created for unified API responses.
 - Use `common.pagination.StandardPagination` for paginated list APIs; set `pagination_class` attribute on `ListAPIView`.
+- For token refresh, deduplicate concurrent 401 requests via shared promise to avoid multiple refresh calls.
+- Auth store must persist `refresh` token alongside `access` token in zustand partialize.
+- Token refresh endpoint: use SimpleJWT `TokenRefreshView.as_view()` wrapped in unified response format.
+- Frontend login must unwrap `response.data` after unified API response change (US-004).
 
 ## 2026-04-22 - US-001
 - Modified `backend/config/settings/base.py`: set `DEBUG = False`, removed hardcoded `SECRET_KEY` default, changed environment variable to `DJANGO_SECRET_KEY` with validation.
@@ -135,4 +139,31 @@
   - Remember to import `from common.responses import error` in views
   - For dynamic error messages, use f-strings within error call: `error(message=f"...", code=...)`
   - Ensure error responses follow unified format with code, message, timestamp fields
+---
+
+## 2026-04-22 - US-011
+- Modified ProductSearchView to use StandardPagination, dynamic queryset and serializer
+- Removed hardcoded [:50] limit, added pagination support
+- Updated frontend searchProducts function to handle paginated response format
+- Files changed: backend/apps/products/views.py, web-admin/src/pages/Orders/OrderCreate.tsx
+- **Learnings for future iterations:**
+  - Use `common.pagination.StandardPagination` for paginated list APIs; set `pagination_class` attribute on `ListAPIView`
+  - When overriding `ListAPIView`, implement `get_queryset` and `get_serializer_class` for dynamic filtering
+  - Frontend should expect paginated response format `data.items` (unified response wrapper)
+---
+
+## 2026-04-22 - US-012
+- Added `refresh` field to auth store (zustand persist) to save refresh token from login response
+- Updated login function to unwrap unified response `data` layer for correct token/refresh/user extraction
+- Added `token_refresh_view` backend endpoint wrapping SimpleJWT TokenRefreshView in unified response format
+- Added `/api/v1/users/token/refresh/` URL pattern in users/urls.py
+- Updated request.ts to intercept 401, attempt token refresh via shared promise (deduplicates concurrent refreshes), update localStorage, and retry original request
+- On refresh failure, clear auth state and redirect to login
+- Files changed: web-admin/src/stores/auth.store.ts, web-admin/src/utils/request.ts, backend/apps/users/views.py, backend/apps/users/urls.py
+- **Learnings for future iterations:**
+  - SimpleJWT TokenRefreshView must be wrapped to return unified response format; call `.as_view()` directly and forward response data
+  - Auth store partialize must include `refresh` to persist across page reloads
+  - Deduplicate concurrent 401 refresh attempts via module-level shared promise to avoid race conditions
+  - After unified response change (US-004), frontend login must access `response.data` not top-level fields
+  - Token rotation (ROTATE_REFRESH_TOKENS=True) means refresh endpoint returns both new access and new refresh tokens
 ---

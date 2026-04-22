@@ -16,6 +16,7 @@ router.register(r"pending", views.PendingUserViewSet, basename="pending-user")
 urlpatterns = [
     # 登录与用户信息
     path("login/", views.login_view, name="login"),
+    path("token/refresh/", views.token_refresh_view, name="token-refresh"),
     path("me/", views.me_view, name="me"),
     # 注册接口
     path("register/decoration/", views.register_decoration, name="register-decoration"),

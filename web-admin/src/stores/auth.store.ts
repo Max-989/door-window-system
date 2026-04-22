@@ -33,6 +33,7 @@ interface AuthState {
   user: User | null
   isAuthenticated: boolean
   token: string | null
+  refresh: string | null
   me: () => Promise<User>
   login: (credentials: LoginRequest) => Promise<LoginResponse>
   logout: () => void
@@ -45,18 +46,19 @@ const useAuthStore = create<AuthState>()(
       user: null,
       isAuthenticated: false,
       token: null,
+      refresh: null,
 
       login: async (credentials: LoginRequest) => {
-        const data = await post<LoginResponse>('/api/v1/users/login/', {
+        const response = await post<any>('/api/v1/users/login/', {
           username: credentials.phone,
           password: credentials.password,
         })
-        const { token, user } = data
-        set({ user, isAuthenticated: true, token })
-        return data
+        const { token, refresh, user } = response.data
+        set({ user, isAuthenticated: true, token, refresh })
+        return response.data
       },
 
-      logout: () => set({ user: null, isAuthenticated: false, token: null }),
+      logout: () => set({ user: null, isAuthenticated: false, token: null, refresh: null }),
 
       me: async () => {
         const token = get().token
@@ -73,7 +75,7 @@ const useAuthStore = create<AuthState>()(
         return roles.includes(userRoleCode)
       },
     }),
-    { name: 'auth-storage', partialize: (s) => ({ user: s.user, isAuthenticated: s.isAuthenticated, token: s.token }) }
+    { name: 'auth-storage', partialize: (s) => ({ user: s.user, isAuthenticated: s.isAuthenticated, token: s.token, refresh: s.refresh }) }
   )
 )
 

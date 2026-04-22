@@ -1,11 +1,51 @@
 const BASE_URL = '/api/v1'
 
-function getToken(): string | null {
+function getAuthStorage(): { state?: { token?: string; refresh?: string } } | null {
   try {
-    const auth = JSON.parse(localStorage.getItem('auth-storage') || '{}')
-    return auth?.state?.token || null
+    return JSON.parse(localStorage.getItem('auth-storage') || '{}')
   } catch {
     return null
+  }
+}
+
+function getToken(): string | null {
+  const auth = getAuthStorage()
+  return auth?.state?.token || null
+}
+
+function getRefreshToken(): string | null {
+  const auth = getAuthStorage()
+  return auth?.state?.refresh || null
+}
+
+function updateToken(newToken: string, newRefresh?: string): void {
+  const auth = getAuthStorage()
+  if (!auth) return
+  auth.state = auth.state || {}
+  auth.state.token = newToken
+  if (newRefresh) auth.state.refresh = newRefresh
+  localStorage.setItem('auth-storage', JSON.stringify(auth))
+}
+
+let refreshing: Promise<boolean> | null = null
+
+async function refreshAccessToken(): Promise<boolean> {
+  const refreshToken = getRefreshToken()
+  if (!refreshToken) return false
+
+  try {
+    const res = await fetch('/api/v1/users/token/refresh/', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ refresh: refreshToken }),
+    })
+    if (!res.ok) return false
+    const json = await res.json()
+    const data = json.data || json
+    updateToken(data.access, data.refresh)
+    return true
+  } catch {
+    return false
   }
 }
 
@@ -23,7 +63,23 @@ export async function request<T = unknown>(url: string, options: RequestInit = {
   const res = await fetch(fullUrl, { ...options, headers })
 
   if (res.status === 401) {
-    // Token 过期，清除登录状态
+    // Try to refresh token
+    if (!refreshing) refreshing = refreshAccessToken()
+    const refreshed = await refreshing
+    refreshing = null
+
+    if (refreshed) {
+      // Retry original request with new token
+      const newToken = getToken()
+      headers['Authorization'] = `Bearer ${newToken}`
+      const retryRes = await fetch(fullUrl, { ...options, headers })
+      if (retryRes.ok) {
+        const retryData = await retryRes.json()
+        return retryData
+      }
+    }
+
+    // Refresh failed, clear login state and redirect
     localStorage.removeItem('auth-storage')
     window.location.href = '/login'
     throw new Error('登录已过期')

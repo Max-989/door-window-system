@@ -244,6 +244,22 @@ def login_view(request):
     )
 
 
+@api_view(["POST"])
+@permission_classes([AllowAny])
+def token_refresh_view(request):
+    """刷新 access token - 使用 SimpleJWT TokenRefreshView"""
+    from rest_framework_simplejwt.views import TokenRefreshView
+
+    view = TokenRefreshView.as_view()
+    response = view(request)
+
+    if response.status_code != 200:
+        detail = response.data.get("detail", "刷新失败")
+        return responses.error(message=detail, code=response.status_code)
+
+    return responses.success(data=response.data)
+
+
 @api_view(["GET"])
 def me_view(request):
     """获取当前用户信息"""
