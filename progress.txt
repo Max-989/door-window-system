@@ -217,7 +217,20 @@
   - The `RoleSerializer` uses `__all__` fields so `code` is automatically included in API responses
 ---
 
-## 2026-04-22 - US-015
+## 2026-04-22 - US-016
+- Created `StockService` class in `backend/apps/warehouse/services.py` with `out_stock`, `in_stock`, and `validate_quantity_and_reason` static methods
+- Refactored `HardwareInventoryViewSet.out_stock`/`in_stock` to delegate to `StockService`
+- Refactored `AccessoryInventoryViewSet.out_stock`/`in_stock` to delegate to `StockService`
+- Used `hasattr(item, "available_stock")` pattern to handle HardwareInventory (has available_stock) vs AccessoryInventory (doesn't)
+- Removed unused `StockRecord` import from views.py (model now used only in services.py)
+- Files changed: `backend/apps/warehouse/services.py` (new), `backend/apps/warehouse/views.py`
+- Backend tests: 85 passed, 3 failed (pre-existing), 3 skipped — no regressions
+- Lint: clean (flake8)
+- **Learnings for future iterations:**
+  - StockService returns `(error_response, item)` tuple; caller checks `if error_response: return error_response` then serializes
+  - Use `hasattr` to handle model-specific fields (available_stock, alert_quantity) without tight coupling to model class
+  - Keep StockRecord model access contained in services.py, views only deal with serializers and response formatting
+---
 - Created `StockRecord` model with fields: item_type, item_id, record_type, quantity, reason, operator (FK to User), related_task_id, supplier, created_at
 - Removed `stock_records` JSONField from `HardwareInventory` and `AccessoryInventory` models
 - Created `StockRecordSerializer` for API serialization
@@ -232,4 +245,14 @@
   - When removing a JSONField in favor of a model, existing tests referencing the field via kwargs will fail; update them to create StockRecord objects instead
   - The warehouse User model uses `phone` as identifier, not `username` — use `create_user(phone=..., password=...)`
   - StockRecord has default ordering `["-created_at"]` so newest records appear first
+---
+## 2026-04-22 - US-017
+- Removed unused axios dependency from web-admin project
+- Confirmed no imports or references to axios in any source files
+- `npm uninstall axios` removed 146 packages
+- Vite build passes successfully
+- Files changed: `web-admin/package.json`, `web-admin/package-lock.json`
+- **Learnings for future iterations:**
+  - Pre-existing tsc errors unrelated to this change; vite build is the reliable build check
+  - Only package.json and package-lock.json are affected by dependency removal
 ---
