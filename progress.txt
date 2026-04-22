@@ -1,4 +1,7 @@
 ## Codebase Patterns
+- All Python files with Chinese content should have `# -*- coding: utf-8 -*-` header on first line.
+- Use a script to batch-add encoding headers to all .py files with CJK characters at once.
+- Python 3 defaults to UTF-8, but explicit encoding header prevents issues in legacy tools.
 - request.ts auto-unwraps unified responses: if response JSON has `code` and `data` fields, returns `json.data` directly. Callers get the data payload, not the wrapper.
 - After auto-unwrap, use `Array.isArray(res) ? res : (res.items || res.results || [])` for list data and `res.total ?? res.count ?? 0` for total count.
 - Never access `.data` on request responses — it's already unwrapped.
@@ -342,4 +345,34 @@
   - Use `vi.mocked(get).mockResolvedValue(...)` for mocking named imports (works for modules where `vi.mock` intercepts correctly)
   - For zustand store tests, call `useStore.getState().logout()` or `useStore.setState(...)` in beforeEach to reset state between tests
   - Browser verification recommended: manual test to ensure tests run via `npm test`
+---
+
+## 2026-04-22 - US-024
+- Added `# -*- coding: utf-8 -*-` encoding header to 123 Python files with Chinese characters.
+- All files were already valid UTF-8; added explicit encoding declaration for safety.
+- Used a Python script to batch-process: find .py files with CJK chars, add header on first line (or after shebang).
+- Ran flake8 lint: clean. Backend tests: 85 pass, 3 fail (pre-existing), 3 skip — no regressions.
+- Frontend typecheck: pre-existing errors only.
+- Files changed: 123 backend `.py` files across apps, common, config, tests, migrations.
+- **Learnings for future iterations:**
+  - Python 3 defaults to UTF-8 source encoding; explicit `# -*- coding: utf-8 -*-` prevents issues in legacy tools/editors.
+  - Use a batch script to add headers to all files at once; handle shebang lines by inserting after them.
+---
+
+## 2026-04-22 - US-025
+- Renamed `users.Role` → `UserRole` in models.py with deprecation comment
+- Updated serializers.py: `RoleSerializer` → `UserRoleSerializer`, import `UserRole`
+- Updated views.py: `RoleViewSet` → `UserRoleViewSet`, import `UserRole`
+- Updated urls.py: register `UserRoleViewSet` instead of `RoleViewSet`
+- Created migration `0007_rename_role_userrole` via Django auto-detected rename
+- `UserProfile.role` FK already points to `permissions.Role` — no change needed
+- Backend tests: 85 passed, 3 failed (pre-existing), 3 skipped — no regressions
+- Frontend typecheck: pre-existing errors only
+- Files changed: `backend/apps/users/models.py`, `backend/apps/users/serializers.py`, `backend/apps/users/views.py`, `backend/apps/users/urls.py`, `backend/apps/users/migrations/0007_rename_role_userrole_alter_userrole_options_and_more.py`
+- **Learnings for future iterations:**
+  - Django auto-detects model rename via `makemigrations` and asks for confirmation — pipe `y` for non-interactive
+  - `UserProfile.role` FK already uses `permissions.Role` (lazy string `"permissions.Role"`), not `users.Role`
+  - `permissions.RoleViewSet` (in permissions app) and `users.RoleViewSet` (renamed to `UserRoleViewSet`) serve different models
+  - Migration `0003_preset_roles.py` uses historical `apps.get_model('users', 'Role')` — Django migration state preserves old name, so it still works
+  - No test changes needed — no tests directly reference `users.Role`
 ---
