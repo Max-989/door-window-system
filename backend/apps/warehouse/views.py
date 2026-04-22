@@ -15,7 +15,6 @@ from .models import (
     AccessoryInventory,
     HardwareInventory,
     PendingGoods,
-    StockRecord,
     WarehouseProduct,
     WarehouseTransfer,
 )
@@ -29,6 +28,7 @@ from .serializers import (
     WarehouseProductSerializer,
     WarehouseTransferSerializer,
 )
+from .services import StockService
 
 
 class WarehouseProductFilterSet(filters.FilterSet):
@@ -81,48 +81,18 @@ class HardwareInventoryViewSet(viewsets.ModelViewSet):
     @action(detail=True, methods=["post"], url_path="out-stock")
     def out_stock(self, request, pk=None):
         """出库"""
-        from django.db import transaction
+        error_response, item = StockService.out_stock(
+            model_class=HardwareInventory,
+            item_type="hardware",
+            pk=pk,
+            quantity=request.data.get("quantity"),
+            reason=request.data.get("reason", ""),
+            related_task_id=request.data.get("related_task_id"),
+            operator=request.user,
+        )
+        if error_response:
+            return error_response
 
-        with transaction.atomic():
-            # 🔴 使用 select_for_update 加行锁，防止并发超卖
-            item = HardwareInventory.objects.select_for_update().get(pk=pk)
-            quantity = request.data.get("quantity")
-            reason = request.data.get("reason", "")
-            related_task_id = request.data.get("related_task_id")
-
-            # 参数校验
-            if not quantity or not isinstance(quantity, int) or quantity <= 0:
-                return error(message="quantity 必须是正整数", code=status.HTTP_400_BAD_REQUEST)
-            if not reason:
-                return error(message="reason 必填", code=status.HTTP_400_BAD_REQUEST)
-
-            # 库存检查
-            if item.current_stock < quantity:
-                return error(message=f"库存不足，当前库存 {item.current_stock}，出库数量 {quantity}", code=status.HTTP_400_BAD_REQUEST)
-
-            # 减少库存
-            item.current_stock -= quantity
-            item.available_stock = item.current_stock - item.pending_out_quantity
-            item.save(
-                update_fields=[
-                    "current_stock",
-                    "available_stock",
-                    "updated_at",
-                ]
-            )
-
-            # 记录出库历史
-            StockRecord.objects.create(
-                item_type="hardware",
-                item_id=item.pk,
-                record_type="out",
-                quantity=quantity,
-                reason=reason,
-                operator=request.user if request.user.is_authenticated else None,
-                related_task_id=related_task_id or "",
-            )
-
-        # 检查是否低于预警
         result = HardwareInventorySerializer(item).data
         if item.current_stock < item.alert_quantity:
             result["warning"] = f"库存低于预警数量（{item.alert_quantity}）"
@@ -132,41 +102,18 @@ class HardwareInventoryViewSet(viewsets.ModelViewSet):
     @action(detail=True, methods=["post"], url_path="in-stock")
     def in_stock(self, request, pk=None):
         """入库"""
-        item = self.get_object()
-        quantity = request.data.get("quantity")
-        reason = request.data.get("reason", "")
-        supplier = request.data.get("supplier", "")
-
-        # 参数校验
-        if not quantity or not isinstance(quantity, int) or quantity <= 0:
-            return error(message="quantity 必须是正整数", code=status.HTTP_400_BAD_REQUEST)
-        if not reason:
-            return error(message="reason 必填", code=status.HTTP_400_BAD_REQUEST)
-
-        # 增加库存
-        item.current_stock += quantity
-        item.available_stock = item.current_stock - item.pending_out_quantity
-
-        item.save(
-            update_fields=[
-                "current_stock",
-                "available_stock",
-                "updated_at",
-            ]
-        )
-
-        # 记录入库历史
-        StockRecord.objects.create(
+        error_response, item = StockService.in_stock(
+            model_class=HardwareInventory,
             item_type="hardware",
-            item_id=item.pk,
-            record_type="in",
-            quantity=quantity,
-            reason=reason,
-            operator=request.user if request.user.is_authenticated else None,
-            supplier=supplier or "",
+            pk=pk,
+            quantity=request.data.get("quantity"),
+            reason=request.data.get("reason", ""),
+            supplier=request.data.get("supplier", ""),
+            operator=request.user,
         )
+        if error_response:
+            return error_response
 
-        # 检查是否仍低于预警
         result = HardwareInventorySerializer(item).data
         if item.current_stock < item.alert_quantity:
             result["warning"] = f"库存仍低于预警数量（{item.alert_quantity}）"
@@ -214,70 +161,34 @@ class AccessoryInventoryViewSet(viewsets.ModelViewSet):
     @action(detail=True, methods=["post"], url_path="out-stock")
     def out_stock(self, request, pk=None):
         """出库"""
-        from django.db import transaction
-
-        with transaction.atomic():
-            # 🔴 使用 select_for_update 加行锁，防止并发超卖
-            item = AccessoryInventory.objects.select_for_update().get(pk=pk)
-            quantity = request.data.get("quantity")
-            reason = request.data.get("reason", "")
-            related_task_id = request.data.get("related_task_id")
-
-            # 参数校验
-            if not quantity or not isinstance(quantity, int) or quantity <= 0:
-                return error(message="quantity 必须是正整数", code=status.HTTP_400_BAD_REQUEST)
-            if not reason:
-                return error(message="reason 必填", code=status.HTTP_400_BAD_REQUEST)
-
-            # 库存检查
-            if item.current_stock < quantity:
-                return error(message=f"库存不足，当前库存 {item.current_stock}，出库数量 {quantity}", code=status.HTTP_400_BAD_REQUEST)
-
-            # 减少库存
-            item.current_stock -= quantity
-            item.save(update_fields=["current_stock", "updated_at"])
-
-            # 记录出库历史
-            StockRecord.objects.create(
-                item_type="accessory",
-                item_id=item.pk,
-                record_type="out",
-                quantity=quantity,
-                reason=reason,
-                operator=request.user if request.user.is_authenticated else None,
-                related_task_id=related_task_id or "",
-            )
+        error_response, item = StockService.out_stock(
+            model_class=AccessoryInventory,
+            item_type="accessory",
+            pk=pk,
+            quantity=request.data.get("quantity"),
+            reason=request.data.get("reason", ""),
+            related_task_id=request.data.get("related_task_id"),
+            operator=request.user,
+        )
+        if error_response:
+            return error_response
 
         return Response(AccessoryInventorySerializer(item).data)
 
     @action(detail=True, methods=["post"], url_path="in-stock")
     def in_stock(self, request, pk=None):
         """入库"""
-        item = self.get_object()
-        quantity = request.data.get("quantity")
-        reason = request.data.get("reason", "")
-        supplier = request.data.get("supplier", "")
-
-        # 参数校验
-        if not quantity or not isinstance(quantity, int) or quantity <= 0:
-            return error(message="quantity 必须是正整数", code=status.HTTP_400_BAD_REQUEST)
-        if not reason:
-            return error(message="reason 必填", code=status.HTTP_400_BAD_REQUEST)
-
-        # 增加库存
-        item.current_stock += quantity
-        item.save(update_fields=["current_stock", "updated_at"])
-
-        # 记录入库历史
-        StockRecord.objects.create(
+        error_response, item = StockService.in_stock(
+            model_class=AccessoryInventory,
             item_type="accessory",
-            item_id=item.pk,
-            record_type="in",
-            quantity=quantity,
-            reason=reason,
-            operator=request.user if request.user.is_authenticated else None,
-            supplier=supplier or "",
+            pk=pk,
+            quantity=request.data.get("quantity"),
+            reason=request.data.get("reason", ""),
+            supplier=request.data.get("supplier", ""),
+            operator=request.user,
         )
+        if error_response:
+            return error_response
 
         return Response(AccessoryInventorySerializer(item).data)
 

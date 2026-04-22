@@ -216,3 +216,20 @@
   - New `code` field is nullable to avoid breaking existing data; migrate to add codes for existing roles
   - The `RoleSerializer` uses `__all__` fields so `code` is automatically included in API responses
 ---
+
+## 2026-04-22 - US-015
+- Created `StockRecord` model with fields: item_type, item_id, record_type, quantity, reason, operator (FK to User), related_task_id, supplier, created_at
+- Removed `stock_records` JSONField from `HardwareInventory` and `AccessoryInventory` models
+- Created `StockRecordSerializer` for API serialization
+- Updated `out_stock` and `in_stock` actions in both `HardwareInventoryViewSet` and `AccessoryInventoryViewSet` to create `StockRecord` objects instead of appending to JSONField
+- Removed unused `timezone` import from views.py
+- Generated and applied migration `0005_remove_accessoryinventory_stock_records_and_more.py`
+- Updated warehouse test `test_hardware_inventory_stock_records` to test via StockRecord model
+- Backend tests: 85 passed, 3 failed (pre-existing), 3 skipped
+- Files changed: `backend/apps/warehouse/models.py`, `backend/apps/warehouse/serializers.py`, `backend/apps/warehouse/views.py`, `backend/tests/warehouse/test_warehouse.py`, `backend/apps/warehouse/migrations/0005_remove_accessoryinventory_stock_records_and_more.py`
+- **Learnings for future iterations:**
+  - Use `StockRecord` model with `item_type` + `item_id` pattern to track records for multiple inventory types (hardware/accessory) without GenericForeignKey
+  - When removing a JSONField in favor of a model, existing tests referencing the field via kwargs will fail; update them to create StockRecord objects instead
+  - The warehouse User model uses `phone` as identifier, not `username` — use `create_user(phone=..., password=...)`
+  - StockRecord has default ordering `["-created_at"]` so newest records appear first
+---
