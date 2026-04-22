@@ -166,9 +166,7 @@ class OrderItem(models.Model):
     )
 
     # 产品关联（按产品线不同指向不同表）
-    product_type = models.CharField(
-        "产品类型", max_length=20, choices=ProductLine.CHOICES
-    )
+    product_type = models.CharField("产品类型", max_length=20, choices=ProductLine.CHOICES)
     wood_product = models.ForeignKey(
         "products.WoodProduct",
         on_delete=models.SET_NULL,
@@ -198,9 +196,7 @@ class OrderItem(models.Model):
     product_name = models.CharField("产品名称", max_length=200)
     product_model = models.CharField("产品型号", max_length=100, blank=True, default="")
     color = models.CharField("颜色", max_length=50, blank=True, default="")
-    specs = models.JSONField(
-        "规格参数", default=dict, blank=True, help_text="每樘单独规格记录"
-    )
+    specs = models.JSONField("规格参数", default=dict, blank=True, help_text="每樘单独规格记录")
 
     # 数量与价格
     quantity = models.IntegerField("数量", default=1)

@@ -43,15 +43,11 @@ class RoleModelTest(TestCase):
     def test_role_data_scope_choices(self):
         """测试数据范围选项"""
         # 全部数据
-        role1 = Role.objects.create(
-            name="全部数据角色", code="all_data", data_scope="all"
-        )
+        role1 = Role.objects.create(name="全部数据角色", code="all_data", data_scope="all")
         self.assertEqual(role1.data_scope, "all")
 
         # 本城市数据
-        role2 = Role.objects.create(
-            name="城市数据角色", code="city_data", data_scope="city"
-        )
+        role2 = Role.objects.create(name="城市数据角色", code="city_data", data_scope="city")
         self.assertEqual(role2.data_scope, "city")
 
         # 本部门数据
@@ -61,9 +57,7 @@ class RoleModelTest(TestCase):
         self.assertEqual(role3.data_scope, "department")
 
         # 仅自己创建的数据
-        role4 = Role.objects.create(
-            name="自己数据角色", code="self_data", data_scope="self"
-        )
+        role4 = Role.objects.create(name="自己数据角色", code="self_data", data_scope="self")
         self.assertEqual(role4.data_scope, "self")
 
     def test_role_str_representation(self):
@@ -155,9 +149,7 @@ class RoleMenuPermissionModelTest(TestCase):
 
     def setUp(self):
         """测试前置设置：创建角色和菜单"""
-        self.role = Role.objects.create(
-            name="测试角色", code="test_role", data_scope="all"
-        )
+        self.role = Role.objects.create(name="测试角色", code="test_role", data_scope="all")
         self.menu = Menu.objects.create(name="测试菜单", code="test_menu")
 
     def test_create_role_menu_permission(self):

@@ -58,9 +58,7 @@ def register_decoration(request):
     password = data.get("password")
 
     if not phone or not isinstance(phone, str) or not phone.strip():
-        return responses.error(
-            message="手机号必填", code=http_status.HTTP_400_BAD_REQUEST
-        )
+        return responses.error(message="手机号必填", code=http_status.HTTP_400_BAD_REQUEST)
 
     if not password or not isinstance(password, str) or len(password) < 6:
         return responses.error(
@@ -106,9 +104,7 @@ def register_decoration(request):
     # captcha = request.data.get('captcha', '')
 
     if User.objects.filter(phone=phone).exists():
-        return responses.error(
-            message="该手机号已注册", code=http_status.HTTP_400_BAD_REQUEST
-        )
+        return responses.error(message="该手机号已注册", code=http_status.HTTP_400_BAD_REQUEST)
 
     # 创建 User
     user = User.objects.create_user(
@@ -161,14 +157,10 @@ def register_staff(request):
         )
 
     if user_type not in ("management", "service"):
-        return responses.error(
-            message="用户类型无效", code=http_status.HTTP_400_BAD_REQUEST
-        )
+        return responses.error(message="用户类型无效", code=http_status.HTTP_400_BAD_REQUEST)
 
     if User.objects.filter(phone=phone).exists():
-        return responses.error(
-            message="该手机号已注册", code=http_status.HTTP_400_BAD_REQUEST
-        )
+        return responses.error(message="该手机号已注册", code=http_status.HTTP_400_BAD_REQUEST)
 
     user = User.objects.create_user(
         phone=phone, password=password, real_name=real_name, identity="contractor"
@@ -325,29 +317,19 @@ def reset_password(request):
     new_password = request.data.get("new_password", "")
 
     if not old_password:
-        return Response(
-            {"detail": "原密码不能为空"}, status=http_status.HTTP_400_BAD_REQUEST
-        )
+        return Response({"detail": "原密码不能为空"}, status=http_status.HTTP_400_BAD_REQUEST)
     if not new_password:
-        return Response(
-            {"detail": "新密码不能为空"}, status=http_status.HTTP_400_BAD_REQUEST
-        )
+        return Response({"detail": "新密码不能为空"}, status=http_status.HTTP_400_BAD_REQUEST)
     if len(new_password) < 6:
-        return Response(
-            {"detail": "密码至少6位"}, status=http_status.HTTP_400_BAD_REQUEST
-        )
+        return Response({"detail": "密码至少6位"}, status=http_status.HTTP_400_BAD_REQUEST)
 
     # 验证原密码
     if not request.user.check_password(old_password):
-        return Response(
-            {"detail": "原密码错误"}, status=http_status.HTTP_400_BAD_REQUEST
-        )
+        return Response({"detail": "原密码错误"}, status=http_status.HTTP_400_BAD_REQUEST)
 
     # 只能重置自己的密码
     if phone and phone != request.user.phone:
-        return Response(
-            {"detail": "只能重置自己的密码"}, status=http_status.HTTP_403_FORBIDDEN
-        )
+        return Response({"detail": "只能重置自己的密码"}, status=http_status.HTTP_403_FORBIDDEN)
 
     request.user.set_password(new_password)
     request.user.save()
@@ -377,13 +359,9 @@ def confirm_role(request):
         profile.save()
         return Response({"detail": "角色确认成功"})
     except UserProfile.DoesNotExist:
-        return Response(
-            {"detail": "用户档案不存在"}, status=http_status.HTTP_404_NOT_FOUND
-        )
+        return Response({"detail": "用户档案不存在"}, status=http_status.HTTP_404_NOT_FOUND)
     except PermRole.DoesNotExist:
-        return Response(
-            {"detail": "角色不存在"}, status=http_status.HTTP_400_BAD_REQUEST
-        )
+        return Response({"detail": "角色不存在"}, status=http_status.HTTP_400_BAD_REQUEST)
 
 
 # ==================== 审核视图 ====================

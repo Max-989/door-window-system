@@ -65,14 +65,10 @@ class InstallationTask(models.Model):
     customer_phone = models.CharField(
         "客户电话", max_length=20, blank=True, default="", validators=[phone_validator]
     )
-    customer_address = models.CharField(
-        "客户地址", max_length=500, blank=True, default=""
-    )
+    customer_address = models.CharField("客户地址", max_length=500, blank=True, default="")
 
     # 直接安装单信息
-    door_types = models.JSONField(
-        "门种类", default=list, blank=True, help_text="直接安装单填写"
-    )
+    door_types = models.JSONField("门种类", default=list, blank=True, help_text="直接安装单填写")
     door_quantity = models.IntegerField("门数量", default=0)
     size_list = models.JSONField("尺寸单", default=list, blank=True)
 
@@ -105,9 +101,7 @@ class InstallationTask(models.Model):
 
     # 师傅提交
     room_photos = models.JSONField("按房间安装照片", default=list, blank=True)
-    installed_quantity = models.IntegerField(
-        "安装数量", default=0, help_text="自动生成可改"
-    )
+    installed_quantity = models.IntegerField("安装数量", default=0, help_text="自动生成可改")
     additional_items = models.TextField("增项说明", blank=True, default="")
     additional_fee = models.DecimalField(
         "增项费用",

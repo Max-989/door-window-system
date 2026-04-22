@@ -108,9 +108,7 @@ class MaintenanceTaskCreateSerializer(serializers.ModelSerializer):
             if not isinstance(item, dict):
                 raise serializers.ValidationError(f"第 {i+1} 个配件必须是对象")
             if not item.get("name") or not isinstance(item.get("name"), str):
-                raise serializers.ValidationError(
-                    f"第 {i+1} 个配件名称不能为空且必须是字符串"
-                )
+                raise serializers.ValidationError(f"第 {i+1} 个配件名称不能为空且必须是字符串")
             quantity = item.get("quantity")
             if not isinstance(quantity, int) or quantity < 1:
                 raise serializers.ValidationError(f"第 {i+1} 个配件数量必须是正整数")

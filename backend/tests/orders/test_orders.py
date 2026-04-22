@@ -55,9 +55,7 @@ class TestOrderManagement:
     @pytest.fixture
     def test_store(self, test_brand):
         """创建测试门店"""
-        store = Store.objects.create(
-            name="测试门店", brand=test_brand, address="测试地址"
-        )
+        store = Store.objects.create(name="测试门店", brand=test_brand, address="测试地址")
         yield store
         store.delete()
 

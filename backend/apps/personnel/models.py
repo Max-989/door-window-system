@@ -20,9 +20,7 @@ class Worker(models.Model):
     )
     wechat = models.CharField("微信号", max_length=100, blank=True, default="")
     bank_card_no = models.CharField("银行卡号", max_length=30, blank=True, default="")
-    skills = models.JSONField(
-        "技能类型", default=list, help_text="量尺/安装/维修/送货多选"
-    )
+    skills = models.JSONField("技能类型", default=list, help_text="量尺/安装/维修/送货多选")
     foreman = models.ForeignKey(
         "Foreman",
         on_delete=models.SET_NULL,
@@ -195,9 +193,7 @@ class WageSettlement(models.Model):
     deduction = models.DecimalField(
         "扣费", max_digits=10, decimal_places=2, default=0, help_text="责任扣费等"
     )
-    total_fee = models.DecimalField(
-        "总工费", max_digits=10, decimal_places=2, default=0
-    )
+    total_fee = models.DecimalField("总工费", max_digits=10, decimal_places=2, default=0)
     status = models.CharField(
         "状态",
         max_length=20,
@@ -252,9 +248,7 @@ class ContractModeSetting(models.Model):
     contract_mode = models.CharField(
         "承包模式", max_length=20, choices=ContractMode.CHOICES
     )
-    contractor_name = models.CharField(
-        "承包商名称", max_length=100, blank=True, default=""
-    )
+    contractor_name = models.CharField("承包商名称", max_length=100, blank=True, default="")
     settlement_price = models.DecimalField(
         "承包结算价", max_digits=12, decimal_places=2, default=0
     )

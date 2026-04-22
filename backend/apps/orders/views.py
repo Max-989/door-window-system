@@ -33,15 +33,11 @@ class OrderFilterSet(filters.FilterSet):
 
     city = filters.CharFilter(field_name="city", lookup_expr="exact", help_text="城市")
     brand = filters.NumberFilter(field_name="brand", help_text="品牌ID")
-    product_line = filters.CharFilter(
-        field_name="product_line", help_text="品类/产品线"
-    )
+    product_line = filters.CharFilter(field_name="product_line", help_text="品类/产品线")
     time_field = filters.CharFilter(
         method="filter_time_field", help_text="时间字段：created_at/installation_time"
     )
-    time_start = filters.DateTimeFilter(
-        method="filter_time_range", help_text="开始时间"
-    )
+    time_start = filters.DateTimeFilter(method="filter_time_range", help_text="开始时间")
     time_end = filters.DateTimeFilter(method="filter_time_range", help_text="结束时间")
 
     class Meta:
@@ -133,9 +129,7 @@ class OrderViewSet(viewsets.ModelViewSet):
         order = self.get_object()
         if order.status != OrderStatus.CONFIRMED:
             return Response(
-                {
-                    "detail": f"当前状态为「{order.get_status_display()}」，只有已确认状态才能开始生产"
-                },
+                {"detail": f"当前状态为「{order.get_status_display()}」，只有已确认状态才能开始生产"},
                 status=status.HTTP_400_BAD_REQUEST,
             )
         order.status = OrderStatus.PRODUCED
@@ -238,9 +232,7 @@ class OrderViewSet(viewsets.ModelViewSet):
 
         # Simple CSV export
         output = io.StringIO()
-        output.write(
-            "订单号,来源,客户姓名,客户电话,客户地址,省,市,区,产品线,状态,创建时间\n"
-        )
+        output.write("订单号,来源,客户姓名,客户电话,客户地址,省,市,区,产品线,状态,创建时间\n")
         for order in queryset:
             output.write(
                 f"{order.order_no},{order.source},{order.customer_name},"

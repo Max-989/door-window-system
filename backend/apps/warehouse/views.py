@@ -325,9 +325,7 @@ class StocktakeView(viewsets.ViewSet):
 
         model_class, stock_field = model_map[warehouse_type]
         if model_class is None:
-            return error(
-                message="该仓库类型暂不支持盘点", code=status.HTTP_400_BAD_REQUEST
-            )
+            return error(message="该仓库类型暂不支持盘点", code=status.HTTP_400_BAD_REQUEST)
 
         try:
             item = model_class.objects.get(id=item_id)

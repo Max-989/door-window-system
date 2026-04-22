@@ -616,9 +616,7 @@ def seed_personnel(branches):
         )
         workers.append(w)
 
-    print(
-        f"  -> 工费标准 {len(wage_standards)}, 工头 {len(foremen)}, 师傅 {len(workers)}"
-    )
+    print(f"  -> 工费标准 {len(wage_standards)}, 工头 {len(foremen)}, 师傅 {len(workers)}")
     return wage_standards, foremen, workers
 
 
@@ -948,11 +946,7 @@ def seed_maintenance_tasks(orders, workers, users, brands, stores, branches):
             deduction_worker=(
                 worker if resp == MaintenanceResponsibility.INSTALLATION else None
             ),
-            resolution=(
-                "更换新门扇，已验收通过"
-                if status == MaintenanceStatus.COMPLETED
-                else ""
-            ),
+            resolution=("更换新门扇，已验收通过" if status == MaintenanceStatus.COMPLETED else ""),
         )
 
         if status == MaintenanceStatus.COMPLETED:

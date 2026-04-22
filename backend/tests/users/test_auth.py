@@ -91,9 +91,7 @@ class TestUserAuthentication:
         # 管理人员注册需审核
         user = User.objects.get(phone="13900139001")
         profile = user.profile
-        assert (
-            profile.status == "pending"
-        ), f"管理人员注册后应为pending状态，实际: {profile.status}"
+        assert profile.status == "pending", f"管理人员注册后应为pending状态，实际: {profile.status}"
 
     def test_user_registration_duplicate_phone(self, api_client, create_user):
         """测试重复手机号注册"""
@@ -105,9 +103,7 @@ class TestUserAuthentication:
                 "contact_name": "重复注册",
             },
         )
-        assert (
-            response.status_code == 400
-        ), f"重复手机号应返回400，实际: {response.status_code}"
+        assert response.status_code == 400, f"重复手机号应返回400，实际: {response.status_code}"
 
     def test_user_registration_invalid_input(self, api_client):
         """测试注册参数校验"""
@@ -141,9 +137,7 @@ class TestUserAuthentication:
             response.status_code == 200
         ), f"登录失败: {response.status_code} - {response.data}"
 
-        assert (
-            "data" in response.data
-        ), f"返回数据中缺少data字段: {response.data.keys()}"
+        assert "data" in response.data, f"返回数据中缺少data字段: {response.data.keys()}"
         data = response.data["data"]
         assert "token" in data, f"返回数据中缺少token字段: {data.keys()}"
         assert "refresh" in data, f"返回数据中缺少refresh字段: {data.keys()}"
@@ -180,9 +174,7 @@ class TestUserAuthentication:
         api_client.credentials(HTTP_AUTHORIZATION=f"Bearer {refresh.access_token}")
 
         response = api_client.get("/api/v1/users/me/")
-        assert (
-            response.status_code == 200
-        ), f"认证后访问应成功，实际状态码: {response.status_code}"
+        assert response.status_code == 200, f"认证后访问应成功，实际状态码: {response.status_code}"
 
     def test_invalid_login(self, api_client, create_user):
         """测试无效登录凭据"""
@@ -191,18 +183,14 @@ class TestUserAuthentication:
             "/api/v1/users/login/",
             data={"username": "99999999999", "password": "wrongpassword"},
         )
-        assert (
-            response.status_code == 400
-        ), f"不存在的用户登录应返回400，实际: {response.status_code}"
+        assert response.status_code == 400, f"不存在的用户登录应返回400，实际: {response.status_code}"
 
         # 测试错误密码
         response = api_client.post(
             "/api/v1/users/login/",
             data={"username": "13800138000", "password": "wrongpassword"},
         )
-        assert (
-            response.status_code == 400
-        ), f"错误密码登录应返回400，实际: {response.status_code}"
+        assert response.status_code == 400, f"错误密码登录应返回400，实际: {response.status_code}"
 
     def test_login_pending_user_rejected(self, api_client):
         """测试待审核用户登录"""

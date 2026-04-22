@@ -19,9 +19,7 @@ class StockService:
     def validate_quantity_and_reason(quantity, reason):
         """校验出入库参数"""
         if not quantity or not isinstance(quantity, int) or quantity <= 0:
-            return error(
-                message="quantity 必须是正整数", code=status.HTTP_400_BAD_REQUEST
-            )
+            return error(message="quantity 必须是正整数", code=status.HTTP_400_BAD_REQUEST)
         if not reason:
             return error(message="reason 必填", code=status.HTTP_400_BAD_REQUEST)
         return None

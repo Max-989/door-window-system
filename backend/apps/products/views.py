@@ -141,7 +141,5 @@ class ProductSearchView(generics.ListAPIView):
     def list(self, request, *args, **kwargs):
         product_line = request.query_params.get("product_line", "")
         if product_line not in ("wood", "alloy", "security"):
-            return error(
-                message="product_line 必须为 wood / alloy / security", code=400
-            )
+            return error(message="product_line 必须为 wood / alloy / security", code=400)
         return super().list(request, *args, **kwargs)

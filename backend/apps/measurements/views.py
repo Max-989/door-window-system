@@ -68,16 +68,12 @@ class MeasurementTaskViewSet(viewsets.ModelViewSet):
         task = self.get_object()
         if task.status != "pending":
             return Response(
-                {
-                    "error": f"当前状态为{task.get_status_display()}，只有待派单才能执行此操作"
-                },
+                {"error": f"当前状态为{task.get_status_display()}，只有待派单才能执行此操作"},
                 status=status.HTTP_400_BAD_REQUEST,
             )
         worker_id = request.data.get("worker")
         if not worker_id:
-            return Response(
-                {"error": "请指定量尺师傅"}, status=status.HTTP_400_BAD_REQUEST
-            )
+            return Response({"error": "请指定量尺师傅"}, status=status.HTTP_400_BAD_REQUEST)
 
         from apps.personnel.models import Worker
 
@@ -99,9 +95,7 @@ class MeasurementTaskViewSet(viewsets.ModelViewSet):
         task = self.get_object()
         if task.status != "assigned":
             return Response(
-                {
-                    "error": f"当前状态为{task.get_status_display()}，只有已派单才能执行此操作"
-                },
+                {"error": f"当前状态为{task.get_status_display()}，只有已派单才能执行此操作"},
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
@@ -126,9 +120,7 @@ class MeasurementTaskViewSet(viewsets.ModelViewSet):
         task = self.get_object()
         if task.status not in ("pending", "assigned"):
             return Response(
-                {
-                    "error": f"当前状态为{task.get_status_display()}，只有待派单或已派单才能取消"
-                },
+                {"error": f"当前状态为{task.get_status_display()}，只有待派单或已派单才能取消"},
                 status=status.HTTP_400_BAD_REQUEST,
             )
         task.status = "cancelled"

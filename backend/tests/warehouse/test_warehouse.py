@@ -177,9 +177,7 @@ class HardwareInventoryModelTest(TestCase):
 
     def test_hardware_inventory_minimal_fields(self):
         """测试最小字段创建五金库存"""
-        inventory = HardwareInventory.objects.create(
-            name="最小库存", hardware_type="通用"
-        )
+        inventory = HardwareInventory.objects.create(name="最小库存", hardware_type="通用")
         self.assertEqual(inventory.name, "最小库存")
         self.assertEqual(inventory.hardware_type, "通用")
         self.assertEqual(inventory.current_stock, 0)  # 默认值

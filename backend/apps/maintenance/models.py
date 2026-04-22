@@ -82,9 +82,7 @@ class MaintenanceTask(models.Model):
     customer_phone = models.CharField(
         "客户电话", max_length=20, blank=True, default="", validators=[phone_validator]
     )
-    customer_address = models.CharField(
-        "客户地址", max_length=500, blank=True, default=""
-    )
+    customer_address = models.CharField("客户地址", max_length=500, blank=True, default="")
 
     # 维修信息
     issue_description = models.TextField("问题描述", blank=True, default="")
@@ -167,9 +165,7 @@ class MaintenanceTask(models.Model):
     # 补发配件
     accessory_reissue = models.BooleanField(default=False, verbose_name="是否补发配件")
     accessory_reissue_reason = models.TextField("补发原因", blank=True, default="")
-    reissue_items = models.JSONField(
-        default=list, blank=True, verbose_name="补发配件明细"
-    )
+    reissue_items = models.JSONField(default=list, blank=True, verbose_name="补发配件明细")
     repair_details = models.JSONField(default=list, blank=True, verbose_name="维修详情")
 
     # 部分完成

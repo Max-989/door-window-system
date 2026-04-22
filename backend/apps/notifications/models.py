@@ -20,9 +20,7 @@ class Notification(models.Model):
     title = models.CharField("标题", max_length=200)
     content = models.TextField("内容", blank=True, default="")
     related_id = models.IntegerField("相关业务ID", null=True, blank=True)
-    related_type = models.CharField(
-        "相关业务类型", max_length=50, blank=True, default=""
-    )
+    related_type = models.CharField("相关业务类型", max_length=50, blank=True, default="")
     is_read = models.BooleanField("是否已读", default=False)
     read_at = models.DateTimeField("阅读时间", null=True, blank=True)
     created_at = models.DateTimeField("创建时间", auto_now_add=True)

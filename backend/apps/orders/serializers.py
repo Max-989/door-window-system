@@ -91,9 +91,7 @@ class OrderItemSerializer(serializers.ModelSerializer):
                 colors_list = product.door_colors or []
             if colors_list and color not in colors_list:
                 raise serializers.ValidationError(
-                    {
-                        "color": f'颜色 "{color}" 不在该产品的可选颜色中，可选: {colors_list}'
-                    }
+                    {"color": f'颜色 "{color}" 不在该产品的可选颜色中，可选: {colors_list}'}
                 )
 
         # 自动填充 product_model（如果未提供但有关联产品）

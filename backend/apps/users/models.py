@@ -88,9 +88,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         related_name="users",
         verbose_name="分公司",
     )
-    city = models.CharField(
-        "城市", max_length=50, blank=True, default="", db_index=True
-    )
+    city = models.CharField("城市", max_length=50, blank=True, default="", db_index=True)
     product_line = models.CharField(
         "文员产品线", max_length=20, choices=ProductLine.CHOICES, blank=True, default=""
     )
