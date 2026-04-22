@@ -25,6 +25,7 @@ const ROLE_NAME_TO_CODE: Record<string, UserRole> = {
   'foreman': 'foreman',
 }
 
+/** Map backend role name to frontend UserRole code */
 function mapRoleToCode(role: string): UserRole {
   return ROLE_NAME_TO_CODE[role] || role as UserRole
 }

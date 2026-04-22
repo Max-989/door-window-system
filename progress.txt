@@ -450,3 +450,20 @@
   - drf_yasg openapi.Info accepts env-configured values at import time
   - No migration or typecheck concerns for URL config changes
 ---
+
+## 2026-04-22 - US-031
+- Added Chinese docstrings to 13 ViewSet classes across 5 backend files:
+  - notifications/views.py: NotificationViewSet
+  - products/views.py: SupplierViewSet, ProductCategoryViewSet, WoodProductViewSet, AlloyProductViewSet, SecurityProductViewSet, HardwareViewSet
+  - permissions/views.py: RoleViewSet, MenuViewSet, PermissionLogViewSet
+  - decoration/views.py: BrandViewSet, StoreViewSet, DecorationStaffViewSet
+- Added JSDoc comments to key frontend functions in request.ts (getAuthStorage, getToken, getRefreshToken, updateToken, refreshAccessToken, request)
+- Added JSDoc to auth.store.ts (mapRoleToCode)
+- Backend tests: 85 passed, 3 failed (pre-existing), 3 skipped — no regressions
+- Lint: clean (flake8)
+- Files changed: `backend/apps/notifications/views.py`, `backend/apps/products/views.py`, `backend/apps/permissions/views.py`, `backend/apps/decoration/views.py`, `web-admin/src/utils/request.ts`, `web-admin/src/stores/auth.store.ts`
+- **Learnings for future iterations:**
+  - All major ViewSet classes across the project now have Chinese docstrings for Swagger documentation
+  - Frontend request.ts core functions now have JSDoc comments explaining auth/token/refresh behavior
+  - Docstrings should be one-line Chinese descriptions matching module purpose
+---

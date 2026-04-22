@@ -1,5 +1,7 @@
+/** Base URL prefix for all API requests */
 const BASE_URL = '/api/v1'
 
+/** Read auth storage from localStorage */
 function getAuthStorage(): { state?: { token?: string; refresh?: string } } | null {
   try {
     return JSON.parse(localStorage.getItem('auth-storage') || '{}')
@@ -8,16 +10,19 @@ function getAuthStorage(): { state?: { token?: string; refresh?: string } } | nu
   }
 }
 
+/** Get current access token from localStorage */
 function getToken(): string | null {
   const auth = getAuthStorage()
   return auth?.state?.token || null
 }
 
+/** Get current refresh token from localStorage */
 function getRefreshToken(): string | null {
   const auth = getAuthStorage()
   return auth?.state?.refresh || null
 }
 
+/** Persist new access/refresh tokens to localStorage */
 function updateToken(newToken: string, newRefresh?: string): void {
   const auth = getAuthStorage()
   if (!auth) return
@@ -29,6 +34,7 @@ function updateToken(newToken: string, newRefresh?: string): void {
 
 let refreshing: Promise<boolean> | null = null
 
+/** Attempt to refresh expired access token via refresh token endpoint. Returns true if successful. */
 async function refreshAccessToken(): Promise<boolean> {
   const refreshToken = getRefreshToken()
   if (!refreshToken) return false
@@ -49,6 +55,10 @@ async function refreshAccessToken(): Promise<boolean> {
   }
 }
 
+/**
+ * Core API request utility. Handles auth headers, unified response unwrapping, and automatic 401 token refresh.
+ * If response JSON has `code` and `data` fields, returns `json.data` directly (unwrapped).
+ */
 export async function request<T = unknown>(url: string, options: RequestInit = {}): Promise<T> {
   const token = getToken()
   const isFormData = options.body instanceof FormData

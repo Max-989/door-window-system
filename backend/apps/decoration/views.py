@@ -13,6 +13,8 @@ from .serializers import BrandSerializer, DecorationStaffSerializer, StoreSerial
 
 
 class BrandViewSet(viewsets.ModelViewSet):
+    """品牌管理"""
+
     permission_classes = [IsAuthenticated]
     queryset = Brand.objects.all()
     serializer_class = BrandSerializer
@@ -22,6 +24,8 @@ class BrandViewSet(viewsets.ModelViewSet):
 
 
 class StoreViewSet(viewsets.ModelViewSet):
+    """门店管理"""
+
     permission_classes = [IsAuthenticated]
     queryset = Store.objects.select_related("brand").all()
     serializer_class = StoreSerializer
@@ -31,6 +35,8 @@ class StoreViewSet(viewsets.ModelViewSet):
 
 
 class DecorationStaffViewSet(viewsets.ModelViewSet):
+    """装修人员管理"""
+
     permission_classes = [IsAuthenticated]
     queryset = DecorationStaff.objects.select_related("store", "store__brand").all()
     serializer_class = DecorationStaffSerializer

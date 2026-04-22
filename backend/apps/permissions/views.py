@@ -55,6 +55,8 @@ def _build_menu_tree(menus):
 
 
 class RoleViewSet(viewsets.ModelViewSet):
+    """角色管理"""
+
     queryset = Role.objects.all()
     serializer_class = RoleSerializer
     permission_classes = [IsAuthenticated]
@@ -138,6 +140,8 @@ class RoleViewSet(viewsets.ModelViewSet):
 
 
 class MenuViewSet(viewsets.ReadOnlyModelViewSet):
+    """菜单管理"""
+
     queryset = Menu.objects.all()
     permission_classes = [IsAuthenticated]
 
@@ -155,6 +159,8 @@ class MenuViewSet(viewsets.ReadOnlyModelViewSet):
 
 
 class PermissionLogViewSet(viewsets.ReadOnlyModelViewSet):
+    """权限操作日志管理"""
+
     queryset = PermissionLog.objects.all()
     serializer_class = PermissionLogSerializer
     permission_classes = [IsAuthenticated]

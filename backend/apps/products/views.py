@@ -33,6 +33,8 @@ from .serializers import (
 
 
 class SupplierViewSet(viewsets.ModelViewSet):
+    """供应商管理"""
+
     permission_classes = [IsAuthenticated]
     queryset = Supplier.objects.all()
     serializer_class = SupplierSerializer
@@ -42,12 +44,16 @@ class SupplierViewSet(viewsets.ModelViewSet):
 
 
 class ProductCategoryViewSet(viewsets.ModelViewSet):
+    """产品分类管理"""
+
     permission_classes = [IsAuthenticated]
     queryset = ProductCategory.objects.all()
     serializer_class = ProductCategorySerializer
 
 
 class WoodProductViewSet(viewsets.ModelViewSet):
+    """木门产品管理"""
+
     permission_classes = [IsAuthenticated]
     queryset = WoodProduct.objects.select_related("supplier").all()
     serializer_class = WoodProductSerializer
@@ -57,6 +63,8 @@ class WoodProductViewSet(viewsets.ModelViewSet):
 
 
 class AlloyProductViewSet(viewsets.ModelViewSet):
+    """合金门产品管理"""
+
     permission_classes = [IsAuthenticated]
     queryset = AlloyProduct.objects.select_related("supplier").all()
     serializer_class = AlloyProductSerializer
@@ -66,6 +74,8 @@ class AlloyProductViewSet(viewsets.ModelViewSet):
 
 
 class SecurityProductViewSet(viewsets.ModelViewSet):
+    """安防门产品管理"""
+
     permission_classes = [IsAuthenticated]
     queryset = SecurityProduct.objects.select_related("supplier").all()
     serializer_class = SecurityProductSerializer
@@ -75,6 +85,8 @@ class SecurityProductViewSet(viewsets.ModelViewSet):
 
 
 class HardwareViewSet(viewsets.ModelViewSet):
+    """五金配件管理"""
+
     permission_classes = [IsAuthenticated]
     queryset = Hardware.objects.select_related("supplier").all()
     serializer_class = HardwareSerializer

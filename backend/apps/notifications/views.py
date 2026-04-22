@@ -12,6 +12,8 @@ from .serializers import NotificationSerializer
 
 
 class NotificationViewSet(viewsets.ModelViewSet):
+    """通知管理"""
+
     serializer_class = NotificationSerializer
     permission_classes = [IsAuthenticated]
     http_method_names = ["get", "post"]  # Only allow read operations
