@@ -4,9 +4,10 @@ import {
 } from 'antd'
 import { CheckOutlined, CloseOutlined, AuditOutlined } from '@ant-design/icons'
 import type { ColumnsType } from 'antd/es/table'
+import { get, post } from '../../../utils/request'
 import Authorized from '../../../components/Authorized'
 
-const API = '/api/users/pending'
+const API = '/users/pending'
 
 interface PendingUser {
   id: number
@@ -24,6 +25,19 @@ interface Role {
   description: string
 }
 
+interface PaginatedResponse<T> {
+  code: number
+  message: string
+  data: {
+    items: T[]
+    total: number
+    page: number
+    pageSize: number
+    totalPages: number
+  }
+  timestamp: string
+}
+
 const departments = ['量尺部', '安装部', '维修部', '仓库管理', '综合管理']
 
 const Approval = () => {
@@ -34,16 +48,18 @@ const Approval = () => {
   const [rejectOpen, setRejectOpen] = useState(false)
   const [currentUser, setCurrentUser] = useState<PendingUser | null>(null)
   const [roles, setRoles] = useState<Role[]>([])
+  const [page, setPage] = useState(1)
+  const [pageSize, setPageSize] = useState(20)
+  const [total, setTotal] = useState(0)
   const [approveForm] = Form.useForm()
   const [rejectForm] = Form.useForm()
 
-  const fetchData = useCallback(async () => {
+  const fetchData = useCallback(async (p: number, ps: number) => {
     setLoading(true)
     try {
-      const res = await fetch(API)
-      if (!res.ok) throw new Error()
-      const json = await res.json()
-      setData(json.results ?? json)
+      const json = await get<PaginatedResponse<PendingUser>>(`${API}/?page=${p}&pageSize=${ps}`)
+      setData(json.data.items)
+      setTotal(json.data.total)
     } catch {
       message.error('获取待审核列表失败')
     } finally {
@@ -53,30 +69,21 @@ const Approval = () => {
 
   const fetchRoles = useCallback(async () => {
     try {
-      const res = await fetch('/api/permissions/roles/')
-      if (!res.ok) return
-      const json = await res.json()
-      setRoles(json.results ?? json)
+      const json = await get<Role[]>('/api/permissions/roles/')
+      setRoles(Array.isArray(json) ? json : (json as any).results ?? [])
     } catch { /* ignore */ }
   }, [])
 
-  useEffect(() => { fetchData(); fetchRoles() }, [fetchData, fetchRoles])
-
-  const filtered = typeFilter === 'all' ? data : data.filter(u => u.user_type === typeFilter)
+  useEffect(() => { fetchData(page, pageSize); fetchRoles() }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleApprove = async (values: { role_id: number; department: string }) => {
     if (!currentUser) return
     try {
-      const res = await fetch(`${API}/${currentUser.id}/approve/`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(values),
-      })
-      if (!res.ok) throw new Error()
+      await post(`${API}/${currentUser.id}/approve/`, values)
       message.success('审核通过')
       setApproveOpen(false)
       approveForm.resetFields()
-      fetchData()
+      fetchData(page, pageSize)
     } catch {
       message.error('操作失败')
     }
@@ -85,19 +92,20 @@ const Approval = () => {
   const handleReject = async (values: { reason: string }) => {
     if (!currentUser) return
     try {
-      const res = await fetch(`${API}/${currentUser.id}/reject/`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(values),
-      })
-      if (!res.ok) throw new Error()
+      await post(`${API}/${currentUser.id}/reject/`, values)
       message.success('已驳回')
       setRejectOpen(false)
       rejectForm.resetFields()
-      fetchData()
+      fetchData(page, pageSize)
     } catch {
       message.error('操作失败')
     }
+  }
+
+  const onPageChange = (p: number, ps: number) => {
+    setPage(p)
+    setPageSize(ps)
+    fetchData(p, ps)
   }
 
   const columns: ColumnsType<PendingUser> = [
@@ -134,16 +142,17 @@ const Approval = () => {
 
   return (
     <Authorized permission="settings-approval">
-      <Card title={<Space><AuditOutlined /> 注册审核 <Badge count={data.length} showZero color="#007AFF" /></Space>}>
+      <Card title={<Space><AuditOutlined /> 注册审核</Space>}>
         <Radio.Group value={typeFilter} onChange={e => setTypeFilter(e.target.value)} style={{ marginBottom: 16 }}>
           <Radio.Button value="all">全部</Radio.Button>
           <Radio.Button value="management">管理人员</Radio.Button>
           <Radio.Button value="service">服务人员</Radio.Button>
         </Radio.Group>
         <Table<PendingUser>
-          rowKey="id" columns={columns} dataSource={filtered} loading={loading}
+          rowKey="id" columns={columns} dataSource={data} loading={loading}
           locale={{ emptyText: <Empty description="暂无待审核用户" /> }}
-          pagination={false} size="middle"
+          pagination={{ current: page, pageSize, total, onChange: onPageChange, showSizeChanger: true, showTotal: t => `共 ${t} 条` }}
+          size="middle"
         />
       </Card>
 

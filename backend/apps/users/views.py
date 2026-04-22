@@ -12,6 +12,7 @@ from rest_framework.permissions import AllowAny, IsAdminUser, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
 from common import responses
+from common.pagination import StandardPagination
 
 from apps.permissions.models import Role as PermRole
 
@@ -353,10 +354,11 @@ def confirm_role(request):
 # ==================== 审核视图 ====================
 
 
-class PendingUserViewSet(viewsets.ViewSet):
+class PendingUserViewSet(viewsets.GenericViewSet):
     """待审核用户管理"""
 
     permission_classes = [IsAdminUser]
+    pagination_class = StandardPagination
 
     def list(self, request):
         """获取待审核用户列表"""
