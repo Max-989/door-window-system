@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 """
 measurements app - 序列化器
 """

@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 """
 measurements app - 量尺管理
 按需求文档第十节重构：4个状态

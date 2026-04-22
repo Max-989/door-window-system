@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 """
 measurements app - URL配置
 """

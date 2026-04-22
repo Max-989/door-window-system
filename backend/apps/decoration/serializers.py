@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 """
 decoration app - 序列化器
 """

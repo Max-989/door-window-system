@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 """
 Door & Window Installation Management System - Root URL Configuration
 重构后的路由配置

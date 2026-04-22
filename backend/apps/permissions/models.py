@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 """
 permissions app - 权限管理模块
 菜单、角色、权限分配、操作日志

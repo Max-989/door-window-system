@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 """
 warehouse app - 序列化器
 """

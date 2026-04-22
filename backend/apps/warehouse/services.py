@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 """
 warehouse app - 库存操作服务
 抽取出入库通用逻辑，消除 HardwareInventoryViewSet 和 AccessoryInventoryViewSet 重复代码

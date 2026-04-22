@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 """
 decoration app - 装企管理
 按需求文档第十四节新增

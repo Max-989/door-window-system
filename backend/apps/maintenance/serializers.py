@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 """
 maintenance app - 序列化器
 """

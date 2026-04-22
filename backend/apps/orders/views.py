@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 """
 orders app - 视图
 """

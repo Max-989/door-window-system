@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 """
 reports app - URL配置
 """

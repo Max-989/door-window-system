@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 """
 API文档端点测试
 验证Swagger/OpenAPI文档生成是否正常工作

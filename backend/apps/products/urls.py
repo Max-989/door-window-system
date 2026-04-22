@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 """
 products app - URL配置
 """

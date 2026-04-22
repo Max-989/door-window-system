@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 """
 warehouse app - 仓库管理
 按需求文档第十五节重构
