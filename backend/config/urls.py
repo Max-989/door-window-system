@@ -84,7 +84,7 @@ urlpatterns = [
     # 数据看板
     path("api/v1/reports/", include("apps.reports.urls")),
     # 权限管理
-    path("api/permissions/", include("apps.permissions.urls")),
+    path("api/v1/permissions/", include("apps.permissions.urls")),
 ]
 
 if settings.DEBUG:

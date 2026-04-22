@@ -24,7 +24,7 @@ interface PermissionState {
   clearPermissions: () => void
 }
 
-const API_BASE = '/api/permissions'
+const API_BASE = '/api/v1/permissions'
 
 
 const usePermissionStore = create<PermissionState>()((set, get) => ({
