@@ -321,3 +321,25 @@
   - prod.py reads CORS from env var — secure by default, configured at deploy time
   - CORS_ALLOW_CREDENTIALS = True stays in base.py (needed for JWT auth everywhere)
 ---
+
+## 2026-04-22 - US-023
+- Installed Vitest v2 + React Testing Library + jsdom for frontend testing
+- Added `test` config to vite.config.ts (globals, jsdom environment, setup file)
+- Created `src/test/setup.ts` importing `@testing-library/jest-dom`
+- Added `test`, `test:watch`, `test:coverage` scripts to package.json
+- Wrote 13 tests for `src/utils/request.ts`: auth headers, auto-unwrap, error handling, FormData, URL prefix, HTTP helpers, 401 refresh flow (refresh + retry, failure redirect, deduplication)
+- Wrote 9 tests for `src/stores/auth.store.ts`: login state, logout, hasRole, role mapping, me(), localStorage persistence
+- Wrote 10 tests for `src/stores/permissionStore.ts`: hasPermission logic, hasMenuPermission with nested children, clearPermissions, initPermissions error handling
+- All 32 tests pass across 3 test files
+- No new tsc errors introduced (all 141 pre-existing)
+- Files changed: `web-admin/vite.config.ts`, `web-admin/package.json`, `web-admin/package-lock.json`, `web-admin/src/test/setup.ts` (new), `web-admin/src/test/request.test.ts` (new), `web-admin/src/test/auth.store.test.ts` (new), `web-admin/src/test/permissionStore.test.ts` (new)
+- **Learnings for future iterations:**
+  - Vitest config goes in `vite.config.ts` with `test` field; use `/// <reference types="vitest/config" />` for type support
+  - `vi.mock` with path aliases (`@/`) may not intercept static imports in the target module reliably. Use `vi.hoisted` for mock functions, or test store logic via `setState` directly
+  - For 401 refresh tests, use `vi.stubGlobal('fetch', mockFn)` and `vi.unstubAllGlobals()` in cleanup
+  - For token refresh deduplication, use `vi.resetModules()` to clear the module-level `refreshing` variable between tests
+  - For `window.location.href` redirect tests, use `vi.stubGlobal('location', { href: '' })` as a mock
+  - Use `vi.mocked(get).mockResolvedValue(...)` for mocking named imports (works for modules where `vi.mock` intercepts correctly)
+  - For zustand store tests, call `useStore.getState().logout()` or `useStore.setState(...)` in beforeEach to reset state between tests
+  - Browser verification recommended: manual test to ensure tests run via `npm test`
+---
