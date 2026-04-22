@@ -58,8 +58,8 @@ const Approval = () => {
     setLoading(true)
     try {
       const json = await get<PaginatedResponse<PendingUser>>(`${API}/?page=${p}&pageSize=${ps}`)
-      setData(json.data.items)
-      setTotal(json.data.total)
+      setData(json.items)
+      setTotal(json.total)
     } catch {
       message.error('获取待审核列表失败')
     } finally {

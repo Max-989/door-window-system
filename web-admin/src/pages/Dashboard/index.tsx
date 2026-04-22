@@ -85,7 +85,7 @@ const Dashboard = () => {
 
       if (ordersRes.status === 'fulfilled') {
         const r = ordersRes.value
-        const list = Array.isArray(r) ? r : (r.results || r.data?.items || r.data || [])
+        const list = Array.isArray(r) ? r : (r.items || r.results || [])
         setOrders(list)
       }
 

@@ -146,9 +146,9 @@ const MaintenanceList = () => {
       })
 
       const res = await get<any>(`/maintenance/tasks/?${params.toString()}`)
-      const results = res.results || res.data?.items || res.data || res || []
+      const results = Array.isArray(res) ? res : (res.items || res.results || [])
       setData(Array.isArray(results) ? results : [])
-      setTotal(res.count ?? res.data?.total ?? 0)
+      setTotal(res.total ?? res.count ?? 0)
     } catch (err: any) {
       message.error(err.message || '加载维修任务失败')
     } finally {
@@ -167,7 +167,7 @@ const MaintenanceList = () => {
     setInstallationSearchLoading(true)
     try {
       const res = await get<any>(`/installations/tasks/?search=${encodeURIComponent(keyword)}&page_size=20`)
-      const items = res.results || res.data?.items || res.data || res || []
+      const items = Array.isArray(res) ? res : (res.items || res.results || [])
       setInstallationOptions(
         Array.isArray(items) ? items.map((o: any) => ({ value: o.id, label: `${o.task_no || ''} - ${o.customer_name || ''}` })) : []
       )
@@ -187,7 +187,7 @@ const MaintenanceList = () => {
     setInstallerSearchLoading(true)
     try {
       const res = await get<any>(`/workers/?search=${encodeURIComponent(keyword)}&skill=installation&page_size=20`)
-      const items = res.results || res.data?.items || res.data || res || []
+      const items = Array.isArray(res) ? res : (res.items || res.results || [])
       // 🔴 返回 worker ID 而不是 name
       setInstallerOptions(
         Array.isArray(items) ? items.map((w: any) => ({ value: w.id, label: `${w.name}${w.phone ? ` (${w.phone})` : ''}` })) : []
@@ -196,7 +196,7 @@ const MaintenanceList = () => {
       // fallback: try workers endpoint without skill filter
       try {
         const res = await get<any>(`/workers/?search=${encodeURIComponent(keyword)}&page_size=20`)
-        const items = res.results || res.data?.items || res.data || res || []
+        const items = Array.isArray(res) ? res : (res.items || res.results || [])
         setInstallerOptions(
           Array.isArray(items) ? items.map((w: any) => ({ value: w.id, label: `${w.name}${w.phone ? ` (${w.phone})` : ''}` })) : []
         )
@@ -224,7 +224,7 @@ const MaintenanceList = () => {
           // 查询工人 ID
           try {
             const workerRes = await get<any>(`/workers/?search=${encodeURIComponent(workers[0])}&page_size=1`)
-            const workerItems = workerRes.results || workerRes.data?.items || workerRes.data || workerRes || []
+            const workerItems = Array.isArray(workerRes) ? workerRes : (workerRes.items || workerRes.results || [])
             if (Array.isArray(workerItems) && workerItems.length > 0) {
               form.setFieldsValue({ installer: workerItems[0].id })
             }

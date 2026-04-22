@@ -126,7 +126,7 @@ const Orders = () => {
     setLoadingBrands(true)
     try {
       const res = await get<any>('/decoration/brands/')
-      const brands = Array.isArray(res) ? res : (res.results || res.data?.items || res.data || [])
+      const brands = Array.isArray(res) ? res : (res.items || res.results || [])
       const options = brands.map((brand: BrandOption) => ({
         value: String(brand.id),
         label: brand.name
@@ -153,7 +153,7 @@ const Orders = () => {
 
       const res = await get<any>(`/orders/?${params.toString()}`)
       // DRF paginated response: { count, results, next, previous }
-      const results = res.results || res.data?.items || res.data || res || []
+      const results = Array.isArray(res) ? res : (res.items || res.results || [])
       setData(Array.isArray(results) ? results : [])
       setTotal(res.count || results.length || 0)
     } catch (err: any) {

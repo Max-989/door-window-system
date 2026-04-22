@@ -142,7 +142,7 @@ const InstallationList = () => {
     setOrderSearchLoading(true)
     try {
       const res = await get<any>(`/orders/?search=${encodeURIComponent(keyword)}&page_size=20`)
-      const items = res.results || res.data?.items || res.data || res || []
+      const items = Array.isArray(res) ? res : (res.items || res.results || [])
       setOrderOptions(
         Array.isArray(items) ? items.map((o: any) => ({ value: o.id, label: o.order_no })) : []
       )
@@ -183,9 +183,9 @@ const InstallationList = () => {
       if (statusFilter) params.set('status', statusFilter)
 
       const res = await get<any>(`${API_BASE}/?${params.toString()}`)
-      const results = res.results || res.data?.items || res.data || res || []
+      const results = Array.isArray(res) ? res : (res.items || res.results || [])
       setData(Array.isArray(results) ? results.map(toCamel) : [])
-      setTotal(res.count ?? res.data?.total ?? (Array.isArray(results) ? results.length : 0))
+      setTotal(res.total ?? res.count ?? (Array.isArray(results) ? results.length : 0))
     } catch (err: any) {
       message.error(err.message || '加载安装任务列表失败')
     } finally {
@@ -264,14 +264,14 @@ const InstallationList = () => {
     setWorkerSearchLoading(true)
     try {
       const res = await get<any>(`/personnel/workers/?search=${encodeURIComponent(keyword)}&skill=installation&page_size=20`)
-      const items = res.results || res.data?.items || res.data || res || []
+      const items = Array.isArray(res) ? res : (res.items || res.results || [])
       setWorkerOptions(
         Array.isArray(items) ? items.map((w: any) => ({ value: w.id, label: `${w.name}${w.phone ? ` (${w.phone})` : ''}` })) : []
       )
     } catch {
       try {
         const res = await get<any>(`/personnel/workers/?search=${encodeURIComponent(keyword)}&page_size=20`)
-        const items = res.results || res.data?.items || res.data || res || []
+        const items = Array.isArray(res) ? res : (res.items || res.results || [])
         setWorkerOptions(
           Array.isArray(items) ? items.map((w: any) => ({ value: w.id, label: `${w.name}${w.phone ? ` (${w.phone})` : ''}` })) : []
         )

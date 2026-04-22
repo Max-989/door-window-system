@@ -74,8 +74,11 @@ export async function request<T = unknown>(url: string, options: RequestInit = {
       headers['Authorization'] = `Bearer ${newToken}`
       const retryRes = await fetch(fullUrl, { ...options, headers })
       if (retryRes.ok) {
-        const retryData = await retryRes.json()
-        return retryData
+        const retryJson = await retryRes.json()
+        if (retryJson && typeof retryJson === 'object' && 'code' in retryJson && 'data' in retryJson) {
+          return retryJson.data
+        }
+        return retryJson
       }
     }
 
@@ -85,14 +88,18 @@ export async function request<T = unknown>(url: string, options: RequestInit = {
     throw new Error('登录已过期')
   }
 
-  const data = await res.json()
+  const json = await res.json()
   if (!res.ok) {
-    const err = new Error(data.detail || '请求失败') as any
+    const err = new Error(json.detail || json.message || '请求失败') as any
     err.status = res.status
-    err.data = data
+    err.data = json
     throw err
   }
-  return data
+  // Auto-unwrap unified response: if response has code and data fields, return data
+  if (json && typeof json === 'object' && 'code' in json && 'data' in json) {
+    return json.data
+  }
+  return json
 }
 
 export const get = <T = unknown>(url: string) => request<T>(url)

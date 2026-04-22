@@ -108,7 +108,7 @@ const Permissions: React.FC = () => {
     try {
       const res = await get<{code: number, data: {items: Role[], total: number}}>(`${API}/roles/`)
       // Support both DRF format {count, results} and custom wrapper {code, data: {items, total}}
-      const items = res.results || res.data?.items || res.data || res || []
+      const items = Array.isArray(res) ? res : (res.items || res.results || [])
       setRoles(Array.isArray(items) ? items : [])
     } catch (e: unknown) { message.error((e instanceof Error ? e.message : String(e)) || '获取角色列表失败') }
     finally { setLoading(false) }
@@ -119,7 +119,7 @@ const Permissions: React.FC = () => {
   const fetchRoleDetail = useCallback(async (id: number) => {
     try {
       const res = await get<{code: number, data: Role}>(`${API}/roles/${id}/`)
-      const roleData = res.data || res
+      const roleData = res
       setSelectedRole({ ...roleData, members: [] })
       setCheckedKeys({ checked: roleData.menu_ids || [], halfChecked: [] })
     } catch (e: unknown) { message.error(e instanceof Error ? e.message : String(e)) }
@@ -130,7 +130,7 @@ const Permissions: React.FC = () => {
     try {
       const res = await get<{code: number, data: MenuData[]}>(`${API}/menus/`)
       // API 返回格式: {code: 200, data: [...]} 或直接是数组
-      const data = res.data || res
+      const data = res
       setMenuTree(buildTree(Array.isArray(data) ? data : []))
     } catch (e: unknown) { message.error((e instanceof Error ? e.message : String(e)) || '获取菜单树失败') }
     finally { setMenuLoading(false) }
@@ -141,7 +141,7 @@ const Permissions: React.FC = () => {
     try {
       const res = await get<{code: number, data: {items: LogEntry[], total: number}}>(`${API}/logs/`)
       // Support both DRF format {count, results} and custom wrapper {code, data: {items, total}}
-      const items = res.results || res.data?.items || res.data || res || []
+      const items = Array.isArray(res) ? res : (res.items || res.results || [])
       setLogs(Array.isArray(items) ? items : [])
     } catch (e: unknown) { message.error((e instanceof Error ? e.message : String(e)) || '获取日志失败') }
     finally { setLogsLoading(false) }

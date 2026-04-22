@@ -42,7 +42,7 @@ async function searchProducts(productLine: string, keyword: string): Promise<Pro
   try {
     const res = await get<any>(`/products/search/?product_line=${productLine}&q=${encodeURIComponent(keyword)}`)
     // Support paginated response (data.items) and legacy formats
-    return res.data?.items || res.results || res.data?.results || res.data || []
+    return Array.isArray(res) ? res : (res.items || res.results || [])
   } catch {
     return []
   }

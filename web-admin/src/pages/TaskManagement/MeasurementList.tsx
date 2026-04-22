@@ -105,7 +105,7 @@ const MeasurementList = () => {
     setLoadingBrands(true)
     try {
       const res = await get<any>('/decoration/brands/')
-      const brands = res.results || res.data?.items || res.data || res || []
+      const brands = Array.isArray(res) ? res : (res.items || res.results || [])
       const options = brands.map((brand: BrandOption) => ({
         value: String(brand.id),
         label: brand.name
@@ -127,7 +127,7 @@ const MeasurementList = () => {
     setLoadingStores(true)
     try {
       const res = await get<any>(`/decoration/stores/?brand=${brandId}`)
-      const stores = res.results || res.data?.items || res.data || res || []
+      const stores = Array.isArray(res) ? res : (res.items || res.results || [])
       const options = stores.map((store: StoreOption) => ({
         value: String(store.id),
         label: store.name
@@ -154,9 +154,9 @@ const MeasurementList = () => {
 
       const res = await get<any>(`/measurements/tasks/?${params.toString()}`)
       // Support both DRF format {count, results} and custom wrapper {code, data: {items, total}}
-      const results = res.results || res.data?.items || res.data || res || []
+      const results = Array.isArray(res) ? res : (res.items || res.results || [])
       setData(Array.isArray(results) ? results : [])
-      setTotal(res.count ?? res.data?.total ?? 0)
+      setTotal(res.total ?? res.count ?? 0)
     } catch (err: any) {
       message.error(err.message || '加载失败')
     } finally {
@@ -179,14 +179,14 @@ const MeasurementList = () => {
     setWorkerSearchLoading(true)
     try {
       const res = await get<any>(`/personnel/workers/?search=${encodeURIComponent(keyword)}&skill=measurement&page_size=20`)
-      const items = res.results || res.data?.items || res.data || res || []
+      const items = Array.isArray(res) ? res : (res.items || res.results || [])
       setWorkerOptions(
         Array.isArray(items) ? items.map((w: any) => ({ value: w.id, label: `${w.name}${w.phone ? ` (${w.phone})` : ''}` })) : []
       )
     } catch {
       try {
         const res = await get<any>(`/personnel/workers/?search=${encodeURIComponent(keyword)}&page_size=20`)
-        const items = res.results || res.data?.items || res.data || res || []
+        const items = Array.isArray(res) ? res : (res.items || res.results || [])
         setWorkerOptions(
           Array.isArray(items) ? items.map((w: any) => ({ value: w.id, label: `${w.name}${w.phone ? ` (${w.phone})` : ''}` })) : []
         )

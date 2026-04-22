@@ -128,9 +128,9 @@ const Personnel = () => {
       params.set('page_size', String(sitePageSize))
       if (siteSearch) params.set('search', siteSearch)
       const res = await get<any>(`${WORKERS_API}?${params.toString()}`)
-      const results = res.results || res.data?.items || res.data || res || []
+      const results = Array.isArray(res) ? res : (res.items || res.results || [])
       setSiteData(Array.isArray(results) ? results : [])
-      setSiteTotal(res.count ?? res.data?.total ?? (Array.isArray(results) ? results.length : 0))
+      setSiteTotal(res.total ?? res.count ?? (Array.isArray(results) ? results.length : 0))
     } catch (err: any) {
       message.error(err.message || '加载人员列表失败')
     } finally {
@@ -149,9 +149,9 @@ const Personnel = () => {
       params.set('page_size', String(clerkPageSize))
       if (clerkSearch) params.set('search', clerkSearch)
       const res = await get<any>(`${FOREMEN_API}?${params.toString()}`)
-      const results = res.results || res.data?.items || res.data || res || []
+      const results = Array.isArray(res) ? res : (res.items || res.results || [])
       setClerkData(Array.isArray(results) ? results : [])
-      setClerkTotal(res.count ?? res.data?.total ?? (Array.isArray(results) ? results.length : 0))
+      setClerkTotal(res.total ?? res.count ?? (Array.isArray(results) ? results.length : 0))
     } catch (err: any) {
       message.error(err.message || '加载文员列表失败')
     } finally {

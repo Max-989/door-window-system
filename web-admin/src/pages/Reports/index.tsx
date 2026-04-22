@@ -98,7 +98,7 @@ const Reports = () => {
     setLoadingOrders(true)
     try {
       const res = await get<any>(`/reports/orders/?${buildParams()}`)
-      const results = res.results || res.data?.items || res.data || res || []
+      const results = Array.isArray(res) ? res : (res.items || res.results || [])
       setOrderStats(Array.isArray(results) ? results : [])
     } catch (err: any) {
       console.error('加载订单统计失败:', err)
@@ -113,7 +113,7 @@ const Reports = () => {
     setLoadingWorkers(true)
     try {
       const res = await get<any>(`/reports/worker-performance/?${buildParams()}`)
-      const results = res.results || res.data?.items || res.data || res || []
+      const results = Array.isArray(res) ? res : (res.items || res.results || [])
       setWorkerPerf(Array.isArray(results) ? results : [])
     } catch (err: any) {
       console.error('加载师傅绩效失败:', err)
@@ -128,7 +128,7 @@ const Reports = () => {
     setLoadingRepair(true)
     try {
       const res = await get<any>(`/reports/maintenance/?${buildParams()}`)
-      const results = res.results || res.data?.items || res.data || res || []
+      const results = Array.isArray(res) ? res : (res.items || res.results || [])
       setRepairStats(Array.isArray(results) ? results : [])
     } catch (err: any) {
       console.error('加载维修统计失败:', err)

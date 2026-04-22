@@ -59,7 +59,7 @@ const Settings = () => {
     setRolesLoading(true)
     try {
       const res = await get<any>('/api/permissions/roles/')
-      const items = res.results || res.data?.items || res.data || res || []
+      const items = Array.isArray(res) ? res : (res.items || res.results || [])
       setRoles(Array.isArray(items) ? items : [])
     } catch (err: any) {
       message.error(err.message || '加载角色数据失败')
@@ -84,7 +84,7 @@ const Settings = () => {
     setLogsLoading(true)
     try {
       const res = await get<any>('/api/permissions/logs/')
-      const items = res.results || res.data?.items || res.data || res || []
+      const items = Array.isArray(res) ? res : (res.items || res.results || [])
       setLogs(Array.isArray(items) ? items : [])
     } catch (err: any) {
       message.error(err.message || '加载操作日志失败')

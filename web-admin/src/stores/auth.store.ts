@@ -53,9 +53,9 @@ const useAuthStore = create<AuthState>()(
           username: credentials.phone,
           password: credentials.password,
         })
-        const { token, refresh, user } = response.data
+        const { token, refresh, user } = response
         set({ user, isAuthenticated: true, token, refresh })
-        return response.data
+        return response
       },
 
       logout: () => set({ user: null, isAuthenticated: false, token: null, refresh: null }),
