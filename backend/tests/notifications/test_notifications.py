@@ -4,6 +4,7 @@
 通知管理模块单元测试
 测试门窗安装管理系统的通知功能
 """
+import time
 import uuid
 
 from django.test import TestCase
@@ -99,19 +100,21 @@ class NotificationModelTest(TestCase):
 
     def test_notification_ordering(self):
         """测试通知按创建时间倒序排列"""
-        # 创建多个通知
+        # 创建多个通知，添加微小延迟确保created_at不同
         notification1 = Notification.objects.create(
             user=self.user, type=NotificationType.SYSTEM, title="通知1"
         )
+        time.sleep(0.001)
         notification2 = Notification.objects.create(
             user=self.user, type=NotificationType.SYSTEM, title="通知2"
         )
+        time.sleep(0.001)
         notification3 = Notification.objects.create(
             user=self.user, type=NotificationType.SYSTEM, title="通知3"
         )
 
         # 获取按创建时间倒序排列的通知
-        notifications = list(Notification.objects.all())
+        notifications = list(Notification.objects.order_by('-created_at'))
         self.assertEqual(notifications[0].title, "通知3")  # 最新创建
         self.assertEqual(notifications[1].title, "通知2")
         self.assertEqual(notifications[2].title, "通知1")

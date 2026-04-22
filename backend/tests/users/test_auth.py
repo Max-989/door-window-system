@@ -64,8 +64,9 @@ class TestUserAuthentication:
         assert (
             response.status_code == 201
         ), f"装企注册失败: {response.status_code} - {response.data}"
-        assert "token" in response.data, f"注册响应缺少token: {response.data.keys()}"
-        token = response.data["token"]
+        assert "data" in response.data, f"注册响应缺少data字段: {response.data.keys()}"
+        assert "token" in response.data["data"], f"注册响应data缺少token: {response.data['data'].keys()}"
+        token = response.data["data"]["token"]
         assert "access" in token
         assert "refresh" in token
 
@@ -133,7 +134,8 @@ class TestUserAuthentication:
             response.status_code == 200
         ), f"登录失败: {response.status_code} - {response.data}"
 
-        data = response.data
+        assert "data" in response.data, f"返回数据中缺少data字段: {response.data.keys()}"
+        data = response.data["data"]
         assert "token" in data, f"返回数据中缺少token字段: {data.keys()}"
         assert "refresh" in data, f"返回数据中缺少refresh字段: {data.keys()}"
         assert "user" in data, f"返回数据中缺少user字段: {data.keys()}"
