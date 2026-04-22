@@ -307,3 +307,17 @@
 - Updated PRD to set `passes: true` for US-021
 ---
 ---
+
+## 2026-04-22 - US-022
+- Removed permissive localhost CORS defaults from base.py (empty list now)
+- Moved localhost CORS_ALLOWED_ORIGINS to dev.py alongside existing CORS_ALLOW_ALL_ORIGINS = True
+- prod.py stays as-is: reads CORS_ALLOWED_ORIGINS from env var (strict)
+- Files changed: `backend/config/settings/base.py`, `backend/config/settings/dev.py`
+- Backend tests: 85 pass, 3 fail (pre-existing), 3 skip — no regressions
+- Lint: clean
+- Frontend typecheck: pre-existing errors only
+- **Learnings for future iterations:**
+  - base.py should have strict/empty CORS defaults; dev.py loosens permissively
+  - prod.py reads CORS from env var — secure by default, configured at deploy time
+  - CORS_ALLOW_CREDENTIALS = True stays in base.py (needed for JWT auth everywhere)
+---
